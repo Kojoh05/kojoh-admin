@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>KOJOH Admin | Dataset editor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="supabase-config.js"></script>
+<script src="admin-core.js"></script>
+<script>
+KA.boot('content', function(ctx){
+  var main = ctx.main;
+  var id = new URLSearchParams(location.search).get('id');
+  var ds = null, folders = [], schema = [], tab = 'basics';
+
+  if (!id) { main.innerHTML = '<div class="ka-empty">No dataset id in the link.</div>'; return; }
+
+  function storagePath(){ return (ds.storage_path || ds.slug); }
+
+  // ---------------------------------------------------------------- load
+  Promise.all([
+    KA.supa.from('datasets').select('*').eq('id', id).maybeSingle(),
+    KA.supa.from('folders').select('id, title').order('sort_order'),
+    KA.supa.from('dataset_schema').select('*').eq('dataset_id', id).order('sort_order')
+  ]).then(function(r){
+    if (r[0].error || !r[0].data) {
+      main.innerHTML = '<div class="ka-empty">Could not load that dataset.</div>';
+      return;
+    }
+    ds = r[0].data;
+    folders = r[1].data || [];
+    schema = r[2].data || [];
+    shell();
+    renderTab();
+  });
+
+  function shell(){
+    main.innerHTML =
+        '<div class="ka-head">'
+      +   '<div><h1 id="kaTitle">' + KA.esc(ds.title) + '</h1>'
+      +   '<p><code>' + KA.esc(ds.slug) + '</code> &#183; '
+      +   '<a href="content.html">Back to all content</a> &#183; '
+      +   '<a href="https://dataset-marketplace-kojoh.vercel.app/dataset.html?slug='
+      +   encodeURIComponent(ds.slug) + '" target="_blank" rel="noopener">View on the site</a></p></div>'
+      +   '<label class="ka-toggle"><input type="checkbox" id="kaPub"' + (ds.is_published ? ' checked' : '') + '>'
+      +     '<span class="ka-toggle-track"><span class="ka-toggle-knob"></span></span>'
+      +     '<span class="ka-toggle-label">' + (ds.is_published ? 'Live' : 'Hidden') + '</span></label>'
+      + '</div>'
+      + '<div class="ka-filters"><div class="ka-seg" id="kaTabs">'
+      +   '<button data-t="basics" class="on">Basics</button>'
+      +   '<button data-t="columns">Columns</button>'
+      +   '<button data-t="files">Files</button>'
+      +   '<button data-t="images">Images</button>'
+      +   '<button data-t="seo">Search engine</button>'
+      + '</div></div>'
+      + '<div id="kaTabBody"></div>';
+
+    document.getElementById('kaTabs').addEventListener('click', function(e){
+      var b = e.target.closest('button');
+      if (!b) return;
+      Array.prototype.forEach.call(this.querySelectorAll('button'), function(x){ x.classList.remove('on'); });
+      b.classList.add('on');
+      tab = b.getAttribute('data-t');
+      renderTab();
+    });
+
+    document.getElementById('kaPub').addEventListener('change', function(){
+      var on = this.checked, self = this;
+      self.disabled = true;
+      KA.supa.from('datasets').update({ is_published: on }).eq('id', id).then(function(r){
+        self.disabled = false;
+        if (r.error) { self.checked = !on; KA.toast(r.error.message, true); return; }
+        ds.is_published = on;
+        self.parentNode.querySelector('.ka-toggle-label').textContent = on ? 'Live' : 'Hidden';
+        KA.toast(on ? 'Now live on the site' : 'Hidden from the site');
+      });
+    });
+  }
+
+  function renderTab(){
+    var host = document.getElementById('kaTabBody');
+    if (tab === 'basics') return basicsTab(host);
+    if (tab === 'columns') return columnsTab(host);
+    if (tab === 'files') return filesTab(host);
+    if (tab === 'images') return imagesTab(host);
+    if (tab === 'seo') return seoTab(host);
+  }
+
+  function save(patch, msg){
+    return KA.supa.from('datasets').update(patch).eq('id', id).then(function(r){
+      if (r.error) { KA.toast(r.error.message, true); return false; }
+      Object.keys(patch).forEach(function(k){ ds[k] = patch[k]; });
+      KA.toast(msg || 'Saved');
+      return true;
+    });
+  }
+
+  // ---------------------------------------------------------------- basics
+  function basicsTab(host){
+    var lp = ds.locked_preview || {};
+    host.innerHTML =
+        '<div class="ka-card">'
+      +   '<div class="ka-field"><label class="ka-label">Title</label>'
+      +     '<input class="ka-input" id="bTitle" value="' + KA.esc(ds.title) + '"></div>'
+      +   '<div class="ka-row">'
+      +     '<div class="ka-field"><label class="ka-label">Slug</label>'
+      +       '<input class="ka-input" id="bSlug" value="' + KA.esc(ds.slug) + '">'
+      +       '<p class="ka-hint">Changing this changes the public URL and breaks old links.</p></div>'
+      +     '<div class="ka-field"><label class="ka-label">Folder</label>'
+      +       '<select class="ka-select" id="bFolder">'
+      +         folders.map(function(f){
+                  return '<option value="' + f.id + '"' + (f.id === ds.folder_id ? ' selected' : '') + '>'
+                    + KA.esc(f.title) + '</option>';
+                }).join('')
+      +       '</select></div>'
+      +   '</div>'
+      +   '<div class="ka-field"><label class="ka-label">Short description</label>'
+      +     '<textarea class="ka-textarea" id="bShort">' + KA.esc(ds.short_description || '') + '</textarea>'
+      +     '<p class="ka-hint">The line under the title, and the line on the folder card.</p></div>'
+      +   '<div class="ka-field"><label class="ka-label">The story</label>'
+      +     '<textarea class="ka-textarea ka-textarea-tall" id="bLong">' + KA.esc(ds.long_description || '') + '</textarea>'
+      +     '<p class="ka-hint">Leave a blank line between paragraphs. This is the free part buyers read before deciding.</p></div>'
+      +   '<div class="ka-field"><label class="ka-label">Teaser summary</label>'
+      +     '<textarea class="ka-textarea" id="bTeaser">' + KA.esc(lp.summary || '') + '</textarea>'
+      +     '<p class="ka-hint">Shown blurred behind the lock, and quoted in the unlock panel.</p></div>'
+      +   '<div class="ka-row">'
+      +     '<div class="ka-field"><label class="ka-label">Price in rupees</label>'
+      +       '<input class="ka-input" type="number" step="1" id="bPrice" value="' + Number(ds.price || 0) + '"></div>'
+      +     '<div class="ka-field"><label class="ka-label">Difficulty</label>'
+      +       '<select class="ka-select" id="bDiff">'
+      +         ['beginner','intermediate','hard'].map(function(d){
+                  return '<option value="' + d + '"' + (ds.difficulty === d ? ' selected' : '') + '>'
+                    + d.charAt(0).toUpperCase() + d.slice(1) + '</option>';
+                }).join('')
+      +       '</select></div>'
+      +     '<div class="ka-field"><label class="ka-label">Storage folder</label>'
+      +       '<input class="ka-input" id="bPath" value="' + KA.esc(ds.storage_path || '') + '">'
+      +       '<p class="ka-hint">Folder inside the datasets bucket.</p></div>'
+      +   '</div>'
+      +   '<div class="ka-field"><label class="ka-toggle"><input type="checkbox" id="bFree"'
+      +     (ds.is_free ? ' checked' : '') + '><span class="ka-toggle-track">'
+      +     '<span class="ka-toggle-knob"></span></span>'
+      +     '<span class="ka-toggle-label">Give this away free</span></label></div>'
+      +   '<button class="ka-btn ka-btn-primary" id="bSave">Save changes</button>'
+      + '</div>';
+
+    document.getElementById('bSave').addEventListener('click', function(){
+      var lpNew = Object.assign({}, ds.locked_preview || {});
+      lpNew.summary = document.getElementById('bTeaser').value.trim();
+      save({
+        title: document.getElementById('bTitle').value.trim(),
+        slug: KA.slugify(document.getElementById('bSlug').value),
+        folder_id: document.getElementById('bFolder').value,
+        short_description: document.getElementById('bShort').value.trim(),
+        long_description: document.getElementById('bLong').value.trim(),
+        price: Number(document.getElementById('bPrice').value) || 0,
+        difficulty: document.getElementById('bDiff').value,
+        storage_path: document.getElementById('bPath').value.trim() || null,
+        is_free: document.getElementById('bFree').checked,
+        locked_preview: lpNew
+      }).then(function(ok){
+        if (ok) document.getElementById('kaTitle').textContent = ds.title;
+      });
+    });
+  }
+
+  // ---------------------------------------------------------------- columns
+  function columnsTab(host){
+    host.innerHTML =
+        '<div class="ka-card">'
+      +   '<div class="ka-card-head"><div><h2>Column dictionary</h2>'
+      +     '<p class="ka-card-sub">The first six show free on the dataset page. The rest unlock with the project.</p></div>'
+      +     '<button class="ka-btn ka-btn-sm" id="cAdd">Add column</button></div>'
+      +   '<div id="cList"></div>'
+      +   '<button class="ka-btn ka-btn-primary" id="cSave" style="margin-top:1rem;">Save all columns</button>'
+      + '</div>';
+
+    function draw(){
+      var host2 = document.getElementById('cList');
+      if (!schema.length) {
+        host2.innerHTML = '<div class="ka-empty">No columns yet. Upload a CSV on the Files tab and '
+          + 'use "Build columns from the CSV header", or add them by hand.</div>';
+        return;
+      }
+      host2.innerHTML = '<table class="ka-table"><thead><tr><th style="width:3rem;">#</th>'
+        + '<th style="width:30%;">Column</th><th>What to expect</th><th></th></tr></thead><tbody>'
+        + schema.map(function(c, i){
+            return '<tr>'
+              + '<td class="num">' + (i + 1) + '</td>'
+              + '<td><input class="ka-input" data-col-name="' + i + '" value="' + KA.esc(c.column_name) + '"></td>'
+              + '<td><input class="ka-input" data-col-desc="' + i + '" value="' + KA.esc(c.description || '') + '"></td>'
+              + '<td style="text-align:right;"><button class="ka-btn ka-btn-sm ka-btn-danger" '
+              +   'data-col-del="' + i + '">Remove</button></td>'
+              + '</tr>';
+          }).join('')
+        + '</tbody></table>';
+
+      Array.prototype.forEach.call(host2.querySelectorAll('[data-col-del]'), function(b){
+        b.addEventListener('click', function(){
+          schema.splice(Number(b.getAttribute('data-col-del')), 1);
+          draw();
+        });
+      });
+    }
+
+    document.getElementById('cAdd').addEventListener('click', function(){
+      schema.push({ dataset_id: id, column_name: '', description: '', sort_order: schema.length });
+      draw();
+    });
+
+    document.getElementById('cSave').addEventListener('click', function(){
+      var list = document.getElementById('cList');
+      schema.forEach(function(c, i){
+        var n = list.querySelector('[data-col-name="' + i + '"]');
+        var d = list.querySelector('[data-col-desc="' + i + '"]');
+        if (n) c.column_name = n.value.trim();
+        if (d) c.description = d.value.trim();
+        c.sort_order = i;
+      });
+      var clean = schema.filter(function(c){ return c.column_name; })
+        .map(function(c){
+          return { dataset_id: id, column_name: c.column_name, description: c.description, sort_order: c.sort_order };
+        });
+
+      KA.supa.from('dataset_schema').delete().eq('dataset_id', id).then(function(r){
+        if (r.error) { KA.toast(r.error.message, true); return; }
+        if (!clean.length) { KA.toast('Columns cleared'); schema = []; draw(); return; }
+        KA.supa.from('dataset_schema').insert(clean).then(function(r2){
+          if (r2.error) { KA.toast(r2.error.message, true); return; }
+          KA.toast(clean.length + ' columns saved');
+          KA.supa.from('dataset_schema').select('*').eq('dataset_id', id).order('sort_order')
+            .then(function(r3){ schema = r3.data || []; draw(); });
+        });
+      });
+    });
+
+    draw();
+  }
+
+  // ---------------------------------------------------------------- files
+  function filesTab(host){
+    host.innerHTML =
+        '<div class="ka-card">'
+      +   '<div class="ka-card-head"><div><h2>Data files</h2>'
+      +     '<p class="ka-card-sub">Everything here goes into the private datasets bucket at <code>'
+      +     KA.esc(storagePath()) + '/</code> and is only reachable by buyers.</p></div></div>'
+      +   '<div class="ka-drop" id="fDrop"><div class="ka-drop-title">Drop files here, or click to choose</div>'
+      +     '<div class="ka-drop-sub">CSV, XLSX, MD, PDF. Existing names are replaced.</div></div>'
+      +   '<input type="file" id="fInput" multiple hidden>'
+      +   '<div class="ka-progress" id="fProg" hidden><div class="ka-progress-fill" id="fProgFill"></div></div>'
+      +   '<div class="ka-filelist" id="fList"></div>'
+      + '</div>'
+      + '<div class="ka-card">'
+      +   '<div class="ka-card-head"><div><h2>Public preview</h2>'
+      +     '<p class="ka-card-sub">The first five rows shown free on the dataset page, plus the row and column counts.</p></div></div>'
+      +   '<div id="fPreviewState"></div>'
+      +   '<div class="ka-btnrow" style="margin-top:0.9rem;">'
+      +     '<button class="ka-btn ka-btn-primary" id="fRebuild">Rebuild preview from the CSV</button>'
+      +     '<button class="ka-btn" id="fCols">Build columns from the CSV header</button>'
+      +   '</div>'
+      +   '<p class="ka-hint">Both read the CSV in this browser. Nothing is sent anywhere except the '
+      +     'five rows and the column names, which become public.</p>'
+      + '</div>';
+
+    drawPreviewState();
+    listFiles();
+
+    var input = document.getElementById('fInput');
+    var drop = document.getElementById('fDrop');
+    drop.addEventListener('click', function(){ input.click(); });
+    ['dragenter','dragover'].forEach(function(ev){
+      drop.addEventListener(ev, function(e){ e.preventDefault(); drop.classList.add('over'); });
+    });
+    ['dragleave','drop'].forEach(function(ev){
+      drop.addEventListener(ev, function(e){ e.preventDefault(); drop.classList.remove('over'); });
+    });
+    drop.addEventListener('drop', function(e){ uploadFiles(e.dataTransfer.files); });
+    input.addEventListener('change', function(){ uploadFiles(input.files); });
+
+    document.getElementById('fRebuild').addEventListener('click', rebuildPreview);
+    document.getElementById('fCols').addEventListener('click', columnsFromCsv);
+  }
+
+  function drawPreviewState(){
+    var el = document.getElementById('fPreviewState');
+    if (!el) return;
+    var pv = ds.preview_rows;
+    if (!pv || !pv.rows) {
+      el.innerHTML = '<div class="ka-rank-empty">No preview stored yet. The dataset page will show '
+        + 'the story and columns but no sample rows.</div>';
+      return;
+    }
+    el.innerHTML = '<div class="ka-kpis" style="margin-bottom:0;">'
+      + '<div class="ka-kpi"><div class="ka-kpi-label">Rows in the file</div>'
+      +   '<div class="ka-kpi-value">' + KA.nf(pv.total_rows) + '</div></div>'
+      + '<div class="ka-kpi"><div class="ka-kpi-label">Columns</div>'
+      +   '<div class="ka-kpi-value">' + KA.nf((pv.columns || []).length) + '</div></div>'
+      + '<div class="ka-kpi"><div class="ka-kpi-label">Preview rows</div>'
+      +   '<div class="ka-kpi-value">' + KA.nf((pv.rows || []).length) + '</div></div>'
+      + '</div>';
+  }
+
+  function listFiles(){
+    var host = document.getElementById('fList');
+    if (!host) return;
+    host.innerHTML = '<div class="ka-rank-empty">Loading files</div>';
+    KA.supa.storage.from('datasets').list(storagePath()).then(function(r){
+      if (r.error) { host.innerHTML = '<div class="ka-rank-empty">' + KA.esc(r.error.message) + '</div>'; return; }
+      var files = (r.data || []).filter(function(f){ return f.name !== '.emptyFolderPlaceholder'; });
+      if (!files.length) { host.innerHTML = '<div class="ka-rank-empty">No files uploaded yet.</div>'; return; }
+      host.innerHTML = files.map(function(f){
+        var kb = f.metadata && f.metadata.size ? Math.round(f.metadata.size / 1024) : null;
+        return '<div class="ka-filerow"><span>' + KA.esc(f.name) + '</span>'
+          + '<span class="ka-filerow-meta">'
+          + (kb ? (kb > 1024 ? (kb / 1024).toFixed(1) + ' MB' : kb + ' KB') : '')
+          + ' <button class="ka-btn ka-btn-sm ka-btn-danger" data-rm="' + KA.esc(f.name) + '">Remove</button>'
+          + '</span></div>';
+      }).join('');
+      Array.prototype.forEach.call(host.querySelectorAll('[data-rm]'), function(b){
+        b.addEventListener('click', function(){
+          var name = b.getAttribute('data-rm');
+          if (!KA.confirm('Remove ' + name + ' from storage?')) return;
+          KA.supa.storage.from('datasets').remove([storagePath() + '/' + name]).then(function(rr){
+            if (rr.error) { KA.toast(rr.error.message, true); return; }
+            KA.toast(name + ' removed');
+            listFiles();
+          });
+        });
+      });
+    });
+  }
+
+  function uploadFiles(fileList){
+    var files = Array.prototype.slice.call(fileList || []);
+    if (!files.length) return;
+    var prog = document.getElementById('fProg');
+    var fill = document.getElementById('fProgFill');
+    prog.hidden = false;
+    var done = 0;
+
+    (function next(){
+      if (!files.length) {
+        prog.hidden = true; fill.style.width = '0';
+        KA.toast(done + (done === 1 ? ' file uploaded' : ' files uploaded'));
+        listFiles();
+        return;
+      }
+      var f = files.shift();
+      KA.supa.storage.from('datasets')
+        .upload(storagePath() + '/' + f.name, f, { upsert: true, cacheControl: '3600' })
+        .then(function(r){
+          if (r.error) KA.toast(f.name + ': ' + r.error.message, true);
+          else done++;
+          fill.style.width = Math.round((done / (done + files.length)) * 100) + '%';
+          next();
+        });
+    })();
+  }
+
+  // --------------------------------------------- CSV helpers, run in this browser
+  function parseCsv(text){
+    var rows = [], row = [], cur = '', i = 0, inQ = false, n = text.length;
+    while (i < n){
+      var c = text.charAt(i);
+      if (inQ){
+        if (c === '"'){
+          if (text.charAt(i+1) === '"'){ cur += '"'; i += 2; continue; }
+          inQ = false; i++; continue;
+        }
+        cur += c; i++; continue;
+      }
+      if (c === '"'){ inQ = true; i++; continue; }
+      if (c === ','){ row.push(cur); cur = ''; i++; continue; }
+      if (c === '\r'){ i++; continue; }
+      if (c === '\n'){ row.push(cur); rows.push(row); row = []; cur = ''; i++; continue; }
+      cur += c; i++;
+    }
+    if (cur.length || row.length){ row.push(cur); rows.push(row); }
+    return rows;
+  }
+
+  function withCsv(cb){
+    KA.supa.storage.from('datasets').list(storagePath()).then(function(r){
+      if (r.error) { KA.toast(r.error.message, true); return; }
+      var csv = (r.data || []).filter(function(f){ return /\.csv$/i.test(f.name); })[0];
+      if (!csv) { KA.toast('No CSV file in storage for this dataset', true); return; }
+      KA.toast('Reading ' + csv.name);
+      KA.supa.storage.from('datasets')
+        .createSignedUrl(storagePath() + '/' + csv.name, 600)
+        .then(function(s){
+          if (s.error) { KA.toast(s.error.message, true); return; }
+          fetch(s.data.signedUrl).then(function(res){ return res.text(); }).then(function(text){
+            var rows = parseCsv(text).filter(function(x){ return x.length > 1 || (x[0] && x[0].trim()); });
+            cb(rows);
+          }).catch(function(e){ KA.toast('Could not read the CSV: ' + e.message, true); });
+        });
+    });
+  }
+
+  function rebuildPreview(){
+    withCsv(function(rows){
+      if (rows.length < 2) { KA.toast('That CSV has no data rows', true); return; }
+      var pv = {
+        columns: rows[0],
+        rows: rows.slice(1, 6),
+        total_rows: rows.length - 1
+      };
+      save({ preview_rows: pv }, 'Preview rebuilt, ' + KA.nf(pv.total_rows) + ' rows counted')
+        .then(function(){ drawPreviewState(); });
+    });
+  }
+
+  function columnsFromCsv(){
+    withCsv(function(rows){
+      var header = rows[0] || [];
+      if (!header.length) { KA.toast('No header row found', true); return; }
+      var existing = {};
+      schema.forEach(function(c){ existing[c.column_name] = c.description; });
+      var payload = header.map(function(name, i){
+        return {
+          dataset_id: id,
+          column_name: name,
+          description: existing[name] || '',
+          sort_order: i
+        };
+      });
+      KA.supa.from('dataset_schema').delete().eq('dataset_id', id).then(function(r){
+        if (r.error) { KA.toast(r.error.message, true); return; }
+        KA.supa.from('dataset_schema').insert(payload).then(function(r2){
+          if (r2.error) { KA.toast(r2.error.message, true); return; }
+          schema = payload;
+          KA.toast(payload.length + ' columns built. Descriptions kept where they already existed.');
+        });
+      });
+    });
+  }
+
+  // ---------------------------------------------------------------- images
+  function imagesTab(host){
+    host.innerHTML =
+        '<div class="ka-card">'
+      +   '<div class="ka-card-head"><div><h2>Images</h2>'
+      +     '<p class="ka-card-sub">These go into the public images bucket, so anyone with the link can see them. '
+      +     'Do not put anything here that should stay behind the paywall.</p></div></div>'
+      +   imageSlot('hero_image_url', 'Hero image', 'Wide image at the top of the dataset page. About 1600 by 900.')
+      +   imageSlot('card_image_url', 'Card image', 'Square or wide thumbnail on the folder page. About 800 by 600.')
+      +   imageSlot('og_image_url', 'Social share image', 'What shows when the link is pasted into WhatsApp or LinkedIn. 1200 by 630.')
+      + '</div>'
+      + '<input type="file" id="imgInput" accept="image/*" hidden>';
+
+    var pendingField = null;
+    var input = document.getElementById('imgInput');
+
+    Array.prototype.forEach.call(host.querySelectorAll('[data-img-pick]'), function(b){
+      b.addEventListener('click', function(){
+        pendingField = b.getAttribute('data-img-pick');
+        input.value = '';
+        input.click();
+      });
+    });
+    Array.prototype.forEach.call(host.querySelectorAll('[data-img-clear]'), function(b){
+      b.addEventListener('click', function(){
+        var field = b.getAttribute('data-img-clear');
+        var patch = {}; patch[field] = null;
+        save(patch, 'Image removed').then(function(){ imagesTab(document.getElementById('kaTabBody')); });
+      });
+    });
+    Array.prototype.forEach.call(host.querySelectorAll('[data-img-url]'), function(inp){
+      inp.addEventListener('change', function(){
+        var field = inp.getAttribute('data-img-url');
+        var patch = {}; patch[field] = inp.value.trim() || null;
+        save(patch, 'Image link saved');
+      });
+    });
+
+    input.addEventListener('change', function(){
+      var f = input.files && input.files[0];
+      if (!f || !pendingField) return;
+      var ext = (f.name.split('.').pop() || 'jpg').toLowerCase();
+      var path = 'datasets/' + ds.slug + '/' + pendingField.replace('_url', '') + '-' + Date.now() + '.' + ext;
+      KA.toast('Uploading');
+      KA.supa.storage.from('images').upload(path, f, { upsert: true, cacheControl: '31536000' })
+        .then(function(r){
+          if (r.error) { KA.toast(r.error.message, true); return; }
+          var pub = KA.supa.storage.from('images').getPublicUrl(path);
+          var patch = {}; patch[pendingField] = pub.data.publicUrl;
+          save(patch, 'Image uploaded').then(function(){
+            imagesTab(document.getElementById('kaTabBody'));
+          });
+        });
+    });
+  }
+
+  function imageSlot(field, label, hint){
+    var url = ds[field];
+    return '<div class="ka-field" style="border-top:1px solid var(--line); padding-top:1rem;">'
+      + '<label class="ka-label">' + KA.esc(label) + '</label>'
+      + '<p class="ka-hint" style="margin-top:0; margin-bottom:0.6rem;">' + KA.esc(hint) + '</p>'
+      + (url ? '<img class="ka-thumb" src="' + KA.esc(url) + '" alt="">' : '')
+      + '<input class="ka-input" data-img-url="' + field + '" value="' + KA.esc(url || '') + '" '
+      +   'placeholder="Upload below, or paste a link">'
+      + '<div class="ka-btnrow" style="margin-top:0.6rem;">'
+      +   '<button class="ka-btn ka-btn-sm" data-img-pick="' + field + '">Upload image</button>'
+      +   (url ? '<button class="ka-btn ka-btn-sm ka-btn-danger" data-img-clear="' + field + '">Remove</button>' : '')
+      + '</div></div>';
+  }
+
+  // ---------------------------------------------------------------- seo
+  function seoTab(host){
+    var title = ds.seo_title || ds.title || '';
+    var desc = ds.seo_description || ds.short_description || '';
+    var url = ds.canonical_url || ('https://dataset-marketplace-kojoh.vercel.app/dataset.html?slug=' + ds.slug);
+
+    host.innerHTML =
+        '<div class="ka-card">'
+      +   '<div class="ka-card-head"><div><h2>Search engine</h2>'
+      +     '<p class="ka-card-sub">Stored now and read by the live page. Real crawler coverage needs '
+      +     'prerendering, which is the next job after this portal.</p></div></div>'
+      +   '<div class="ka-field"><label class="ka-label">Meta title</label>'
+      +     '<input class="ka-input" id="sTitle" value="' + KA.esc(ds.seo_title || '') + '" '
+      +     'placeholder="' + KA.esc(ds.title) + '"><div class="ka-count" id="sTitleCount"></div></div>'
+      +   '<div class="ka-field"><label class="ka-label">Meta description</label>'
+      +     '<textarea class="ka-textarea" id="sDesc" placeholder="' + KA.esc((ds.short_description || '').slice(0,150))
+      +     '">' + KA.esc(ds.seo_description || '') + '</textarea><div class="ka-count" id="sDescCount"></div></div>'
+      +   '<div class="ka-field"><label class="ka-label">Keywords</label>'
+      +     '<input class="ka-input" id="sKw" value="' + KA.esc(ds.seo_keywords || '') + '" '
+      +     'placeholder="tata sales dataset, sql practice dataset, data analyst portfolio project">'
+      +     '<p class="ka-hint">Comma separated. Low weight for ranking, still useful as your own record of intent.</p></div>'
+      +   '<div class="ka-field"><label class="ka-label">Canonical URL</label>'
+      +     '<input class="ka-input" id="sCanon" value="' + KA.esc(ds.canonical_url || '') + '" '
+      +     'placeholder="' + KA.esc(url) + '"></div>'
+      +   '<button class="ka-btn ka-btn-primary" id="sSave">Save SEO</button>'
+      + '</div>'
+      + '<div class="ka-card"><div class="ka-card-head"><div><h2>Search result preview</h2>'
+      +   '<p class="ka-card-sub">Roughly how this looks on a results page.</p></div></div>'
+      +   '<div style="border:1px solid var(--line); border-radius:var(--radius-sm); padding:1rem; background:var(--bg);">'
+      +     '<div style="font-size:0.75rem; color:var(--muted);" id="pUrl"></div>'
+      +     '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:1.05rem; font-weight:600; margin:0.2rem 0;" id="pTitle"></div>'
+      +     '<div style="font-size:0.8125rem; color:var(--muted); line-height:1.5;" id="pDesc"></div>'
+      +   '</div></div>';
+
+    function paint(){
+      document.getElementById('pUrl').textContent =
+        (document.getElementById('sCanon').value.trim() || url).replace(/^https?:\/\//, '');
+      document.getElementById('pTitle').textContent =
+        document.getElementById('sTitle').value.trim() || title;
+      var dv = document.getElementById('sDesc').value.trim() || desc;
+      document.getElementById('pDesc').textContent = dv.length > 165 ? dv.slice(0, 165) + '...' : dv;
+    }
+    ['sTitle','sDesc','sCanon'].forEach(function(i){
+      document.getElementById(i).addEventListener('input', paint);
+    });
+
+    counter('sTitle', 'sTitleCount', 60);
+    counter('sDesc', 'sDescCount', 155);
+    paint();
+
+    document.getElementById('sSave').addEventListener('click', function(){
+      save({
+        seo_title: document.getElementById('sTitle').value.trim() || null,
+        seo_description: document.getElementById('sDesc').value.trim() || null,
+        seo_keywords: document.getElementById('sKw').value.trim() || null,
+        canonical_url: document.getElementById('sCanon').value.trim() || null
+      }, 'SEO saved');
+    });
+  }
+
+  function counter(inputId, countId, ideal){
+    var input = document.getElementById(inputId);
+    var out = document.getElementById(countId);
+    function upd(){
+      var n = input.value.length;
+      out.textContent = n + ' of about ' + ideal + ' characters';
+      out.classList.toggle('over', n > ideal);
+    }
+    input.addEventListener('input', upd);
+    upd();
+  }
+});
+</script>
+</body>
+</html>

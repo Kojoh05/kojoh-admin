@@ -1,0 +1,339 @@
+/* ============================================================
+   KOJOH Admin Portal
+   Monochrome. One ink colour does all the work.
+   ============================================================ */
+
+:root{
+  --bg:#F4F1EA;
+  --card:#FFFFFF;
+  --sunk:#EFECE4;
+  --text:#1C1A1E;
+  --muted:#7A7772;
+  --faint:#A4A09A;
+  --line:#E4E0D6;
+  --ink:#1C1A1E;          /* data mark colour */
+  --track:#E4E0D6;        /* unfilled track, one step off surface */
+  --grid:#E9E5DB;         /* hairline grid, one step off surface */
+  --radius:14px;
+  --radius-sm:9px;
+  --danger:#B3261E;
+  --ok:#1F6F4A;
+}
+[data-theme="dark"]{
+  --bg:#131216;
+  --card:#1C1A20;
+  --sunk:#232128;
+  --text:#EDEBE6;
+  --muted:#8F8B94;
+  --faint:#6A6672;
+  --line:#2E2B34;
+  --ink:#EDEBE6;
+  --track:#2E2B34;
+  --grid:#272430;
+  --danger:#F2B8B5;
+  --ok:#7FD1A6;
+}
+
+*{box-sizing:border-box;}
+html,body{margin:0; padding:0;}
+body{
+  font-family:'IBM Plex Sans', system-ui, sans-serif;
+  background:var(--bg); color:var(--text);
+  font-size:15px; line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{font-family:'Space Grotesk', system-ui, sans-serif; margin:0; line-height:1.25;}
+a{color:inherit;}
+button,input,select,textarea{font-family:inherit; font-size:inherit; color:inherit;}
+
+/* ------------------------------------------------------------ shell */
+.ka-shell{display:flex; min-height:100vh;}
+.ka-side{
+  width:15rem; flex-shrink:0; background:var(--card);
+  border-right:1px solid var(--line);
+  display:flex; flex-direction:column; position:sticky; top:0; height:100vh;
+}
+.ka-brand{
+  padding:1.3rem 1.25rem 1rem; border-bottom:1px solid var(--line);
+}
+.ka-brand-mark{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:1.05rem; letter-spacing:0.01em;}
+.ka-brand-sub{font-size:0.6875rem; letter-spacing:0.09em; text-transform:uppercase; color:var(--muted); margin-top:2px;}
+.ka-nav{padding:0.75rem 0.7rem; display:flex; flex-direction:column; gap:2px; flex:1; overflow:auto;}
+.ka-nav a{
+  display:flex; align-items:center; gap:0.6rem;
+  padding:0.52rem 0.7rem; border-radius:var(--radius-sm);
+  text-decoration:none; font-size:0.875rem; font-weight:500; color:var(--muted);
+}
+.ka-nav a:hover{background:var(--sunk); color:var(--text);}
+.ka-nav a.on{background:var(--ink); color:var(--bg); font-weight:600;}
+.ka-nav a svg{flex-shrink:0;}
+.ka-side-foot{padding:0.85rem 1rem; border-top:1px solid var(--line); font-size:0.75rem; color:var(--muted);}
+.ka-side-foot strong{display:block; color:var(--text); font-size:0.8125rem; font-weight:600;}
+
+.ka-main{flex:1; min-width:0; padding:1.75rem 2rem 5rem;}
+.ka-head{
+  display:flex; align-items:flex-end; justify-content:space-between;
+  gap:1.5rem; flex-wrap:wrap; margin-bottom:1.5rem;
+}
+.ka-head h1{font-size:1.5rem; font-weight:700;}
+.ka-head p{margin:0.3rem 0 0; color:var(--muted); font-size:0.875rem; max-width:44rem;}
+
+/* ------------------------------------------------------------ filter row, one per view */
+.ka-filters{
+  display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;
+  margin:0 0 1.25rem;
+}
+.ka-seg{display:inline-flex; background:var(--card); border:1px solid var(--line); border-radius:999px; padding:2px;}
+.ka-seg button{
+  border:none; background:transparent; cursor:pointer; border-radius:999px;
+  padding:0.32rem 0.8rem; font-size:0.8125rem; font-weight:600; color:var(--muted);
+}
+.ka-seg button.on{background:var(--ink); color:var(--bg);}
+
+/* ------------------------------------------------------------ cards */
+.ka-card{
+  background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+  padding:1.25rem 1.35rem; margin-bottom:1rem;
+}
+.ka-card-head{
+  display:flex; align-items:baseline; justify-content:space-between; gap:1rem;
+  margin-bottom:1rem;
+}
+.ka-card h2{font-size:1rem; font-weight:700;}
+.ka-card-sub{font-size:0.8125rem; color:var(--muted); margin:0.2rem 0 0;}
+.ka-grid2{display:grid; grid-template-columns:repeat(auto-fit, minmax(20rem, 1fr)); gap:1rem;}
+
+/* ------------------------------------------------------------ hero figure, exactly one per view */
+.ka-hero{
+  background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+  padding:1.5rem 1.5rem 1.35rem; margin-bottom:1rem;
+}
+.ka-hero-label{font-size:0.8125rem; color:var(--muted); margin-bottom:0.3rem;}
+.ka-hero-fig{
+  font-family:'Space Grotesk',sans-serif; font-size:3rem; font-weight:700;
+  line-height:1.05; letter-spacing:-0.02em;
+}
+.ka-hero-note{font-size:0.8125rem; color:var(--muted); margin-top:0.45rem;}
+
+/* ------------------------------------------------------------ KPI tiles */
+.ka-kpis{display:grid; grid-template-columns:repeat(auto-fit, minmax(11rem, 1fr)); gap:0.75rem; margin-bottom:1rem;}
+.ka-kpi{
+  background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+  padding:1rem 1.1rem;
+}
+.ka-kpi-label{font-size:0.75rem; color:var(--muted); margin-bottom:0.35rem;}
+.ka-kpi-value{
+  font-family:'Space Grotesk',sans-serif; font-size:1.65rem; font-weight:700; line-height:1.1;
+}
+.ka-kpi-sub{font-size:0.75rem; color:var(--muted); margin-top:0.3rem;}
+
+/* ------------------------------------------------------------ charts */
+.ka-chart{position:relative;}
+.ka-chart svg{display:block; width:100%; overflow:visible;}
+.ka-bar{fill:var(--ink);}
+.ka-bar-hit{fill:transparent; cursor:pointer;}
+.ka-grid-line{stroke:var(--grid); stroke-width:1; shape-rendering:crispEdges;}
+.ka-axis-text{
+  fill:var(--faint); font-size:10px; font-family:'IBM Plex Sans',sans-serif;
+  font-variant-numeric:tabular-nums;
+}
+.ka-mark-label{
+  fill:var(--muted); font-size:10px; font-weight:600;
+  font-family:'IBM Plex Sans',sans-serif;
+}
+.ka-tip{
+  position:absolute; pointer-events:none; z-index:20;
+  background:var(--ink); color:var(--bg);
+  padding:0.4rem 0.6rem; border-radius:var(--radius-sm);
+  font-size:0.75rem; font-weight:600; white-space:nowrap;
+  transform:translate(-50%, -115%); opacity:0; transition:opacity 0.1s ease;
+}
+.ka-tip.on{opacity:1;}
+.ka-chart-empty{
+  padding:2.5rem 1rem; text-align:center; color:var(--muted); font-size:0.8125rem;
+}
+.ka-refetching{opacity:0.45; transition:opacity 0.15s ease;}
+
+/* table twin for every chart */
+.ka-tableview{margin-top:0.9rem; border-top:1px solid var(--line); padding-top:0.75rem;}
+.ka-tableview summary{
+  cursor:pointer; font-size:0.75rem; color:var(--muted); font-weight:600;
+  list-style:none;
+}
+.ka-tableview summary::-webkit-details-marker{display:none;}
+.ka-tableview summary::before{content:"View as table"; }
+.ka-tableview[open] summary::before{content:"Hide table"; }
+.ka-tableview table{width:100%; border-collapse:collapse; margin-top:0.6rem;}
+.ka-tableview th, .ka-tableview td{
+  text-align:left; padding:0.3rem 0.5rem; font-size:0.75rem;
+  border-bottom:1px solid var(--line); font-variant-numeric:tabular-nums;
+}
+.ka-tableview th{color:var(--muted); font-weight:600;}
+.ka-tableview td:last-child, .ka-tableview th:last-child{text-align:right;}
+
+/* ------------------------------------------------------------ ranked lists */
+.ka-rank{display:flex; flex-direction:column; gap:0.6rem;}
+.ka-rank-row{display:grid; grid-template-columns:1fr auto; gap:0.5rem 0.75rem; align-items:baseline;}
+.ka-rank-name{font-size:0.8125rem; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.ka-rank-val{font-size:0.8125rem; font-weight:700; font-variant-numeric:tabular-nums;}
+.ka-rank-track{
+  grid-column:1 / -1; height:6px; border-radius:3px; background:var(--track); overflow:hidden;
+}
+.ka-rank-fill{height:100%; background:var(--ink); border-radius:0 3px 3px 0;}
+.ka-rank-empty{font-size:0.8125rem; color:var(--muted); padding:0.5rem 0;}
+
+/* ------------------------------------------------------------ data tables */
+.ka-table{width:100%; border-collapse:collapse;}
+.ka-table th{
+  text-align:left; font-size:0.6875rem; letter-spacing:0.06em; text-transform:uppercase;
+  color:var(--muted); font-weight:600; padding:0.5rem 0.65rem; border-bottom:1px solid var(--line);
+}
+.ka-table td{
+  padding:0.65rem; border-bottom:1px solid var(--line); font-size:0.875rem; vertical-align:middle;
+}
+.ka-table tbody tr:hover{background:var(--sunk);}
+.ka-table td.num, .ka-table th.num{text-align:right; font-variant-numeric:tabular-nums;}
+.ka-table-title{font-weight:600;}
+.ka-table-sub{font-size:0.75rem; color:var(--muted); margin-top:1px;}
+
+/* ------------------------------------------------------------ badges */
+.ka-badge{
+  display:inline-flex; align-items:center; gap:0.3rem;
+  font-size:0.6875rem; font-weight:600; padding:0.18rem 0.5rem;
+  border-radius:999px; border:1px solid var(--line); background:var(--sunk); color:var(--muted);
+  white-space:nowrap;
+}
+.ka-badge-live{background:var(--ink); color:var(--bg); border-color:var(--ink);}
+.ka-dot{width:0.4rem; height:0.4rem; border-radius:50%; background:currentColor;}
+
+/* ------------------------------------------------------------ buttons */
+.ka-btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:0.4rem;
+  padding:0.5rem 0.95rem; border-radius:999px; cursor:pointer;
+  border:1px solid var(--line); background:var(--card); color:var(--text);
+  font-size:0.8125rem; font-weight:600; text-decoration:none; line-height:1.3;
+}
+.ka-btn:hover{border-color:var(--ink);}
+.ka-btn:disabled{opacity:0.45; cursor:default;}
+.ka-btn-primary{background:var(--ink); color:var(--bg); border-color:var(--ink);}
+.ka-btn-primary:hover{opacity:0.88;}
+.ka-btn-danger{color:var(--danger); border-color:var(--danger);}
+.ka-btn-sm{padding:0.32rem 0.7rem; font-size:0.75rem;}
+.ka-btnrow{display:flex; gap:0.5rem; flex-wrap:wrap;}
+
+/* ------------------------------------------------------------ toggle */
+.ka-toggle{display:inline-flex; align-items:center; gap:0.55rem; cursor:pointer; user-select:none;}
+.ka-toggle input{position:absolute; opacity:0; width:0; height:0;}
+.ka-toggle-track{
+  width:2.3rem; height:1.3rem; border-radius:999px; background:var(--track);
+  border:1px solid var(--line); position:relative; transition:background 0.15s ease;
+  flex-shrink:0;
+}
+.ka-toggle-knob{
+  position:absolute; top:1px; left:1px; width:1.05rem; height:1.05rem; border-radius:50%;
+  background:var(--card); box-shadow:0 1px 3px rgba(0,0,0,0.25); transition:transform 0.15s ease;
+}
+.ka-toggle input:checked + .ka-toggle-track{background:var(--ink); border-color:var(--ink);}
+.ka-toggle input:checked + .ka-toggle-track .ka-toggle-knob{transform:translateX(1rem);}
+.ka-toggle-label{font-size:0.8125rem; font-weight:600;}
+
+/* ------------------------------------------------------------ forms */
+.ka-field{margin-bottom:1rem;}
+.ka-label{display:block; font-size:0.8125rem; font-weight:600; margin-bottom:0.3rem;}
+.ka-hint{font-size:0.75rem; color:var(--muted); margin:0.25rem 0 0; line-height:1.5;}
+.ka-input, .ka-textarea, .ka-select{
+  width:100%; padding:0.55rem 0.75rem; border-radius:var(--radius-sm);
+  border:1px solid var(--line); background:var(--bg); color:var(--text);
+}
+.ka-input:focus, .ka-textarea:focus, .ka-select:focus{outline:2px solid var(--ink); outline-offset:-1px;}
+.ka-textarea{min-height:7rem; resize:vertical; line-height:1.6;}
+.ka-textarea-tall{min-height:14rem;}
+.ka-row{display:grid; grid-template-columns:repeat(auto-fit, minmax(12rem, 1fr)); gap:0 1rem;}
+.ka-count{font-size:0.6875rem; color:var(--faint); text-align:right; margin-top:2px; font-variant-numeric:tabular-nums;}
+.ka-count.over{color:var(--danger); font-weight:600;}
+
+/* ------------------------------------------------------------ colour picker */
+.ka-swatches{display:flex; flex-wrap:wrap; gap:0.45rem;}
+.ka-swatch{
+  width:2rem; height:2rem; border-radius:50%; cursor:pointer;
+  border:2px solid var(--line); padding:0;
+}
+.ka-swatch.on{border-color:var(--ink); box-shadow:0 0 0 2px var(--card) inset;}
+
+/* ------------------------------------------------------------ upload */
+.ka-drop{
+  border:1px dashed var(--line); border-radius:var(--radius-sm);
+  padding:1.4rem 1rem; text-align:center; cursor:pointer; background:var(--bg);
+}
+.ka-drop:hover, .ka-drop.over{border-color:var(--ink); background:var(--sunk);}
+.ka-drop-title{font-size:0.8125rem; font-weight:600;}
+.ka-drop-sub{font-size:0.75rem; color:var(--muted); margin-top:0.2rem;}
+.ka-filelist{display:flex; flex-direction:column; gap:0.35rem; margin-top:0.75rem;}
+.ka-filerow{
+  display:flex; align-items:center; justify-content:space-between; gap:0.75rem;
+  padding:0.5rem 0.7rem; border:1px solid var(--line); border-radius:var(--radius-sm);
+  font-size:0.8125rem; background:var(--bg);
+}
+.ka-filerow-meta{font-size:0.75rem; color:var(--muted); flex-shrink:0;}
+.ka-progress{height:4px; border-radius:2px; background:var(--track); overflow:hidden; margin-top:0.5rem;}
+.ka-progress-fill{height:100%; background:var(--ink); width:0; transition:width 0.2s ease;}
+.ka-thumb{
+  width:100%; max-width:18rem; aspect-ratio:16/9; object-fit:cover;
+  border-radius:var(--radius-sm); border:1px solid var(--line); display:block; margin-bottom:0.6rem;
+  background:var(--sunk);
+}
+
+/* ------------------------------------------------------------ gate */
+.ka-gate{
+  min-height:100vh; display:flex; align-items:center; justify-content:center; padding:1.5rem;
+}
+.ka-gate-card{
+  width:100%; max-width:22rem; background:var(--card);
+  border:1px solid var(--line); border-radius:var(--radius); padding:2rem 1.75rem;
+}
+.ka-gate-card h1{font-size:1.25rem; margin-bottom:0.3rem;}
+.ka-gate-card p{font-size:0.8125rem; color:var(--muted); margin:0 0 1.25rem;}
+.ka-gate-err{
+  font-size:0.8125rem; color:var(--danger); margin:0.75rem 0 0; min-height:1.2rem;
+}
+
+/* ------------------------------------------------------------ toast */
+.ka-toasts{position:fixed; right:1.25rem; bottom:1.25rem; z-index:400; display:flex; flex-direction:column; gap:0.5rem;}
+.ka-toast{
+  background:var(--ink); color:var(--bg); padding:0.65rem 0.95rem;
+  border-radius:var(--radius-sm); font-size:0.8125rem; font-weight:600;
+  box-shadow:0 10px 30px rgba(0,0,0,0.25);
+  animation:kaIn 0.18s ease both;
+}
+.ka-toast-bad{background:var(--danger); color:#FFFFFF;}
+@keyframes kaIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;}}
+
+/* ------------------------------------------------------------ drawer */
+.ka-drawer{
+  position:fixed; inset:0; z-index:300; display:flex; justify-content:flex-end;
+  background:rgba(19,18,22,0.5);
+}
+.ka-drawer[hidden]{display:none;}
+.ka-drawer-panel{
+  width:min(38rem, 100%); background:var(--card); height:100%; overflow:auto;
+  border-left:1px solid var(--line); padding:1.5rem 1.6rem 4rem;
+  animation:kaSlide 0.2s cubic-bezier(.2,.8,.2,1) both;
+}
+@keyframes kaSlide{from{transform:translateX(20px); opacity:0;} to{transform:none; opacity:1;}}
+.ka-drawer-head{display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; margin-bottom:1.25rem;}
+.ka-drawer-head h2{font-size:1.15rem;}
+
+.ka-empty{padding:2.5rem 1rem; text-align:center; color:var(--muted); font-size:0.875rem;}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation:none !important; transition:none !important;}
+}
+@media (max-width:860px){
+  .ka-shell{flex-direction:column;}
+  .ka-side{width:auto; height:auto; position:static; flex-direction:row; align-items:center; overflow:auto;}
+  .ka-brand{border-bottom:none; border-right:1px solid var(--line); padding:0.9rem 1rem;}
+  .ka-nav{flex-direction:row; padding:0.5rem; flex:1;}
+  .ka-nav a span{display:none;}
+  .ka-side-foot{display:none;}
+  .ka-main{padding:1.25rem 1rem 4rem;}
+}

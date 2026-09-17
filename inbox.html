@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>KOJOH Admin | Inbox and signals</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="supabase-config.js"></script>
+<script src="admin-core.js"></script>
+<script>
+KA.boot('inbox', function(ctx){
+  var main = ctx.main;
+
+  main.innerHTML =
+      '<div class="ka-head"><div><h1>Inbox and signals</h1>'
+    +   '<p>What people asked for, in their own words, and what they typed into search.</p></div></div>'
+    + '<div class="ka-card"><div class="ka-card-head"><div><h2>Suggestions</h2>'
+    +   '<p class="ka-card-sub">Sent from the suggestions box on the live site.</p></div></div>'
+    +   '<div id="kaSug"><div class="ka-empty">Loading</div></div></div>'
+    + '<div class="ka-grid2">'
+    +   '<div class="ka-card"><div class="ka-card-head"><div><h2>App feedback</h2>'
+    +     '<p class="ka-card-sub">The thumbs up and thumbs down vote.</p></div></div>'
+    +     '<div id="kaFeed"></div></div>'
+    +   '<div class="ka-card"><div class="ka-card-head"><div><h2>Recent searches</h2>'
+    +     '<p class="ka-card-sub">The last 50 things people typed, newest first. '
+    +     'A zero next to one means the search returned nothing.</p></div></div>'
+    +     '<div id="kaSearch"></div></div>'
+    + '</div>';
+
+  // ------------------------------------------------------------ suggestions
+  KA.supa.from('suggestions').select('id, message, created_at, user_id')
+    .order('created_at', { ascending: false }).limit(100)
+    .then(function(r){
+      var host = document.getElementById('kaSug');
+      if (r.error) { host.innerHTML = err(r.error.message); return; }
+      var rows = r.data || [];
+      if (!rows.length) {
+        host.innerHTML = '<div class="ka-empty">Nothing yet. This fills up as people use the suggestion box.</div>';
+        return;
+      }
+      var ids = rows.map(function(x){ return x.user_id; }).filter(Boolean);
+      KA.supa.from('profiles').select('id, username, email').in('id', ids.length ? ids : ['00000000-0000-0000-0000-000000000000'])
+        .then(function(p){
+          var who = {};
+          (p.data || []).forEach(function(u){ who[u.id] = u; });
+          host.innerHTML = '<table class="ka-table"><thead><tr><th>Message</th><th>From</th><th>When</th></tr></thead><tbody>'
+            + rows.map(function(s){
+                var u = who[s.user_id];
+                return '<tr><td>' + KA.esc(s.message) + '</td>'
+                  + '<td>' + (u ? '<div class="ka-table-title">' + KA.esc(u.username) + '</div>'
+                      + '<div class="ka-table-sub">' + KA.esc(u.email) + '</div>' : 'Signed out') + '</td>'
+                  + '<td>' + KA.esc(KA.date(s.created_at)) + '</td></tr>';
+              }).join('')
+            + '</tbody></table>';
+        });
+    });
+
+  // ------------------------------------------------------------ feedback
+  KA.supa.from('app_feedback').select('vote, updated_at')
+    .order('updated_at', { ascending: false })
+    .then(function(r){
+      var host = document.getElementById('kaFeed');
+      if (r.error) { host.innerHTML = err(r.error.message); return; }
+      var rows = r.data || [];
+      var up = rows.filter(function(x){ return x.vote === 'like'; }).length;
+      var down = rows.filter(function(x){ return x.vote === 'dislike'; }).length;
+      if (!rows.length) { host.innerHTML = '<div class="ka-empty">No votes yet.</div>'; return; }
+      host.innerHTML = '<div class="ka-kpis" style="margin-bottom:0.9rem;">'
+        + '<div class="ka-kpi"><div class="ka-kpi-label">Thumbs up</div>'
+        +   '<div class="ka-kpi-value">' + KA.nf(up) + '</div></div>'
+        + '<div class="ka-kpi"><div class="ka-kpi-label">Thumbs down</div>'
+        +   '<div class="ka-kpi-value">' + KA.nf(down) + '</div></div>'
+        + '<div class="ka-kpi"><div class="ka-kpi-label">Positive</div>'
+        +   '<div class="ka-kpi-value">' + (rows.length ? Math.round(up / rows.length * 100) : 0) + '%</div>'
+        +   '<div class="ka-kpi-sub">of ' + KA.nf(rows.length) + ' votes</div></div>'
+        + '</div>'
+        + '<p class="ka-hint">Last vote ' + KA.esc(KA.date(rows[0].updated_at)) + '.</p>';
+    });
+
+  // ------------------------------------------------------------ searches
+  KA.supa.from('search_log').select('query, results_count, created_at')
+    .order('created_at', { ascending: false }).limit(50)
+    .then(function(r){
+      var host = document.getElementById('kaSearch');
+      if (r.error) { host.innerHTML = err(r.error.message); return; }
+      var rows = r.data || [];
+      if (!rows.length) {
+        host.innerHTML = '<div class="ka-empty">No searches logged yet. This starts filling once the '
+          + 'live search page is updated to log them.</div>';
+        return;
+      }
+      host.innerHTML = '<table class="ka-table"><thead><tr><th>Query</th>'
+        + '<th class="num">Results</th><th>When</th></tr></thead><tbody>'
+        + rows.map(function(s){
+            return '<tr><td>' + KA.esc(s.query) + '</td>'
+              + '<td class="num">' + (s.results_count === null ? '' : KA.nf(s.results_count)) + '</td>'
+              + '<td>' + KA.esc(KA.date(s.created_at)) + '</td></tr>';
+          }).join('')
+        + '</tbody></table>';
+    });
+
+  function err(m){ return '<div class="ka-empty">' + KA.esc(m) + '</div>'; }
+});
+</script>
+</body>
+</html>

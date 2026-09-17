@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>KOJOH Admin | Folders and datasets</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="supabase-config.js"></script>
+<script src="admin-core.js"></script>
+<script>
+KA.boot('content', function(ctx){
+  var main = ctx.main;
+  var folders = [], datasets = [];
+
+  var SWATCHES = [
+    { key:'f-analyst',  hex:'#F3B63A', name:'Amber' },
+    { key:'f-engineer', hex:'#B9A6F0', name:'Violet' },
+    { key:'f-product',  hex:'#8FD3E8', name:'Sky' },
+    { key:'f-qa',       hex:'#F5A8A0', name:'Coral' },
+    { key:'f-python',   hex:'#9BD6A8', name:'Sage' },
+    { key:'f-sql',      hex:'#E8C9A0', name:'Sand' },
+    { key:'f-excel',    hex:'#C9CDD2', name:'Slate' },
+    { key:'f-viz',      hex:'#E4A8D0', name:'Rose' }
+  ];
+
+  main.innerHTML =
+      '<div class="ka-head">'
+    +   '<div><h1>Folders and datasets</h1>'
+    +   '<p>Everything the public site shows. Hiding something here takes it off the live site immediately, '
+    +   'except for buyers, who keep access to anything they already paid for.</p></div>'
+    +   '<div class="ka-btnrow">'
+    +     '<button class="ka-btn" id="kaNewFolder">New folder</button>'
+    +     '<button class="ka-btn ka-btn-primary" id="kaNewDataset">New dataset</button>'
+    +   '</div>'
+    + '</div>'
+    + '<div class="ka-card"><div class="ka-card-head"><div><h2>Folders</h2>'
+    +   '<p class="ka-card-sub">Each folder is a job track on the home page.</p></div></div>'
+    +   '<div id="kaFolders"><div class="ka-empty">Loading</div></div></div>'
+    + '<div class="ka-card"><div class="ka-card-head"><div><h2>Datasets</h2>'
+    +   '<p class="ka-card-sub">Open one to edit its story, columns, files, images and SEO.</p></div></div>'
+    +   '<div id="kaDatasets"><div class="ka-empty">Loading</div></div></div>'
+    + '<div class="ka-drawer" id="kaDrawer" hidden><div class="ka-drawer-panel" id="kaDrawerPanel"></div></div>';
+
+  document.getElementById('kaNewFolder').addEventListener('click', function(){ editFolder(null); });
+  document.getElementById('kaNewDataset').addEventListener('click', newDataset);
+  document.getElementById('kaDrawer').addEventListener('click', function(e){
+    if (e.target === this) closeDrawer();
+  });
+
+  function closeDrawer(){ document.getElementById('kaDrawer').hidden = true; }
+  function openDrawer(html){
+    document.getElementById('kaDrawerPanel').innerHTML = html;
+    document.getElementById('kaDrawer').hidden = false;
+  }
+
+  // ---------------------------------------------------------------- load
+  function loadAll(){
+    Promise.all([
+      KA.supa.from('folders').select('*').order('sort_order'),
+      KA.supa.from('datasets').select('*').order('created_at', { ascending: false })
+    ]).then(function(r){
+      if (r[0].error) { KA.toast(r[0].error.message, true); return; }
+      if (r[1].error) { KA.toast(r[1].error.message, true); return; }
+      folders = r[0].data || [];
+      datasets = r[1].data || [];
+      renderFolders();
+      renderDatasets();
+    });
+  }
+
+  function countIn(folderId){
+    return datasets.filter(function(d){ return d.folder_id === folderId; }).length;
+  }
+
+  function renderFolders(){
+    var host = document.getElementById('kaFolders');
+    if (!folders.length) {
+      host.innerHTML = '<div class="ka-empty">No folders yet. Create the first one to start a job track.</div>';
+      return;
+    }
+    host.innerHTML = '<table class="ka-table"><thead><tr>'
+      + '<th></th><th>Folder</th><th>Slug</th><th class="num">Datasets</th><th>Live</th><th></th>'
+      + '</tr></thead><tbody>'
+      + folders.map(function(f){
+          var hex = f.color_hex || (SWATCHES.filter(function(s){ return s.key === f.color_key; })[0] || {}).hex || '#CCCCCC';
+          return '<tr>'
+            + '<td><span style="display:inline-block;width:1.1rem;height:1.1rem;border-radius:50%;'
+            +   'background:' + KA.esc(hex) + ';border:1px solid var(--line);"></span></td>'
+            + '<td><div class="ka-table-title">' + KA.esc(f.title) + '</div>'
+            +   '<div class="ka-table-sub">' + KA.esc((f.description || '').slice(0, 90)) + '</div></td>'
+            + '<td><code>' + KA.esc(f.slug) + '</code></td>'
+            + '<td class="num">' + countIn(f.id) + '</td>'
+            + '<td>' + toggleHtml('folders', f.id, f.is_published) + '</td>'
+            + '<td style="text-align:right;"><button class="ka-btn ka-btn-sm" data-edit-folder="' + f.id + '">Edit</button></td>'
+            + '</tr>';
+        }).join('')
+      + '</tbody></table>';
+
+    wireToggles(host);
+    Array.prototype.forEach.call(host.querySelectorAll('[data-edit-folder]'), function(b){
+      b.addEventListener('click', function(){
+        editFolder(folders.filter(function(f){ return f.id === b.getAttribute('data-edit-folder'); })[0]);
+      });
+    });
+  }
+
+  function renderDatasets(){
+    var host = document.getElementById('kaDatasets');
+    if (!datasets.length) {
+      host.innerHTML = '<div class="ka-empty">No datasets yet.</div>';
+      return;
+    }
+    var byId = {};
+    folders.forEach(function(f){ byId[f.id] = f.title; });
+
+    host.innerHTML = '<table class="ka-table"><thead><tr>'
+      + '<th>Dataset</th><th>Folder</th><th class="num">Price</th><th>Live</th><th></th>'
+      + '</tr></thead><tbody>'
+      + datasets.map(function(d){
+          return '<tr>'
+            + '<td><div class="ka-table-title">' + KA.esc(d.title) + '</div>'
+            +   '<div class="ka-table-sub"><code>' + KA.esc(d.slug) + '</code>'
+            +   (d.difficulty ? ' &#183; ' + KA.esc(d.difficulty) : '') + '</div></td>'
+            + '<td>' + KA.esc(byId[d.folder_id] || 'No folder') + '</td>'
+            + '<td class="num">' + (d.is_free ? 'Free' : KA.inr(d.price)) + '</td>'
+            + '<td>' + toggleHtml('datasets', d.id, d.is_published) + '</td>'
+            + '<td style="text-align:right;"><a class="ka-btn ka-btn-sm" href="editor.html?id='
+            +   encodeURIComponent(d.id) + '">Edit</a></td>'
+            + '</tr>';
+        }).join('')
+      + '</tbody></table>';
+
+    wireToggles(host);
+  }
+
+  // ---------------------------------------------------------------- publish toggle
+  function toggleHtml(table, id, on){
+    return '<label class="ka-toggle"><input type="checkbox" data-pub-table="' + table + '" '
+      + 'data-pub-id="' + id + '"' + (on ? ' checked' : '') + '>'
+      + '<span class="ka-toggle-track"><span class="ka-toggle-knob"></span></span>'
+      + '<span class="ka-toggle-label">' + (on ? 'Live' : 'Hidden') + '</span></label>';
+  }
+
+  function wireToggles(host){
+    Array.prototype.forEach.call(host.querySelectorAll('[data-pub-id]'), function(cb){
+      cb.addEventListener('change', function(){
+        var table = cb.getAttribute('data-pub-table');
+        var id = cb.getAttribute('data-pub-id');
+        var on = cb.checked;
+        cb.disabled = true;
+        KA.supa.from(table).update({ is_published: on }).eq('id', id).then(function(r){
+          cb.disabled = false;
+          if (r.error) {
+            cb.checked = !on;
+            KA.toast(r.error.message, true);
+            return;
+          }
+          cb.parentNode.querySelector('.ka-toggle-label').textContent = on ? 'Live' : 'Hidden';
+          var row = (table === 'folders' ? folders : datasets)
+            .filter(function(x){ return x.id === id; })[0];
+          if (row) row.is_published = on;
+          KA.toast(on ? 'Now live on the site' : 'Hidden from the site');
+        });
+      });
+    });
+  }
+
+  // ---------------------------------------------------------------- folder editor
+  function editFolder(f){
+    var isNew = !f;
+    f = f || { title:'', slug:'', description:'', color_key:'f-analyst', color_hex:'',
+               view_type:'job', sort_order: folders.length + 1, is_published:true,
+               seo_title:'', seo_description:'', seo_keywords:'' };
+
+    var currentHex = f.color_hex || (SWATCHES.filter(function(s){ return s.key === f.color_key; })[0] || {}).hex || '#F3B63A';
+
+    openDrawer(
+        '<div class="ka-drawer-head"><h2>' + (isNew ? 'New folder' : 'Edit folder') + '</h2>'
+      +   '<button class="ka-btn ka-btn-sm" id="kaClose">Close</button></div>'
+      + '<div class="ka-field"><label class="ka-label">Title</label>'
+      +   '<input class="ka-input" id="fTitle" value="' + KA.esc(f.title) + '"></div>'
+      + '<div class="ka-field"><label class="ka-label">Slug</label>'
+      +   '<input class="ka-input" id="fSlug" value="' + KA.esc(f.slug) + '">'
+      +   '<p class="ka-hint">Used in the URL, for example folder.html?slug=data-analyst. Lowercase and hyphens.</p></div>'
+      + '<div class="ka-field"><label class="ka-label">Description</label>'
+      +   '<textarea class="ka-textarea" id="fDesc">' + KA.esc(f.description) + '</textarea></div>'
+      + '<div class="ka-field"><label class="ka-label">Colour</label>'
+      +   '<div class="ka-swatches" id="fSwatches">'
+      +     SWATCHES.map(function(s){
+              return '<button class="ka-swatch' + (s.hex.toLowerCase() === currentHex.toLowerCase() ? ' on' : '')
+                + '" style="background:' + s.hex + '" data-hex="' + s.hex + '" data-key="' + s.key
+                + '" title="' + s.name + '"></button>';
+            }).join('')
+      +   '</div>'
+      +   '<div class="ka-row" style="margin-top:0.6rem;">'
+      +     '<div><label class="ka-label">Custom hex</label>'
+      +       '<input class="ka-input" id="fHex" value="' + KA.esc(currentHex) + '"></div>'
+      +   '</div></div>'
+      + '<div class="ka-row">'
+      +   '<div class="ka-field"><label class="ka-label">Type</label>'
+      +     '<select class="ka-select" id="fType">'
+      +       '<option value="job"' + (f.view_type === 'job' ? ' selected' : '') + '>Job track</option>'
+      +       '<option value="practice"' + (f.view_type === 'practice' ? ' selected' : '') + '>Practice track</option>'
+      +     '</select></div>'
+      +   '<div class="ka-field"><label class="ka-label">Sort order</label>'
+      +     '<input class="ka-input" type="number" id="fSort" value="' + Number(f.sort_order || 0) + '"></div>'
+      + '</div>'
+      + '<div class="ka-field"><label class="ka-toggle"><input type="checkbox" id="fPub"'
+      +   (f.is_published ? ' checked' : '') + '><span class="ka-toggle-track">'
+      +   '<span class="ka-toggle-knob"></span></span>'
+      +   '<span class="ka-toggle-label">Show on the live site</span></label></div>'
+      + '<h2 style="font-size:0.95rem; margin:1.5rem 0 0.75rem;">Search engine</h2>'
+      + '<div class="ka-field"><label class="ka-label">Meta title</label>'
+      +   '<input class="ka-input" id="fSeoTitle" maxlength="70" value="' + KA.esc(f.seo_title || '') + '">'
+      +   '<div class="ka-count" id="fSeoTitleCount"></div></div>'
+      + '<div class="ka-field"><label class="ka-label">Meta description</label>'
+      +   '<textarea class="ka-textarea" id="fSeoDesc" maxlength="200">' + KA.esc(f.seo_description || '') + '</textarea>'
+      +   '<div class="ka-count" id="fSeoDescCount"></div></div>'
+      + '<div class="ka-field"><label class="ka-label">Keywords</label>'
+      +   '<input class="ka-input" id="fSeoKw" value="' + KA.esc(f.seo_keywords || '') + '">'
+      +   '<p class="ka-hint">Comma separated.</p></div>'
+      + '<div class="ka-btnrow" style="margin-top:1.5rem;">'
+      +   '<button class="ka-btn ka-btn-primary" id="fSave">' + (isNew ? 'Create folder' : 'Save changes') + '</button>'
+      +   (isNew ? '' : '<button class="ka-btn ka-btn-danger" id="fDelete">Delete</button>')
+      + '</div>'
+    );
+
+    document.getElementById('kaClose').addEventListener('click', closeDrawer);
+
+    var titleEl = document.getElementById('fTitle');
+    var slugEl = document.getElementById('fSlug');
+    if (isNew) {
+      titleEl.addEventListener('input', function(){ slugEl.value = KA.slugify(titleEl.value); });
+    }
+
+    document.getElementById('fSwatches').addEventListener('click', function(e){
+      var b = e.target.closest('.ka-swatch');
+      if (!b) return;
+      e.preventDefault();
+      Array.prototype.forEach.call(this.querySelectorAll('.ka-swatch'), function(x){ x.classList.remove('on'); });
+      b.classList.add('on');
+      document.getElementById('fHex').value = b.getAttribute('data-hex');
+      document.getElementById('fSwatches').setAttribute('data-key', b.getAttribute('data-key'));
+    });
+
+    countChars('fSeoTitle', 'fSeoTitleCount', 60);
+    countChars('fSeoDesc', 'fSeoDescCount', 155);
+
+    document.getElementById('fSave').addEventListener('click', function(){
+      var picked = document.getElementById('fSwatches').getAttribute('data-key') || f.color_key || 'f-analyst';
+      var payload = {
+        title: titleEl.value.trim(),
+        slug: KA.slugify(slugEl.value),
+        description: document.getElementById('fDesc').value.trim(),
+        color_key: picked,
+        color_hex: document.getElementById('fHex').value.trim() || null,
+        view_type: document.getElementById('fType').value,
+        sort_order: Number(document.getElementById('fSort').value) || 0,
+        is_published: document.getElementById('fPub').checked,
+        seo_title: document.getElementById('fSeoTitle').value.trim() || null,
+        seo_description: document.getElementById('fSeoDesc').value.trim() || null,
+        seo_keywords: document.getElementById('fSeoKw').value.trim() || null
+      };
+      if (!payload.title || !payload.slug) { KA.toast('Title and slug are required', true); return; }
+
+      var q = isNew
+        ? KA.supa.from('folders').insert(payload)
+        : KA.supa.from('folders').update(payload).eq('id', f.id);
+
+      q.then(function(r){
+        if (r.error) { KA.toast(r.error.message, true); return; }
+        KA.toast(isNew ? 'Folder created' : 'Folder saved');
+        closeDrawer();
+        loadAll();
+      });
+    });
+
+    var del = document.getElementById('fDelete');
+    if (del) del.addEventListener('click', function(){
+      if (countIn(f.id) > 0) {
+        KA.toast('Move or delete its datasets first', true);
+        return;
+      }
+      if (!KA.confirm('Delete the folder "' + f.title + '"? This cannot be undone.')) return;
+      KA.supa.from('folders').delete().eq('id', f.id).then(function(r){
+        if (r.error) { KA.toast(r.error.message, true); return; }
+        KA.toast('Folder deleted');
+        closeDrawer();
+        loadAll();
+      });
+    });
+  }
+
+  function countChars(inputId, countId, ideal){
+    var input = document.getElementById(inputId);
+    var out = document.getElementById(countId);
+    function upd(){
+      var n = input.value.length;
+      out.textContent = n + ' of about ' + ideal + ' characters';
+      out.classList.toggle('over', n > ideal);
+    }
+    input.addEventListener('input', upd);
+    upd();
+  }
+
+  // ---------------------------------------------------------------- new dataset
+  function newDataset(){
+    if (!folders.length) { KA.toast('Create a folder first', true); return; }
+    var title = window.prompt('Title for the new dataset');
+    if (!title) return;
+    var slug = KA.slugify(title);
+    KA.supa.from('datasets').insert({
+      folder_id: folders[0].id,
+      slug: slug,
+      title: title,
+      short_description: '',
+      long_description: '',
+      price: 0,
+      is_free: true,
+      difficulty: 'intermediate',
+      storage_path: slug,
+      is_published: false
+    }).select('id').maybeSingle().then(function(r){
+      if (r.error) { KA.toast(r.error.message, true); return; }
+      window.location.href = 'editor.html?id=' + encodeURIComponent(r.data.id);
+    });
+  }
+
+  loadAll();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>KOJOH Admin | Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="supabase-config.js"></script>
+<script src="admin-core.js"></script>
+<script>
+KA.boot('dashboard', function(ctx){
+  var main = ctx.main;
+  var days = 30;
+  var firstLoad = true;
+
+  main.innerHTML =
+      '<div class="ka-head">'
+    +   '<div><h1>Dashboard</h1>'
+    +   '<p>Everything happening on KOJOH. The window control below scopes every number and chart on this page.</p></div>'
+    +   '<a class="ka-btn" href="https://dataset-marketplace-kojoh.vercel.app" target="_blank" rel="noopener">Open live site</a>'
+    + '</div>'
+    + '<div class="ka-filters">'
+    +   '<div class="ka-seg" id="kaWindow">'
+    +     '<button data-d="7">7 days</button>'
+    +     '<button data-d="30" class="on">30 days</button>'
+    +     '<button data-d="90">90 days</button>'
+    +     '<button data-d="365">1 year</button>'
+    +   '</div>'
+    + '</div>'
+    + '<div id="kaBody"><div class="ka-empty">Loading</div></div>';
+
+  document.getElementById('kaWindow').addEventListener('click', function(e){
+    var b = e.target.closest('button');
+    if (!b) return;
+    Array.prototype.forEach.call(this.querySelectorAll('button'), function(x){ x.classList.remove('on'); });
+    b.classList.add('on');
+    days = Number(b.getAttribute('data-d'));
+    loadDash();
+  });
+
+  function fillDays(series, key){
+    // continuous day axis so gaps read as zero, not as missing time
+    var out = [], map = {};
+    (series || []).forEach(function(r){ map[r.day] = r; });
+    var span = Math.min(days, 90);
+    for (var i = span - 1; i >= 0; i--) {
+      var d = new Date();
+      d.setHours(0,0,0,0);
+      d.setDate(d.getDate() - i);
+      var iso = d.toISOString().slice(0, 10);
+      var hit = map[iso];
+      out.push({
+        label: KA.dayShort(iso),
+        value: hit ? Number(hit[key]) : 0,
+        sub: hit && key === 'amount' ? hit.n + (hit.n === 1 ? ' sale' : ' sales') : ''
+      });
+    }
+    return out;
+  }
+
+  function loadDash(){
+    var body = document.getElementById('kaBody');
+    if (!firstLoad) body.classList.add('ka-refetching');
+
+    KA.supa.rpc('admin_dashboard', { p_days: days }).then(function(res){
+      body.classList.remove('ka-refetching');
+      firstLoad = false;
+
+      if (res.error) {
+        body.innerHTML = '<div class="ka-card"><h2>Could not load the dashboard</h2>'
+          + '<p class="ka-card-sub">' + KA.esc(res.error.message) + '</p>'
+          + '<p class="ka-card-sub">If this says the function does not exist, run admin-schema.sql in Supabase first.</p></div>';
+        return;
+      }
+
+      var d = res.data || {};
+      var label = days === 365 ? 'last year' : 'last ' + days + ' days';
+
+      var html = '';
+
+      // exactly one hero figure on the page
+      html += '<div class="ka-hero">'
+           +   '<div class="ka-hero-label">Total earnings, all time</div>'
+           +   '<div class="ka-hero-fig">' + KA.inr(d.earnings_total) + '</div>'
+           +   '<div class="ka-hero-note">' + KA.inr(d.earnings_window) + ' in the ' + label
+           +     ' across ' + KA.nf(d.purchases_window) + ' of ' + KA.nf(d.purchases_total) + ' total purchases.'
+           +     (Number(d.earnings_total) === 0
+                  ? ' Everything is free while the purchase flow is in beta, so this stays at zero until you switch pricing on.'
+                  : '')
+           +   '</div>'
+           + '</div>';
+
+      html += '<div class="ka-kpis">'
+           + kpi('Total users', KA.nf(d.users_total), KA.nf(d.users_window) + ' joined in the ' + label)
+           + kpi('Active, 30 days', KA.nf(d.active_30d), KA.nf(d.active_7d) + ' in the last 7 days')
+           + kpi('Licenses claimed', KA.nf(d.licenses_claimed), 'of ' + KA.nf(d.licenses_total) + ' issued')
+           + kpi('Published datasets', KA.nf(d.datasets_published), KA.nf(d.datasets_total) + ' total, '
+               + KA.nf(Number(d.datasets_total) - Number(d.datasets_published)) + ' hidden')
+           + kpi('Folders live', KA.nf(d.folders_published), KA.nf(d.folders_total) + ' total')
+           + kpi('Feedback', KA.nf(d.feedback_like) + ' up', KA.nf(d.feedback_dislike) + ' down, '
+               + KA.nf(d.suggestions_total) + ' suggestions')
+           + '</div>';
+
+      html += '<div class="ka-grid2">'
+           +   chartCard('Signups per day', 'New accounts created in the ' + label + '.', 'kaSignups')
+           +   chartCard('Sales per day', 'Purchases in the ' + label + '. Value is revenue, hover for the count.', 'kaSales')
+           + '</div>';
+
+      html += '<div class="ka-grid2">'
+           +   rankCard('Roles people pick at signup',
+                        'What your audience says it is. This is what to build datasets for next.', 'kaRoles')
+           +   rankCard('Most bookmarked',
+                        'Wanted but not bought. Your pricing and packaging signal.', 'kaBookmarks')
+           +   rankCard('Most purchased',
+                        'What actually converts.', 'kaPurchased')
+           +   rankCard('Top searches',
+                        'What people typed into search in the ' + label + '.', 'kaSearches')
+           + '</div>';
+
+      html += '<div class="ka-card">'
+           +   '<div class="ka-card-head"><div><h2>Searches that found nothing</h2>'
+           +   '<p class="ka-card-sub">Demand you are not serving yet. The most useful list on this page.</p></div></div>'
+           +   '<div id="kaEmptySearch"></div>'
+           + '</div>';
+
+      body.innerHTML = html;
+
+      KA.columnChart(document.getElementById('kaSignups'), fillDays(d.signups_by_day, 'n'), {
+        id: 'signups', aria: 'Signups per day', xTitle: 'Day', yTitle: 'Signups',
+        empty: 'No signups in this window.'
+      });
+      KA.columnChart(document.getElementById('kaSales'), fillDays(d.sales_by_day, 'amount'), {
+        id: 'sales', aria: 'Revenue per day', xTitle: 'Day', yTitle: 'Revenue',
+        format: KA.inr, empty: 'No purchases in this window.'
+      });
+
+      KA.rankList(document.getElementById('kaRoles'),
+        (d.top_roles || []).map(function(r){ return { name: r.name, value: r.n }; }),
+        { empty: 'Nobody has picked a role yet.' });
+
+      KA.rankList(document.getElementById('kaBookmarks'),
+        (d.top_bookmarked || []).map(function(r){ return { name: r.title, value: r.n }; }),
+        { empty: 'No bookmarks yet.' });
+
+      KA.rankList(document.getElementById('kaPurchased'),
+        (d.top_purchased || []).map(function(r){ return { name: r.title, value: r.n }; }),
+        { empty: 'No purchases yet.' });
+
+      KA.rankList(document.getElementById('kaSearches'),
+        (d.top_searches || []).map(function(r){ return { name: r.query, value: r.n }; }),
+        { empty: 'No searches logged yet. This fills up once the live site starts logging them.' });
+
+      KA.rankList(document.getElementById('kaEmptySearch'),
+        (d.empty_searches || []).map(function(r){ return { name: r.query, value: r.n }; }),
+        { empty: 'Nothing yet. Every search so far returned at least one result.' });
+    });
+  }
+
+  function kpi(label, value, sub){
+    return '<div class="ka-kpi"><div class="ka-kpi-label">' + KA.esc(label) + '</div>'
+      + '<div class="ka-kpi-value">' + value + '</div>'
+      + '<div class="ka-kpi-sub">' + sub + '</div></div>';
+  }
+  function chartCard(title, sub, id){
+    return '<div class="ka-card"><div class="ka-card-head"><div><h2>' + KA.esc(title) + '</h2>'
+      + '<p class="ka-card-sub">' + KA.esc(sub) + '</p></div></div>'
+      + '<div class="ka-chart" id="' + id + '"></div></div>';
+  }
+  function rankCard(title, sub, id){
+    return '<div class="ka-card"><div class="ka-card-head"><div><h2>' + KA.esc(title) + '</h2>'
+      + '<p class="ka-card-sub">' + KA.esc(sub) + '</p></div></div>'
+      + '<div id="' + id + '"></div></div>';
+  }
+
+  loadDash();
+});
+</script>
+</body>
+</html>
