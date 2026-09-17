@@ -79,7 +79,11 @@ alter table public.search_log enable row level security;
 drop policy if exists "Anyone can log a search" on public.search_log;
 create policy "Anyone can log a search"
   on public.search_log for insert
-  with check (query is not null and length(query) between 1 and 120);
+  with check (
+    query is not null
+    and length(query) between 1 and 120
+    and (user_id is null or user_id = auth.uid())
+  );
 
 drop policy if exists "Admins read search log" on public.search_log;
 create policy "Admins read search log"
