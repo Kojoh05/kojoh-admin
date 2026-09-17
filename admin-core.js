@@ -129,12 +129,29 @@
       + '</div></div>';
   }
 
+  // TEMP: login gate is bypassed for preview. Set back to false once
+  // admin-schema.sql has been run in Supabase and is_admin is confirmed set,
+  // then real accounts will be checked again on every page load.
+  KA.SKIP_LOGIN = true;
+
   KA.boot = function(pageKey, onReady){
     if (!(window.SUPABASE_URL && window.SUPABASE_ANON_KEY && window.supabase)) {
       document.body.innerHTML = gateHtml('denied', 'Supabase is not configured. Fill in supabase-config.js.');
       return;
     }
     var supa = KA.supa = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
+
+    if (KA.SKIP_LOGIN) {
+      var previewProfile = { username: 'Preview', email: 'Login gate is off', is_admin: true };
+      document.body.innerHTML = shellHtml(pageKey, previewProfile);
+      document.getElementById('kaTheme').addEventListener('click', function(e){
+        e.preventDefault(); KA.toggleTheme();
+      });
+      var so = document.getElementById('kaSignOut');
+      if (so) so.style.display = 'none';
+      onReady({ session: null, profile: previewProfile, main: document.getElementById('kaMain') });
+      return;
+    }
 
     supa.auth.getSession().then(function(res){
       var session = res.data && res.data.session;
