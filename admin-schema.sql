@@ -170,9 +170,13 @@ $do$;
 
 
 -- ------------------------------------------------------------
--- 8. Storage. A public images bucket, and admin upload rights on
---    both buckets. The datasets bucket stays private.
+-- 8. Storage. A private datasets bucket, a public images bucket,
+--    and admin upload rights on both.
 -- ------------------------------------------------------------
+insert into storage.buckets (id, name, public)
+values ('datasets', 'datasets', false)
+on conflict (id) do nothing;
+
 insert into storage.buckets (id, name, public)
 values ('images', 'images', true)
 on conflict (id) do nothing;
