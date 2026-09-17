@@ -144,6 +144,10 @@ KA.boot('content', function(ctx){
       +       '<input class="ka-input" id="bPath" value="' + KA.esc(ds.storage_path || '') + '">'
       +       '<p class="ka-hint">Folder inside the datasets bucket.</p></div>'
       +   '</div>'
+      +   '<div class="ka-field"><label class="ka-label">AI coaching prompt</label>'
+      +     '<textarea class="ka-textarea ka-textarea-tall" id="bPrompt">' + KA.esc(ds.ai_prompt || '') + '</textarea>'
+      +     '<p class="ka-hint">What the copy prompt button on the Summary tab puts on a buyer\'s clipboard. '
+      +     'Leave this empty and the site builds one automatically from the story, the columns and their challenge pack.</p></div>'
       +   '<div class="ka-field"><label class="ka-toggle"><input type="checkbox" id="bFree"'
       +     (ds.is_free ? ' checked' : '') + '><span class="ka-toggle-track">'
       +     '<span class="ka-toggle-knob"></span></span>'
@@ -163,6 +167,7 @@ KA.boot('content', function(ctx){
         price: Number(document.getElementById('bPrice').value) || 0,
         difficulty: document.getElementById('bDiff').value,
         storage_path: document.getElementById('bPath').value.trim() || null,
+        ai_prompt: document.getElementById('bPrompt').value.trim() || null,
         is_free: document.getElementById('bFree').checked,
         locked_preview: lpNew
       }).then(function(ok){
