@@ -96,6 +96,10 @@
       +     'stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'
       +     '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/>'
       +     '</svg><span>Switch theme</span></a>'
+      +     '<a href="#" id="kaChangePw"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" '
+      +     'stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'
+      +     '<rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>'
+      +     '</svg><span>Change password</span></a>'
       +     '<a href="#" id="kaSignOut"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" '
       +     'stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'
       +     '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>'
@@ -105,7 +109,75 @@
       +     KA.esc(profile.email || '') + '</div>'
       + '</aside>'
       + '<main class="ka-main" id="kaMain"></main>'
+      + '<div class="ka-drawer" id="kaPwDrawer" hidden><div class="ka-drawer-panel" id="kaPwPanel"></div></div>'
       + '</div>';
+  }
+
+  // ------------------------------------------------------------ change password
+  function pwDrawerHtml(){
+    return '<div class="ka-drawer-head"><h2>Change password</h2>'
+      + '<button class="ka-btn ka-btn-sm" id="kaPwClose">Close</button></div>'
+      + '<form id="kaPwForm">'
+      + '<div class="ka-field"><label class="ka-label" for="kaPwCurrent">Current password</label>'
+      + '<input class="ka-input" type="password" id="kaPwCurrent" autocomplete="current-password" required></div>'
+      + '<div class="ka-field"><label class="ka-label" for="kaPwNew">New password</label>'
+      + '<input class="ka-input" type="password" id="kaPwNew" autocomplete="new-password" minlength="8" required></div>'
+      + '<div class="ka-field"><label class="ka-label" for="kaPwConfirm">Confirm new password</label>'
+      + '<input class="ka-input" type="password" id="kaPwConfirm" autocomplete="new-password" minlength="8" required></div>'
+      + '<button class="ka-btn ka-btn-primary" type="submit" id="kaPwSubmit" style="width:100%;">Update password</button>'
+      + '<p class="ka-gate-err" id="kaPwErr"></p>'
+      + '</form>';
+  }
+
+  function wireChangePassword(supa, session){
+    var link = document.getElementById('kaChangePw');
+    if (!link) return;
+    link.addEventListener('click', function(e){
+      e.preventDefault();
+      if (!session) {
+        KA.toast('Sign in with a real account first, the login gate is currently off.', true);
+        return;
+      }
+      var drawer = document.getElementById('kaPwDrawer');
+      var panel = document.getElementById('kaPwPanel');
+      panel.innerHTML = pwDrawerHtml();
+      drawer.hidden = false;
+
+      document.getElementById('kaPwClose').addEventListener('click', function(){ drawer.hidden = true; });
+      drawer.addEventListener('click', function(ev){ if (ev.target === drawer) drawer.hidden = true; });
+
+      document.getElementById('kaPwForm').addEventListener('submit', function(ev){
+        ev.preventDefault();
+        var cur = document.getElementById('kaPwCurrent').value;
+        var next = document.getElementById('kaPwNew').value;
+        var confirm = document.getElementById('kaPwConfirm').value;
+        var err = document.getElementById('kaPwErr');
+        var btn = document.getElementById('kaPwSubmit');
+        err.textContent = '';
+
+        if (next !== confirm) { err.textContent = 'New password and confirmation do not match.'; return; }
+        if (next.length < 8) { err.textContent = 'New password needs to be at least 8 characters.'; return; }
+
+        btn.disabled = true; btn.textContent = 'Checking current password';
+
+        // Supabase has no direct "verify password" call, so re-authenticating
+        // with the current password is how we confirm it before changing it.
+        supa.auth.signInWithPassword({ email: session.user.email, password: cur }).then(function(r){
+          if (r.error) {
+            btn.disabled = false; btn.textContent = 'Update password';
+            err.textContent = 'Current password is incorrect.';
+            return;
+          }
+          btn.textContent = 'Updating';
+          supa.auth.updateUser({ password: next }).then(function(u){
+            btn.disabled = false; btn.textContent = 'Update password';
+            if (u.error) { err.textContent = u.error.message; return; }
+            drawer.hidden = true;
+            KA.toast('Password updated.');
+          });
+        });
+      });
+    });
   }
 
   // ------------------------------------------------------------ gate
@@ -129,10 +201,7 @@
       + '</div></div>';
   }
 
-  // TEMP: login gate is bypassed for preview. Set back to false once
-  // admin-schema.sql has been run in Supabase and is_admin is confirmed set,
-  // then real accounts will be checked again on every page load.
-  KA.SKIP_LOGIN = true;
+  KA.SKIP_LOGIN = false;
 
   KA.boot = function(pageKey, onReady){
     if (!(window.SUPABASE_URL && window.SUPABASE_ANON_KEY && window.supabase)) {
@@ -149,6 +218,7 @@
       });
       var so = document.getElementById('kaSignOut');
       if (so) so.style.display = 'none';
+      wireChangePassword(supa, null);
       onReady({ session: null, profile: previewProfile, main: document.getElementById('kaMain') });
       return;
     }
@@ -202,6 +272,7 @@
           document.getElementById('kaTheme').addEventListener('click', function(e){
             e.preventDefault(); KA.toggleTheme();
           });
+          wireChangePassword(supa, session);
           onReady({ session: session, profile: r.data, main: document.getElementById('kaMain') });
         });
     }
