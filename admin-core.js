@@ -76,7 +76,9 @@
     { key:'content',   href:'content.html', label:'Folders and datasets',
       icon:'<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>' },
     { key:'inbox',     href:'inbox.html',   label:'Inbox and signals',
-      icon:'<path d="M4 4h16v12H7l-3 3z"/>' }
+      icon:'<path d="M4 4h16v12H7l-3 3z"/>' },
+    { key:'submissions', href:'submissions.html', label:'Challenge submissions',
+      icon:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6l6 6v10a2 2 0 0 1-2 2h-1M9 15l2 2 4-4"/>' }
   ];
 
   function shellHtml(active, profile){

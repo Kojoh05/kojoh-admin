@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>KOJOH Admin | Challenge submissions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="supabase-config.js"></script>
+<script src="admin-core.js"></script>
+<script>
+KA.boot('submissions', function(ctx){
+  var main = ctx.main;
+  var filter = 'pending';
+  var rows = [];
+  var who = {};
+  var datasetsById = {};
+
+  main.innerHTML =
+      '<div class="ka-head"><div><h1>Challenge submissions</h1>'
+    +   '<p>The GitHub repo and LinkedIn post each buyer sent in once they finished their task pack. '
+    +   'Award points once you\'ve checked the work, points then show on the public leaderboard.</p></div></div>'
+    + '<div class="ka-filters">'
+    +   '<div class="ka-seg" id="kaSubFilter">'
+    +     '<button data-f="pending" class="on">Pending</button>'
+    +     '<button data-f="reviewed">Reviewed</button>'
+    +     '<button data-f="all">All</button>'
+    +   '</div>'
+    + '</div>'
+    + '<div id="kaSubBody"><div class="ka-empty">Loading</div></div>'
+    + '<div class="ka-drawer" id="kaSubDrawer" hidden><div class="ka-drawer-panel" id="kaSubPanel"></div></div>';
+
+  document.getElementById('kaSubFilter').addEventListener('click', function(e){
+    var b = e.target.closest('button');
+    if (!b) return;
+    filter = b.getAttribute('data-f');
+    Array.prototype.forEach.call(document.querySelectorAll('#kaSubFilter button'), function(x){
+      x.classList.toggle('on', x === b);
+    });
+    renderTable();
+  });
+
+  loadAll();
+
+  function loadAll(){
+    document.getElementById('kaSubBody').innerHTML = '<div class="ka-empty">Loading</div>';
+    KA.supa.from('challenge_submissions')
+      .select('*, datasets(title, slug)')
+      .order('submitted_at', { ascending: false })
+      .then(function(r){
+        if (r.error) {
+          document.getElementById('kaSubBody').innerHTML = '<div class="ka-empty">' + KA.esc(r.error.message) + '</div>';
+          return;
+        }
+        rows = r.data || [];
+        var ids = rows.map(function(x){ return x.user_id; }).filter(Boolean);
+        if (!ids.length) { renderTable(); return; }
+        KA.supa.from('profiles').select('id, username, email').in('id', ids).then(function(p){
+          who = {};
+          (p.data || []).forEach(function(u){ who[u.id] = u; });
+          renderTable();
+        });
+      });
+  }
+
+  function renderTable(){
+    var host = document.getElementById('kaSubBody');
+    var list = rows.filter(function(r){
+      if (filter === 'all') return true;
+      return r.status === filter;
+    });
+
+    if (!list.length) {
+      host.innerHTML = '<div class="ka-card"><div class="ka-empty">'
+        + (filter === 'pending' ? 'Nothing waiting on review.' : 'Nothing here yet.') + '</div></div>';
+      return;
+    }
+
+    host.innerHTML = '<div class="ka-card"><table class="ka-table"><thead><tr>'
+      + '<th>Buyer</th><th>Dataset</th><th>License</th><th>Tasks</th>'
+      + '<th>Links</th><th>Submitted</th><th>Status</th><th></th>'
+      + '</tr></thead><tbody>'
+      + list.map(rowHtml).join('')
+      + '</tbody></table></div>';
+
+    Array.prototype.forEach.call(host.querySelectorAll('[data-review]'), function(b){
+      b.addEventListener('click', function(){ openDrawer(b.getAttribute('data-review')); });
+    });
+  }
+
+  function rowHtml(s){
+    var u = who[s.user_id];
+    var ds = s.datasets || {};
+    var reviewed = s.status === 'reviewed';
+    return '<tr>'
+      + '<td>' + (u ? '<div class="ka-table-title">' + KA.esc(u.username) + '</div><div class="ka-table-sub">' + KA.esc(u.email) + '</div>' : 'Unknown') + '</td>'
+      + '<td>' + KA.esc(ds.title || s.dataset_id) + '</td>'
+      + '<td>' + KA.esc(s.license_code) + '</td>'
+      + '<td class="num">' + KA.nf(s.tasks_done) + ' / ' + KA.nf(s.tasks_total) + '</td>'
+      + '<td><a href="' + KA.esc(s.github_url) + '" target="_blank" rel="noopener">GitHub</a> &middot; '
+      +     '<a href="' + KA.esc(s.linkedin_url) + '" target="_blank" rel="noopener">LinkedIn</a></td>'
+      + '<td>' + KA.esc(KA.date(s.submitted_at)) + '</td>'
+      + '<td>' + (reviewed
+          ? '<span class="ka-badge ka-badge-live">' + KA.nf(s.points || 0) + ' pts</span>'
+          : '<span class="ka-badge">Pending</span>') + '</td>'
+      + '<td><button class="ka-btn ka-btn-sm" data-review="' + s.id + '">' + (reviewed ? 'Edit score' : 'Review') + '</button></td>'
+      + '</tr>';
+  }
+
+  function openDrawer(id){
+    var s = rows.filter(function(x){ return x.id === id; })[0];
+    if (!s) return;
+    var u = who[s.user_id];
+    var ds = s.datasets || {};
+    var drawer = document.getElementById('kaSubDrawer');
+    var panel = document.getElementById('kaSubPanel');
+
+    panel.innerHTML =
+        '<div class="ka-drawer-head"><h2>Score this submission</h2>'
+      +   '<button class="ka-btn ka-btn-sm" id="kaSubClose">Close</button></div>'
+      + '<p class="ka-hint" style="margin-bottom:1rem;">'
+      +   '<strong>' + KA.esc(u ? u.username : 'Unknown buyer') + '</strong>' + (u ? ' &middot; ' + KA.esc(u.email) : '') + '<br>'
+      +   KA.esc(ds.title || s.dataset_id) + ', license ' + KA.esc(s.license_code) + ', '
+      +   KA.nf(s.tasks_done) + ' / ' + KA.nf(s.tasks_total) + ' tasks ticked.<br>'
+      +   '<a href="' + KA.esc(s.github_url) + '" target="_blank" rel="noopener">' + KA.esc(s.github_url) + '</a><br>'
+      +   '<a href="' + KA.esc(s.linkedin_url) + '" target="_blank" rel="noopener">' + KA.esc(s.linkedin_url) + '</a>'
+      + '</p>'
+      + '<form id="kaSubForm">'
+      +   '<div class="ka-field"><label class="ka-label" for="kaSubPoints">Points</label>'
+      +   '<input class="ka-input" type="number" min="0" step="1" id="kaSubPoints" value="' + (s.points == null ? '' : s.points) + '" required></div>'
+      +   '<div class="ka-field"><label class="ka-label" for="kaSubNotes">Notes, admin only</label>'
+      +   '<textarea class="ka-textarea" id="kaSubNotes">' + KA.esc(s.admin_notes || '') + '</textarea></div>'
+      +   '<button class="ka-btn ka-btn-primary" type="submit" style="width:100%;">'
+      +     (s.status === 'reviewed' ? 'Update score' : 'Award points and mark reviewed') + '</button>'
+      +   '<p class="ka-gate-err" id="kaSubErr"></p>'
+      + '</form>';
+    drawer.hidden = false;
+
+    document.getElementById('kaSubClose').addEventListener('click', function(){ drawer.hidden = true; });
+    drawer.addEventListener('click', function(ev){ if (ev.target === drawer) drawer.hidden = true; });
+
+    document.getElementById('kaSubForm').addEventListener('submit', function(ev){
+      ev.preventDefault();
+      var pts = parseInt(document.getElementById('kaSubPoints').value, 10);
+      var notes = document.getElementById('kaSubNotes').value;
+      var err = document.getElementById('kaSubErr');
+      var btn = ev.target.querySelector('button[type="submit"]');
+      if (!(pts >= 0)) { err.textContent = 'Points needs to be zero or more.'; return; }
+      btn.disabled = true; btn.textContent = 'Saving';
+
+      KA.supa.from('challenge_submissions').update({
+        points: pts,
+        admin_notes: notes,
+        status: 'reviewed',
+        reviewed_by: ctx.session ? ctx.session.user.id : null,
+        reviewed_at: new Date().toISOString()
+      }).eq('id', s.id).then(function(r){
+        if (r.error) {
+          btn.disabled = false;
+          btn.textContent = 'Award points and mark reviewed';
+          err.textContent = r.error.message;
+          return;
+        }
+        drawer.hidden = true;
+        KA.toast('Points saved, the leaderboard picks this up right away.');
+        loadAll();
+      });
+    });
+  }
+});
+</script>
+</body>
+</html>
