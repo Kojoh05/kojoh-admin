@@ -83,16 +83,18 @@
 
   function shellHtml(active, profile){
     var links = NAV.map(function(n){
-      return '<a href="' + n.href + '"' + (n.key === active ? ' class="on"' : '') + '>'
+      return '<a href="' + n.href + '"' + (n.key === active ? ' class="on" aria-current="page"' : '') + ' data-nav="' + n.key + '">'
         + '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
         + 'stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + n.icon + '</svg>'
-        + '<span>' + n.label + '</span></a>';
+        + '<span>' + n.label + '</span><b class="ka-navbadge" hidden></b></a>';
     }).join('');
 
     return '<div class="ka-shell">'
       + '<aside class="ka-side">'
-      +   '<div class="ka-brand"><div class="ka-brand-mark">KOJOH</div>'
+      +   '<div class="ka-brand"><div><div class="ka-brand-mark">KOJOH</div>'
       +     '<div class="ka-brand-sub">Admin portal</div></div>'
+      +     '<button class="ka-menubtn" id="kaMenuBtn" type="button" aria-label="Open menu" aria-expanded="false">'
+      +     '<span></span><span></span><span></span></button></div>'
       +   '<nav class="ka-nav">' + links
       +     '<a href="#" id="kaTheme"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" '
       +     'stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'
@@ -114,6 +116,43 @@
       + '<div class="ka-drawer" id="kaPwDrawer" hidden><div class="ka-drawer-panel" id="kaPwPanel"></div></div>'
       + '</div>';
   }
+
+  // ------------------------------------------------------------ shell behaviour
+  // Phone menu toggle, and a live count of submissions waiting on review
+  // beside the nav link, so pending work is visible from every page.
+  function wireShell(supa){
+    var side = document.querySelector('.ka-side');
+    var btn = document.getElementById('kaMenuBtn');
+    if (btn && side) {
+      btn.addEventListener('click', function(){
+        var open = side.classList.toggle('open');
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+      document.addEventListener('keydown', function(e){
+        if (e.key === 'Escape' && side.classList.contains('open')) { side.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); }
+      });
+    }
+    if (!supa) return;
+    supa.from('challenge_submissions').select('id', { count: 'exact', head: true }).eq('status', 'pending')
+      .then(function(r){
+        if (r.error || !r.count) return;
+        var b = document.querySelector('[data-nav="submissions"] .ka-navbadge');
+        if (!b) return;
+        b.textContent = r.count > 99 ? '99+' : String(r.count);
+        b.hidden = false;
+        b.setAttribute('aria-label', r.count + ' waiting on review');
+      }, function(){});
+  }
+  KA.refreshShellBadges = function(){
+    if (!KA.supa) return;
+    KA.supa.from('challenge_submissions').select('id', { count: 'exact', head: true }).eq('status', 'pending')
+      .then(function(r){
+        var b = document.querySelector('[data-nav="submissions"] .ka-navbadge');
+        if (!b || r.error) return;
+        b.hidden = !r.count;
+        b.textContent = r.count > 99 ? '99+' : String(r.count || '');
+      }, function(){});
+  };
 
   // ------------------------------------------------------------ change password
   function pwDrawerHtml(){
@@ -221,6 +260,7 @@
       var so = document.getElementById('kaSignOut');
       if (so) so.style.display = 'none';
       wireChangePassword(supa, null);
+      wireShell(supa);
       onReady({ session: null, profile: previewProfile, main: document.getElementById('kaMain') });
       return;
     }
@@ -275,6 +315,7 @@
             e.preventDefault(); KA.toggleTheme();
           });
           wireChangePassword(supa, session);
+          wireShell(supa);
           onReady({ session: session, profile: r.data, main: document.getElementById('kaMain') });
         });
     }

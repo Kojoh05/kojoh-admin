@@ -50,13 +50,13 @@ KA.boot('inbox', function(ctx){
         .then(function(p){
           var who = {};
           (p.data || []).forEach(function(u){ who[u.id] = u; });
-          host.innerHTML = '<table class="ka-table"><thead><tr><th>Message</th><th>From</th><th>When</th></tr></thead><tbody>'
+          host.innerHTML = '<table class="ka-table ka-table-cards"><thead><tr><th>Message</th><th>From</th><th>When</th></tr></thead><tbody>'
             + rows.map(function(s){
                 var u = who[s.user_id];
-                return '<tr><td>' + KA.esc(s.message) + '</td>'
-                  + '<td>' + (u ? '<div class="ka-table-title">' + KA.esc(u.username) + '</div>'
+                return '<tr><td data-label="Message">' + KA.esc(s.message) + '</td>'
+                  + '<td data-label="From">' + (u ? '<div class="ka-table-title">' + KA.esc(u.username) + '</div>'
                       + '<div class="ka-table-sub">' + KA.esc(u.email) + '</div>' : 'Signed out') + '</td>'
-                  + '<td>' + KA.esc(KA.date(s.created_at)) + '</td></tr>';
+                  + '<td data-label="When">' + KA.esc(KA.date(s.created_at)) + '</td></tr>';
               }).join('')
             + '</tbody></table>';
         });

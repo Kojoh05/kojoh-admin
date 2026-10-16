@@ -97,6 +97,10 @@ KA.boot('dashboard', function(ctx){
            +   '</div>'
            + '</div>';
 
+      html += '<div class="ka-card"><div class="ka-card-head"><div><h2>Needs your attention</h2>'
+           +   '<p class="ka-card-sub">Work waiting on you, worst first.</p></div></div>'
+           +   '<div id="kaAttn"><div class="ka-empty" style="padding:1rem;">Checking</div></div></div>';
+
       html += '<div class="ka-kpis">'
            + kpi('Total users', KA.nf(d.users_total), KA.nf(d.users_window) + ' joined in the ' + label)
            + kpi('Active, 30 days', KA.nf(d.active_30d), KA.nf(d.active_7d) + ' in the last 7 days')
@@ -131,6 +135,7 @@ KA.boot('dashboard', function(ctx){
            + '</div>';
 
       body.innerHTML = html;
+      loadAttention(d);
 
       KA.columnChart(document.getElementById('kaSignups'), fillDays(d.signups_by_day, 'n'), {
         id: 'signups', aria: 'Signups per day', xTitle: 'Day', yTitle: 'Signups',
@@ -160,6 +165,52 @@ KA.boot('dashboard', function(ctx){
       KA.rankList(document.getElementById('kaEmptySearch'),
         (d.empty_searches || []).map(function(r){ return { name: r.query, value: r.n }; }),
         { empty: 'Nothing yet. Every search so far returned at least one result.' });
+    });
+  }
+
+  // The short list of things that need doing today: reviews, stock, gaps.
+  function loadAttention(d){
+    Promise.all([
+      KA.supa.from('challenge_submissions').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
+      KA.supa.rpc('dataset_shelf'),
+      KA.supa.from('datasets').select('id, title, slug, is_published')
+    ]).then(function(r){
+      var host = document.getElementById('kaAttn');
+      if (!host) return;
+      var rows = [];
+      var pending = (r[0] && !r[0].error && r[0].count) || 0;
+      if (pending) rows.push({ n: pending, warn: true, t: pending === 1 ? 'Submission waiting on review' : 'Submissions waiting on review',
+        s: 'Score them so points reach the leaderboard.', href: 'submissions.html' });
+
+      var shelf = (r[1] && !r[1].error && r[1].data) || [];
+      var sets = {}; ((r[2] && r[2].data) || []).forEach(function(x){ sets[x.id] = x; });
+      shelf.forEach(function(x){
+        if (!x.licenses_total) return;
+        var left = Number(x.licenses_left);
+        if (left / x.licenses_total > 0.2) return;
+        var ds = sets[x.dataset_id] || {};
+        rows.push({ n: left, warn: left <= 5, t: (ds.title || 'A dataset') + ' is running low',
+          s: left + ' of ' + x.licenses_total + ' licenses left. Seed more before it sells out.', href: 'editor.html?id=' + encodeURIComponent(x.dataset_id) });
+      });
+
+      var hidden = Object.keys(sets).filter(function(k){ return sets[k].is_published === false; }).length;
+      if (hidden) rows.push({ n: hidden, t: hidden === 1 ? 'Dataset is hidden' : 'Datasets are hidden', s: 'Drafts nobody can see yet.', href: 'content.html' });
+
+      var gaps = (d.empty_searches || []).reduce(function(a, x){ return a + Number(x.n || 0); }, 0);
+      if (gaps) rows.push({ n: gaps, t: 'Searches found nothing', s: 'Top miss: "' + (d.empty_searches[0].query || '') + '". Worth a dataset?', href: 'inbox.html' });
+
+      if (Number(d.suggestions_window)) rows.push({ n: d.suggestions_window, t: 'New suggestions', s: 'Ideas sent from the live site in this window.', href: 'inbox.html' });
+
+      if (!rows.length) {
+        host.innerHTML = '<div class="ka-allclear"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>All clear. Nothing is waiting on you.</div>';
+        return;
+      }
+      host.innerHTML = '<div class="ka-attn">' + rows.map(function(x){
+        return '<a class="ka-attn-row' + (x.warn ? ' warn' : '') + '" href="' + x.href + '">'
+          + '<span class="ka-attn-n">' + KA.nf(x.n) + '</span>'
+          + '<span class="ka-attn-txt"><strong>' + KA.esc(x.t) + '</strong><span>' + KA.esc(x.s) + '</span></span>'
+          + '<span class="ka-attn-go">Open &rarr;</span></a>';
+      }).join('') + '</div>';
     });
   }
 

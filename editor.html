@@ -18,7 +18,7 @@
 KA.boot('content', function(ctx){
   var main = ctx.main;
   var id = new URLSearchParams(location.search).get('id');
-  var ds = null, folders = [], schema = [], tab = 'basics';
+  var ds = null, folders = [], schema = [], tab = 'basics', dirty = false;
 
   if (!id) { main.innerHTML = '<div class="ka-empty">No dataset id in the link.</div>'; return; }
 
@@ -53,6 +53,7 @@ KA.boot('content', function(ctx){
       +     '<span class="ka-toggle-track"><span class="ka-toggle-knob"></span></span>'
       +     '<span class="ka-toggle-label">' + (ds.is_published ? 'Live' : 'Hidden') + '</span></label>'
       + '</div>'
+      + '<div id="kaReady"></div>'
       + '<div class="ka-filters"><div class="ka-seg" id="kaTabs">'
       +   '<button data-t="basics" class="on">Basics</button>'
       +   '<button data-t="columns">Columns</button>'
@@ -65,14 +66,28 @@ KA.boot('content', function(ctx){
     document.getElementById('kaTabs').addEventListener('click', function(e){
       var b = e.target.closest('button');
       if (!b) return;
-      Array.prototype.forEach.call(this.querySelectorAll('button'), function(x){ x.classList.remove('on'); });
-      b.classList.add('on');
-      tab = b.getAttribute('data-t');
-      renderTab();
+      goTab(b.getAttribute('data-t'));
     });
+
+    // Typing in a form tab marks it unsaved, so nothing is lost on a tab
+    // switch or a closed window. File pickers and auto-saving toggles are
+    // left out on purpose, they save on their own.
+    document.getElementById('kaTabBody').addEventListener('input', function(e){
+      if (tab !== 'basics' && tab !== 'seo') return;
+      if (e.target.type === 'file' || e.target.closest('.ka-toggle')) return;
+      setDirty(true);
+    });
+    document.getElementById('kaTabBody').addEventListener('change', function(e){
+      if (tab !== 'basics') return;
+      if (e.target.tagName === 'SELECT' || e.target.id === 'bFree') setDirty(true);
+    });
+    paintReady();
 
     document.getElementById('kaPub').addEventListener('change', function(){
       var on = this.checked, self = this;
+      var missing = readiness().filter(function(x){ return !x.ok && x.must; });
+      if (on && missing.length && !KA.confirm('Still missing: ' + missing.map(function(x){ return x.label; }).join(', ')
+          + '.\n\nPublish anyway?')) { self.checked = false; return; }
       self.disabled = true;
       KA.supa.from('datasets').update({ is_published: on }).eq('id', id).then(function(r){
         self.disabled = false;
@@ -81,6 +96,77 @@ KA.boot('content', function(ctx){
         self.parentNode.querySelector('.ka-toggle-label').textContent = on ? 'Live' : 'Hidden';
         KA.toast(on ? 'Now live on the site' : 'Hidden from the site');
       });
+    });
+  }
+
+  function setDirty(on){
+    dirty = on;
+    var b = document.getElementById('bSave') || document.getElementById('sSave');
+    if (b) b.textContent = on ? (tab === 'seo' ? 'Save SEO' : 'Save changes') + ' \u2022' : (tab === 'seo' ? 'Save SEO' : 'Save changes');
+    var note = document.getElementById('kaDirty');
+    if (note) note.hidden = !on;
+  }
+
+  function goTab(t){
+    if (t === tab) return;
+    if (dirty && !KA.confirm('You have unsaved changes on this tab. Leave without saving?')) return;
+    setDirty(false);
+    tab = t;
+    Array.prototype.forEach.call(document.querySelectorAll('#kaTabs button'), function(x){
+      x.classList.toggle('on', x.getAttribute('data-t') === t);
+    });
+    renderTab();
+  }
+
+  window.addEventListener('beforeunload', function(e){
+    if (!dirty) return;
+    e.preventDefault();
+    e.returnValue = '';
+  });
+  document.addEventListener('keydown', function(e){
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+      var b = document.getElementById('bSave') || document.getElementById('sSave') || document.getElementById('cSave');
+      if (!b) return;
+      e.preventDefault();
+      b.click();
+    }
+  });
+
+  // What a dataset needs before buyers see it. must = blocks a clean launch.
+  function readiness(){
+    var pv = ds.preview_rows || {};
+    var lp = ds.locked_preview || {};
+    return [
+      { ok: !!(ds.title && ds.title.trim()), label: 'Title', tab: 'basics', must: true },
+      { ok: (ds.short_description || '').trim().length >= 60, label: 'Short description, 60+ characters', tab: 'basics', must: true },
+      { ok: (ds.long_description || '').trim().length >= 200, label: 'The story, 200+ characters', tab: 'basics', must: true },
+      { ok: !!(lp.summary && lp.summary.trim()), label: 'Teaser summary', tab: 'basics' },
+      { ok: schema.length >= 6, label: 'At least 6 columns described', tab: 'columns', must: true },
+      { ok: !!(pv.rows && pv.rows.length), label: 'Public preview rows', tab: 'files', must: true },
+      { ok: !!(ds.card_image_url || ds.hero_image_url), label: 'A card or hero image', tab: 'images' },
+      { ok: !!(ds.seo_description || '').trim(), label: 'Meta description', tab: 'seo' }
+    ];
+  }
+
+  function paintReady(){
+    var host = document.getElementById('kaReady');
+    if (!host) return;
+    var items = readiness();
+    var done = items.filter(function(x){ return x.ok; }).length;
+    var pct = Math.round(100 * done / items.length);
+    var html = '<div class="ka-card ka-ready"><div class="ka-card-head"><div><h2>Launch checklist</h2>'
+      + '<p class="ka-card-sub">' + done + ' of ' + items.length + ' done' + (done === items.length ? ', ready to go live.' : '. Click an item to jump to it.') + '</p></div>'
+      + '<div class="ka-ready-pct">' + pct + '%</div></div>'
+      + '<div class="ka-progress" style="margin:0 0 0.9rem;"><div class="ka-progress-fill" style="width:' + pct + '%"></div></div>'
+      + '<div class="ka-ready-list">';
+    items.forEach(function(x){
+      html += '<button type="button" class="ka-ready-item' + (x.ok ? ' ok' : '') + '" data-t="' + x.tab + '">'
+        + '<span class="ka-ready-dot" aria-hidden="true">' + (x.ok ? '&#10003;' : '') + '</span>'
+        + '<span>' + KA.esc(x.label) + (x.must && !x.ok ? ' <b class="ka-ready-must">needed</b>' : '') + '</span></button>';
+    });
+    host.innerHTML = html + '</div></div>';
+    Array.prototype.forEach.call(host.querySelectorAll('.ka-ready-item'), function(b){
+      b.addEventListener('click', function(){ goTab(b.getAttribute('data-t')); });
     });
   }
 
@@ -98,6 +184,8 @@ KA.boot('content', function(ctx){
       if (r.error) { KA.toast(r.error.message, true); return false; }
       Object.keys(patch).forEach(function(k){ ds[k] = patch[k]; });
       KA.toast(msg || 'Saved');
+      setDirty(false);
+      paintReady();
       return true;
     });
   }
@@ -123,7 +211,8 @@ KA.boot('content', function(ctx){
       +   '</div>'
       +   '<div class="ka-field"><label class="ka-label">Short description</label>'
       +     '<textarea class="ka-textarea" id="bShort">' + KA.esc(ds.short_description || '') + '</textarea>'
-      +     '<p class="ka-hint">The line under the title, and the line on the folder card.</p></div>'
+      +     '<div class="ka-count" id="bShortCount"></div>'
+      +     '<p class="ka-hint">The line under the title, and the line on the folder card. Cards show about three lines of it.</p></div>'
       +   '<div class="ka-field"><label class="ka-label">The story</label>'
       +     '<textarea class="ka-textarea ka-textarea-tall" id="bLong">' + KA.esc(ds.long_description || '') + '</textarea>'
       +     '<p class="ka-hint">Leave a blank line between paragraphs. This is the free part buyers read before deciding.</p></div>'
@@ -152,10 +241,22 @@ KA.boot('content', function(ctx){
       +     (ds.is_free ? ' checked' : '') + '><span class="ka-toggle-track">'
       +     '<span class="ka-toggle-knob"></span></span>'
       +     '<span class="ka-toggle-label">Give this away free</span></label></div>'
-      +   '<button class="ka-btn ka-btn-primary" id="bSave">Save changes</button>'
+      +   '<div class="ka-savebar"><button class="ka-btn ka-btn-primary" id="bSave">Save changes</button>'
+      +   '<span class="ka-hint" id="kaDirty" hidden>Unsaved changes</span>'
+      +   '<span class="ka-hint ka-savebar-kbd"><span class="ka-kbd">Ctrl</span> + <span class="ka-kbd">S</span></span></div>'
+      +   '<p class="ka-gate-err" id="bErr"></p>'
       + '</div>';
 
+    counter('bShort', 'bShortCount', 220);
     document.getElementById('bSave').addEventListener('click', function(){
+      var err = document.getElementById('bErr');
+      var t = document.getElementById('bTitle').value.trim();
+      var slug = KA.slugify(document.getElementById('bSlug').value);
+      err.textContent = '';
+      if (!t) { err.textContent = 'The title cannot be empty.'; document.getElementById('bTitle').focus(); return; }
+      if (!slug) { err.textContent = 'The slug needs at least one letter or number.'; document.getElementById('bSlug').focus(); return; }
+      if (slug !== ds.slug && !KA.confirm('Changing the slug breaks any link already shared for this dataset. Continue?')) return;
+      if (Number(document.getElementById('bPrice').value) < 0) { err.textContent = 'Price cannot be negative.'; return; }
       var lpNew = Object.assign({}, ds.locked_preview || {});
       lpNew.summary = document.getElementById('bTeaser').value.trim();
       save({
@@ -241,7 +342,7 @@ KA.boot('content', function(ctx){
           if (r2.error) { KA.toast(r2.error.message, true); return; }
           KA.toast(clean.length + ' columns saved');
           KA.supa.from('dataset_schema').select('*').eq('dataset_id', id).order('sort_order')
-            .then(function(r3){ schema = r3.data || []; draw(); });
+            .then(function(r3){ schema = r3.data || []; draw(); paintReady(); });
         });
       });
     });
@@ -541,7 +642,8 @@ KA.boot('content', function(ctx){
       +   '<div class="ka-field"><label class="ka-label">Canonical URL</label>'
       +     '<input class="ka-input" id="sCanon" value="' + KA.esc(ds.canonical_url || '') + '" '
       +     'placeholder="' + KA.esc(url) + '"></div>'
-      +   '<button class="ka-btn ka-btn-primary" id="sSave">Save SEO</button>'
+      +   '<div class="ka-savebar"><button class="ka-btn ka-btn-primary" id="sSave">Save SEO</button>'
+      +   '<span class="ka-hint" id="kaDirty" hidden>Unsaved changes</span></div>'
       + '</div>'
       + '<div class="ka-card"><div class="ka-card-head"><div><h2>Search result preview</h2>'
       +   '<p class="ka-card-sub">Roughly how this looks on a results page.</p></div></div>'

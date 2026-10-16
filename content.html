@@ -85,7 +85,7 @@ KA.boot('content', function(ctx){
       host.innerHTML = '<div class="ka-empty">No folders yet. Create the first one to start a job track.</div>';
       return;
     }
-    host.innerHTML = '<table class="ka-table"><thead><tr>'
+    host.innerHTML = '<table class="ka-table ka-table-cards"><thead><tr>'
       + '<th></th><th>Folder</th><th>Slug</th><th class="num">Datasets</th><th>Live</th><th></th>'
       + '</tr></thead><tbody>'
       + folders.map(function(f){
@@ -93,11 +93,11 @@ KA.boot('content', function(ctx){
           return '<tr>'
             + '<td><span style="display:inline-block;width:1.1rem;height:1.1rem;border-radius:50%;'
             +   'background:' + KA.esc(hex) + ';border:1px solid var(--line);"></span></td>'
-            + '<td><div class="ka-table-title">' + KA.esc(f.title) + '</div>'
+            + '<td data-label="Folder"><div class="ka-table-title">' + KA.esc(f.title) + '</div>'
             +   '<div class="ka-table-sub">' + KA.esc((f.description || '').slice(0, 90)) + '</div></td>'
-            + '<td><code>' + KA.esc(f.slug) + '</code></td>'
-            + '<td class="num">' + countIn(f.id) + '</td>'
-            + '<td>' + toggleHtml('folders', f.id, f.is_published) + '</td>'
+            + '<td data-label="Slug"><code>' + KA.esc(f.slug) + '</code></td>'
+            + '<td class="num" data-label="Datasets">' + countIn(f.id) + '</td>'
+            + '<td data-label="Live">' + toggleHtml('folders', f.id, f.is_published) + '</td>'
             + '<td style="text-align:right;"><button class="ka-btn ka-btn-sm" data-edit-folder="' + f.id + '">Edit</button></td>'
             + '</tr>';
         }).join('')
@@ -120,17 +120,17 @@ KA.boot('content', function(ctx){
     var byId = {};
     folders.forEach(function(f){ byId[f.id] = f.title; });
 
-    host.innerHTML = '<table class="ka-table"><thead><tr>'
+    host.innerHTML = '<table class="ka-table ka-table-cards"><thead><tr>'
       + '<th>Dataset</th><th>Folder</th><th class="num">Price</th><th>Live</th><th></th>'
       + '</tr></thead><tbody>'
       + datasets.map(function(d){
           return '<tr>'
-            + '<td><div class="ka-table-title">' + KA.esc(d.title) + '</div>'
+            + '<td data-label="Dataset"><div class="ka-table-title">' + KA.esc(d.title) + '</div>'
             +   '<div class="ka-table-sub"><code>' + KA.esc(d.slug) + '</code>'
             +   (d.difficulty ? ' &#183; ' + KA.esc(d.difficulty) : '') + '</div></td>'
-            + '<td>' + KA.esc(byId[d.folder_id] || 'No folder') + '</td>'
-            + '<td class="num">' + (d.is_free ? 'Free' : KA.inr(d.price)) + '</td>'
-            + '<td>' + toggleHtml('datasets', d.id, d.is_published) + '</td>'
+            + '<td data-label="Folder">' + KA.esc(byId[d.folder_id] || 'No folder') + '</td>'
+            + '<td class="num" data-label="Price">' + (d.is_free ? 'Free' : KA.inr(d.price)) + '</td>'
+            + '<td data-label="Live">' + toggleHtml('datasets', d.id, d.is_published) + '</td>'
             + '<td style="text-align:right;"><a class="ka-btn ka-btn-sm" href="editor.html?id='
             +   encodeURIComponent(d.id) + '">Edit</a></td>'
             + '</tr>';

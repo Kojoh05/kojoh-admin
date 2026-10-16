@@ -28,9 +28,9 @@ KA.boot('submissions', function(ctx){
     +   'Award points once you\'ve checked the work, points then show on the public leaderboard.</p></div></div>'
     + '<div class="ka-filters">'
     +   '<div class="ka-seg" id="kaSubFilter">'
-    +     '<button data-f="pending" class="on">Pending</button>'
-    +     '<button data-f="reviewed">Reviewed</button>'
-    +     '<button data-f="all">All</button>'
+    +     '<button data-f="pending" class="on">Pending<span class="ka-segcount" data-c="pending"></span></button>'
+    +     '<button data-f="reviewed">Reviewed<span class="ka-segcount" data-c="reviewed"></span></button>'
+    +     '<button data-f="all">All<span class="ka-segcount" data-c="all"></span></button>'
     +   '</div>'
     + '</div>'
     + '<div id="kaSubBody"><div class="ka-empty">Loading</div></div>'
@@ -69,7 +69,16 @@ KA.boot('submissions', function(ctx){
       });
   }
 
+  function counts(){
+    var c = { all: rows.length, pending: 0, reviewed: 0 };
+    rows.forEach(function(r){ c[r.status] = (c[r.status] || 0) + 1; });
+    Array.prototype.forEach.call(document.querySelectorAll('.ka-segcount'), function(el){
+      el.textContent = c[el.getAttribute('data-c')] || 0;
+    });
+  }
+
   function renderTable(){
+    counts();
     var host = document.getElementById('kaSubBody');
     var list = rows.filter(function(r){
       if (filter === 'all') return true;
@@ -82,7 +91,7 @@ KA.boot('submissions', function(ctx){
       return;
     }
 
-    host.innerHTML = '<div class="ka-card"><table class="ka-table"><thead><tr>'
+    host.innerHTML = '<div class="ka-card"><table class="ka-table ka-table-cards"><thead><tr>'
       + '<th>Buyer</th><th>Dataset</th><th>License</th><th>Tasks</th>'
       + '<th>Links</th><th>Submitted</th><th>Status</th><th></th>'
       + '</tr></thead><tbody>'
@@ -98,18 +107,20 @@ KA.boot('submissions', function(ctx){
     var u = who[s.user_id];
     var ds = s.datasets || {};
     var reviewed = s.status === 'reviewed';
+    var waited = Math.floor((Date.now() - new Date(s.submitted_at).getTime()) / 86400000);
     return '<tr>'
-      + '<td>' + (u ? '<div class="ka-table-title">' + KA.esc(u.username) + '</div><div class="ka-table-sub">' + KA.esc(u.email) + '</div>' : 'Unknown') + '</td>'
-      + '<td>' + KA.esc(ds.title || s.dataset_id) + '</td>'
-      + '<td>' + KA.esc(s.license_code) + '</td>'
-      + '<td class="num">' + KA.nf(s.tasks_done) + ' / ' + KA.nf(s.tasks_total) + '</td>'
-      + '<td><a href="' + KA.esc(s.github_url) + '" target="_blank" rel="noopener">GitHub</a> &middot; '
+      + '<td data-label="Buyer">' + (u ? '<div class="ka-table-title">' + KA.esc(u.username) + '</div><div class="ka-table-sub">' + KA.esc(u.email) + '</div>' : 'Unknown') + '</td>'
+      + '<td data-label="Dataset">' + KA.esc(ds.title || s.dataset_id) + '</td>'
+      + '<td data-label="License">' + KA.esc(s.license_code) + '</td>'
+      + '<td class="num" data-label="Tasks">' + KA.nf(s.tasks_done) + ' / ' + KA.nf(s.tasks_total) + '</td>'
+      + '<td data-label="Links"><a href="' + KA.esc(s.github_url) + '" target="_blank" rel="noopener">GitHub</a> &middot; '
       +     '<a href="' + KA.esc(s.linkedin_url) + '" target="_blank" rel="noopener">LinkedIn</a></td>'
-      + '<td>' + KA.esc(KA.date(s.submitted_at)) + '</td>'
-      + '<td>' + (reviewed
+      + '<td data-label="Submitted">' + KA.esc(KA.date(s.submitted_at))
+      +     (!reviewed && waited >= 2 ? '<div class="ka-table-sub" style="color:var(--danger);">waiting ' + waited + ' days</div>' : '') + '</td>'
+      + '<td data-label="Status">' + (reviewed
           ? '<span class="ka-badge ka-badge-live">' + KA.nf(s.points || 0) + ' pts</span>'
           : '<span class="ka-badge">Pending</span>') + '</td>'
-      + '<td><button class="ka-btn ka-btn-sm" data-review="' + s.id + '">' + (reviewed ? 'Edit score' : 'Review') + '</button></td>'
+      + '<td><button class="ka-btn ka-btn-sm' + (reviewed ? '' : ' ka-btn-primary') + '" data-review="' + s.id + '">' + (reviewed ? 'Edit score' : 'Review') + '</button></td>'
       + '</tr>';
   }
 
@@ -121,38 +132,73 @@ KA.boot('submissions', function(ctx){
     var drawer = document.getElementById('kaSubDrawer');
     var panel = document.getElementById('kaSubPanel');
 
+    var queue = rows.filter(function(x){ return x.status === 'pending' && x.id !== s.id; });
+    var PRESETS = [100, 250, 400, 500];
     panel.innerHTML =
-        '<div class="ka-drawer-head"><h2>Score this submission</h2>'
-      +   '<button class="ka-btn ka-btn-sm" id="kaSubClose">Close</button></div>'
-      + '<p class="ka-hint" style="margin-bottom:1rem;">'
+        '<div class="ka-drawer-head"><div><h2>Score this submission</h2>'
+      +   '<p class="ka-card-sub">' + (queue.length ? queue.length + ' more waiting after this one' : 'Last one in the queue') + '</p></div>'
+      +   '<button class="ka-btn ka-btn-sm" id="kaSubClose" type="button">Close <span class="ka-kbd">Esc</span></button></div>'
+      + '<p class="ka-hint" style="margin:0 0 1rem;">'
       +   '<strong>' + KA.esc(u ? u.username : 'Unknown buyer') + '</strong>' + (u ? ' &middot; ' + KA.esc(u.email) : '') + '<br>'
       +   KA.esc(ds.title || s.dataset_id) + ', license ' + KA.esc(s.license_code) + ', '
-      +   KA.nf(s.tasks_done) + ' / ' + KA.nf(s.tasks_total) + ' tasks ticked.<br>'
-      +   '<a href="' + KA.esc(s.github_url) + '" target="_blank" rel="noopener">' + KA.esc(s.github_url) + '</a><br>'
-      +   '<a href="' + KA.esc(s.linkedin_url) + '" target="_blank" rel="noopener">' + KA.esc(s.linkedin_url) + '</a>'
+      +   KA.nf(s.tasks_done) + ' / ' + KA.nf(s.tasks_total) + ' tasks ticked, submitted ' + KA.esc(KA.date(s.submitted_at)) + '.'
       + '</p>'
-      + '<form id="kaSubForm">'
+      + '<a class="ka-linkcard" href="' + KA.esc(s.github_url) + '" target="_blank" rel="noopener"><span><span class="ka-linkcard-k">GitHub repo</span><br><span class="ka-linkcard-v">' + KA.esc(s.github_url) + '</span></span><span>&#8599;</span></a>'
+      + '<a class="ka-linkcard" href="' + KA.esc(s.linkedin_url) + '" target="_blank" rel="noopener"><span><span class="ka-linkcard-k">LinkedIn post</span><br><span class="ka-linkcard-v">' + KA.esc(s.linkedin_url) + '</span></span><span>&#8599;</span></a>'
+      + '<form id="kaSubForm" style="margin-top:1.1rem;">'
       +   '<div class="ka-field"><label class="ka-label" for="kaSubPoints">Points</label>'
-      +   '<input class="ka-input" type="number" min="0" step="1" id="kaSubPoints" value="' + (s.points == null ? '' : s.points) + '" required></div>'
+      +   '<div class="ka-presets">' + PRESETS.map(function(p){ return '<button type="button" class="ka-preset' + (s.points === p ? ' on' : '') + '" data-p="' + p + '">' + p + '</button>'; }).join('') + '</div>'
+      +   '<input class="ka-input" type="number" min="0" step="1" inputmode="numeric" id="kaSubPoints" value="' + (s.points == null ? '' : s.points) + '" required></div>'
       +   '<div class="ka-field"><label class="ka-label" for="kaSubNotes">Notes, admin only</label>'
-      +   '<textarea class="ka-textarea" id="kaSubNotes">' + KA.esc(s.admin_notes || '') + '</textarea></div>'
-      +   '<button class="ka-btn ka-btn-primary" type="submit" style="width:100%;">'
-      +     (s.status === 'reviewed' ? 'Update score' : 'Award points and mark reviewed') + '</button>'
+      +   '<textarea class="ka-textarea" id="kaSubNotes" placeholder="What was strong, what was missing">' + KA.esc(s.admin_notes || '') + '</textarea></div>'
+      +   '<div class="ka-btnrow">'
+      +     (queue.length ? '<button class="ka-btn ka-btn-primary" type="submit" data-next="1">Save and next</button>' : '')
+      +     '<button class="ka-btn' + (queue.length ? '' : ' ka-btn-primary') + '" type="submit">'
+      +       (s.status === 'reviewed' ? 'Update score' : 'Save and close') + '</button>'
+      +   '</div>'
+      +   '<p class="ka-hint">Ctrl + Enter saves and moves to the next one.</p>'
       +   '<p class="ka-gate-err" id="kaSubErr"></p>'
       + '</form>';
     drawer.hidden = false;
 
-    document.getElementById('kaSubClose').addEventListener('click', function(){ drawer.hidden = true; });
-    drawer.addEventListener('click', function(ev){ if (ev.target === drawer) drawer.hidden = true; });
+    function close(){ drawer.hidden = true; document.removeEventListener('keydown', onKey); }
+    function onKey(ev){
+      if (ev.key === 'Escape') { ev.preventDefault(); close(); }
+      if (ev.key === 'Enter' && (ev.ctrlKey || ev.metaKey)) { ev.preventDefault(); save(!!queue.length); }
+    }
+    document.addEventListener('keydown', onKey);
+    document.getElementById('kaSubClose').addEventListener('click', close);
+    drawer.onclick = function(ev){ if (ev.target === drawer) close(); };
 
-    document.getElementById('kaSubForm').addEventListener('submit', function(ev){
+    var ptsInput = document.getElementById('kaSubPoints');
+    Array.prototype.forEach.call(panel.querySelectorAll('.ka-preset'), function(b){
+      b.addEventListener('click', function(){
+        ptsInput.value = b.getAttribute('data-p');
+        Array.prototype.forEach.call(panel.querySelectorAll('.ka-preset'), function(x){ x.classList.toggle('on', x === b); });
+      });
+    });
+    ptsInput.addEventListener('input', function(){
+      Array.prototype.forEach.call(panel.querySelectorAll('.ka-preset'), function(x){ x.classList.toggle('on', x.getAttribute('data-p') === ptsInput.value); });
+    });
+    setTimeout(function(){ ptsInput.focus(); }, 60);
+
+    var form = document.getElementById('kaSubForm');
+    form.addEventListener('submit', function(ev){
       ev.preventDefault();
-      var pts = parseInt(document.getElementById('kaSubPoints').value, 10);
+      var next = ev.submitter && ev.submitter.getAttribute('data-next') === '1';
+      save(next);
+    });
+
+    var saving = false;
+    function save(goNext){
+      if (saving) return;
+      var pts = parseInt(ptsInput.value, 10);
       var notes = document.getElementById('kaSubNotes').value;
       var err = document.getElementById('kaSubErr');
-      var btn = ev.target.querySelector('button[type="submit"]');
-      if (!(pts >= 0)) { err.textContent = 'Points needs to be zero or more.'; return; }
-      btn.disabled = true; btn.textContent = 'Saving';
+      if (!(pts >= 0)) { err.textContent = 'Points needs to be zero or more.'; ptsInput.focus(); return; }
+      saving = true;
+      err.textContent = '';
+      Array.prototype.forEach.call(form.querySelectorAll('button[type="submit"]'), function(b){ b.disabled = true; });
 
       KA.supa.from('challenge_submissions').update({
         points: pts,
@@ -161,17 +207,21 @@ KA.boot('submissions', function(ctx){
         reviewed_by: ctx.session ? ctx.session.user.id : null,
         reviewed_at: new Date().toISOString()
       }).eq('id', s.id).then(function(r){
+        saving = false;
         if (r.error) {
-          btn.disabled = false;
-          btn.textContent = 'Award points and mark reviewed';
+          Array.prototype.forEach.call(form.querySelectorAll('button[type="submit"]'), function(b){ b.disabled = false; });
           err.textContent = r.error.message;
           return;
         }
+        s.points = pts; s.admin_notes = notes; s.status = 'reviewed';
+        KA.toast(pts + ' points saved for ' + (u ? u.username : 'this buyer') + '.');
+        if (KA.refreshShellBadges) KA.refreshShellBadges();
+        renderTable();
+        document.removeEventListener('keydown', onKey);
+        if (goNext && queue.length) { openDrawer(queue[0].id); return; }
         drawer.hidden = true;
-        KA.toast('Points saved, the leaderboard picks this up right away.');
-        loadAll();
       });
-    });
+    }
   }
 });
 </script>
