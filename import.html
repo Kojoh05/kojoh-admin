@@ -41,6 +41,11 @@ KA.boot('import', function(ctx){
     +   '<div class="ki-row"><button class="ka-btn ka-btn-sm" id="kiPickFiles">Choose loose files instead</button>'
     +   '<button class="ka-btn ka-btn-primary" id="kiGo" disabled>Import</button><span id="kiPicked" class="ka-card-sub"></span></div>'
     +   '<div class="ki-log" id="kiLog" style="margin-top:0.9rem;">Nothing imported yet.</div></div>'
+    + '<div class="ka-card"><div class="ka-card-head"><div><h2>Payments</h2>'
+    +   '<p class="ka-card-sub">Beta: every dataset unlocks at ₹0. Live: paid datasets go through Razorpay checkout; free ones stay free.</p></div></div>'
+    +   '<div class="ki-row" style="margin-top:0;"><label><input type="radio" name="kiMode" value="beta_free"> Beta (free)</label>'
+    +   '<label><input type="radio" name="kiMode" value="live"> Live (Razorpay)</label><span id="kiModeNote" class="ka-card-sub"></span></div>'
+    +   '<div id="kiPays" style="margin-top:0.9rem;"></div></div>'
     + '<div class="ka-card"><div class="ka-card-head"><div><h2>License packs</h2>'
     +   '<p class="ka-card-sub">How many packs each dataset has and how many are claimed. '
     +   '"Keep selling" lets a dataset sell past its packs by giving later buyers a copy of an existing pack. Free datasets always do.</p></div></div>'
@@ -215,6 +220,34 @@ KA.boot('import', function(ctx){
       });
     });
   }
+  async function loadPayments(){
+    var note = document.getElementById('kiModeNote');
+    var st = await s.from('app_settings').select('value').eq('key', 'payments').maybeSingle();
+    if (st.error) { note.textContent = 'Run supabase/schema-admin-final.sql once to enable payments.'; return; }
+    var mode = (st.data && st.data.value && st.data.value.mode) || 'beta_free';
+    Array.prototype.forEach.call(document.querySelectorAll('input[name=kiMode]'), function(r){
+      r.checked = r.value === mode;
+      r.onchange = async function(){
+        if (r.value === 'live' && !KA.confirm('Switch to live payments? Paid datasets will need a Razorpay payment from now on.')) { loadPayments(); return; }
+        var u = await s.from('app_settings').upsert({ key: 'payments', value: { mode: r.value }, updated_at: new Date().toISOString() });
+        if (u.error) { KA.toast(u.error.message, true); loadPayments(); return; }
+        KA.toast(r.value === 'live' ? 'Payments are live' : 'Back to free beta');
+      };
+    });
+    var pays = await s.from('payments').select('created_at,amount_paise,status,razorpay_payment_id,dataset_id').order('created_at', { ascending: false }).limit(20);
+    var host = document.getElementById('kiPays');
+    if (pays.error) { host.innerHTML = ''; return; }
+    var paid = (pays.data || []).filter(function(x){ return x.status === 'paid'; });
+    var total = paid.reduce(function(a, x){ return a + x.amount_paise; }, 0) / 100;
+    var h = '<p class="ka-card-sub">Last 20 orders. Paid: ' + paid.length + ', ₹' + total.toLocaleString('en-IN') + '.</p>';
+    if (pays.data && pays.data.length) {
+      h += '<table class="ki-table" style="width:100%; border-collapse:collapse;"><thead><tr><th>When</th><th>Amount</th><th>Status</th><th>Payment ID</th></tr></thead><tbody>';
+      pays.data.forEach(function(x){ h += '<tr><td>' + KA.esc(new Date(x.created_at).toLocaleString('en-IN')) + '</td><td>₹' + (x.amount_paise / 100) + '</td><td>' + KA.esc(x.status) + '</td><td>' + KA.esc(x.razorpay_payment_id || '') + '</td></tr>'; });
+      h += '</tbody></table>';
+    }
+    host.innerHTML = h;
+  }
+  loadPayments();
   loadPacks();
 });
 </script>
