@@ -35,7 +35,7 @@ KA.boot('import', function(ctx){
     +   '<p class="ka-card-sub">Pick the package folder (the one with <code>admin_payload.json</code> in it). '
     +   'Data files are read from <code>storage_upload/&lt;slug&gt;/</code>, license packs from <code>licenses.json</code>.</p></div></div>'
     +   '<div class="ka-drop" id="kiDrop"><div class="ka-drop-title">Click to choose a package folder</div>'
-    +   '<div class="ka-drop-sub">Or choose the files themselves: admin_payload.json, licenses.json and the data files.</div></div>'
+    +   '<div class="ka-drop-sub">Or choose files: admin_payload.json, licenses.json and the data files. A licenses JSON on its own just loads packs.</div></div>'
     +   '<input type="file" id="kiDir" webkitdirectory directory multiple hidden>'
     +   '<input type="file" id="kiFiles" multiple hidden>'
     +   '<div class="ki-row"><button class="ka-btn ka-btn-sm" id="kiPickFiles">Choose loose files instead</button>'
@@ -88,7 +88,13 @@ KA.boot('import', function(ctx){
   async function run(){
     logEl.dataset.started = '0';
     var payloadFile = picked.filter(function(f){ return base(f) === 'admin_payload.json'; })[0];
-    if (!payloadFile) throw new Error('admin_payload.json not found in what you picked.');
+    var licFiles = picked.filter(function(f){ return /^licenses.*\.json$/i.test(base(f)); });
+    if (!payloadFile) {
+      if (!licFiles.length) throw new Error('Pick a package folder, or admin_payload.json, or a licenses JSON file.');
+      for (var q = 0; q < licFiles.length; q++) await loadLicenses(licFiles[q], null);
+      log('Done.'); KA.toast('License packs loaded');
+      return;
+    }
     var P = JSON.parse(await payloadFile.text());
     var slug = P.dataset.slug;
     log('Dataset: ' + P.dataset.title + ' (' + slug + ')');
@@ -144,23 +150,34 @@ KA.boot('import', function(ctx){
     log('Uploaded ' + dataFiles.length + ' files');
 
     // license packs
-    var licFile = picked.filter(function(f){ return base(f) === 'licenses.json'; })[0];
-    if (licFile) {
-      var L = JSON.parse(await licFile.text());
-      var rows = (L.rows || L).map(function(r){ return { dataset_id: id, license_code: r.license_code, tier: r.tier || 'standard', task_pack: r.task_pack }; });
-      for (var k = 0; k < rows.length; k += 25) {
-        var li = await s.from('dataset_licenses').upsert(rows.slice(k, k + 25), { onConflict: 'license_code', ignoreDuplicates: true });
-        if (li.error) {
-          if (/row-level security/i.test(li.error.message)) throw new Error('Supabase refused the license packs. Run supabase/schema-admin-final.sql once, then import again.');
-          throw li.error;
-        }
-      }
-      log('Loaded ' + rows.length + ' license packs');
+    if (licFiles.length) {
+      for (var q2 = 0; q2 < licFiles.length; q2++) await loadLicenses(licFiles[q2], id);
     } else {
       log('No licenses.json in this package, license packs skipped', true);
     }
     log('Done. Open it in Folders and datasets to check the launch checklist.');
     KA.toast('Imported ' + P.dataset.title);
+  }
+
+  async function loadLicenses(file, datasetId){
+    var L = JSON.parse(await file.text());
+    var id = datasetId;
+    if (!id) {
+      if (!L.slug) throw new Error(file.name + ' has no dataset slug in it.');
+      var d = await s.from('datasets').select('id,title').eq('slug', L.slug).maybeSingle();
+      if (d.error) throw d.error;
+      if (!d.data) throw new Error('No dataset with slug ' + L.slug + '. Import the dataset first.');
+      id = d.data.id; log('License packs for ' + d.data.title);
+    }
+    var rows = (L.rows || L).map(function(r){ return { dataset_id: id, license_code: r.license_code, tier: r.tier || 'standard', task_pack: r.task_pack }; });
+    for (var k = 0; k < rows.length; k += 25) {
+      var li = await s.from('dataset_licenses').upsert(rows.slice(k, k + 25), { onConflict: 'license_code', ignoreDuplicates: true });
+      if (li.error) {
+        if (/row-level security/i.test(li.error.message)) throw new Error('Supabase refused the license packs. Run supabase/schema-admin-final.sql once, then try again.');
+        throw li.error;
+      }
+    }
+    log('Loaded ' + rows.length + ' license packs');
   }
 
   async function loadPacks(){
