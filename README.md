@@ -10,6 +10,7 @@ repo, same Supabase project as the public site.
 | `index.html` | Dashboard: earnings, users, active users, licenses, signups and sales per day, and the preference panels |
 | `content.html` | Folders and datasets: create, edit, set folder colour, hide or publish in one click |
 | `editor.html?id=` | Full dataset editor: story, columns, data files, images, SEO |
+| `import.html` | Import a whole dataset package (dataset, columns, preview, tags, files, license packs) and manage license packs, no SQL |
 | `inbox.html` | Suggestions, app feedback, and what people typed into search |
 
 ## Security

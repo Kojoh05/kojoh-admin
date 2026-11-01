@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>KOJOH Admin | Import a dataset</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+<style>
+.ki-log{font-family:ui-monospace,Menlo,Consolas,monospace; font-size:0.75rem; line-height:1.7; max-height:22rem; overflow:auto;
+  background:var(--sunk); border:1px solid var(--line); border-radius:10px; padding:0.75rem 0.9rem; white-space:pre-wrap;}
+.ki-ok{color:var(--ink);} .ki-bad{color:#C0392B; font-weight:600;}
+.ki-row{display:flex; gap:0.6rem; flex-wrap:wrap; align-items:center; margin-top:0.8rem;}
+.ki-table td,.ki-table th{padding:0.5rem 0.6rem; border-bottom:1px solid var(--line); font-size:0.8125rem; text-align:left;}
+.ki-table th{color:var(--muted); font-weight:600;}
+.ki-table td.num{text-align:right; font-variant-numeric:tabular-nums;}
+</style>
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="supabase-config.js"></script>
+<script src="admin-core.js"></script>
+<script>
+KA.boot('import', function(ctx){
+  var main = ctx.main, s = KA.supa;
+  var TOOL_TAGS = ['Python', 'SQL', 'Excel', 'Power BI', 'Tableau', 'Machine Learning', 'Statistics', 'Looker Studio'];
+
+  main.innerHTML =
+      '<div class="ka-head"><div><h1>Import a dataset</h1>'
+    +   '<p>Drop a whole dataset package folder. The dataset, its columns, preview, tags, files and license packs are all loaded for you. No SQL.</p></div></div>'
+    + '<div class="ka-card"><div class="ka-card-head"><div><h2>Package</h2>'
+    +   '<p class="ka-card-sub">Pick the package folder (the one with <code>admin_payload.json</code> in it). '
+    +   'Data files are read from <code>storage_upload/&lt;slug&gt;/</code>, license packs from <code>licenses.json</code>.</p></div></div>'
+    +   '<div class="ka-drop" id="kiDrop"><div class="ka-drop-title">Click to choose a package folder</div>'
+    +   '<div class="ka-drop-sub">Or choose the files themselves: admin_payload.json, licenses.json and the data files.</div></div>'
+    +   '<input type="file" id="kiDir" webkitdirectory directory multiple hidden>'
+    +   '<input type="file" id="kiFiles" multiple hidden>'
+    +   '<div class="ki-row"><button class="ka-btn ka-btn-sm" id="kiPickFiles">Choose loose files instead</button>'
+    +   '<button class="ka-btn ka-btn-primary" id="kiGo" disabled>Import</button><span id="kiPicked" class="ka-card-sub"></span></div>'
+    +   '<div class="ki-log" id="kiLog" style="margin-top:0.9rem;">Nothing imported yet.</div></div>'
+    + '<div class="ka-card"><div class="ka-card-head"><div><h2>License packs</h2>'
+    +   '<p class="ka-card-sub">How many packs each dataset has and how many are claimed. '
+    +   '"Keep selling" lets a dataset sell past its packs by giving later buyers a copy of an existing pack. Free datasets always do.</p></div></div>'
+    +   '<div id="kiPacks"><div class="ka-empty">Loading</div></div></div>';
+
+  var picked = [];
+  var logEl = document.getElementById('kiLog');
+  function log(msg, bad){
+    if (logEl.dataset.started !== '1') { logEl.textContent = ''; logEl.dataset.started = '1'; }
+    var line = document.createElement('div'); line.className = bad ? 'ki-bad' : 'ki-ok'; line.textContent = msg;
+    logEl.appendChild(line); logEl.scrollTop = logEl.scrollHeight;
+  }
+  function setPicked(list){
+    picked = Array.prototype.slice.call(list);
+    document.getElementById('kiPicked').textContent = picked.length ? picked.length + ' files ready' : '';
+    document.getElementById('kiGo').disabled = !picked.length;
+  }
+  document.getElementById('kiDrop').addEventListener('click', function(){ document.getElementById('kiDir').click(); });
+  document.getElementById('kiPickFiles').addEventListener('click', function(){ document.getElementById('kiFiles').click(); });
+  document.getElementById('kiDir').addEventListener('change', function(){ setPicked(this.files); });
+  document.getElementById('kiFiles').addEventListener('change', function(){ setPicked(this.files); });
+  document.getElementById('kiGo').addEventListener('click', function(){
+    this.disabled = true;
+    run().catch(function(e){ log('Stopped: ' + (e && e.message || e), true); }).then(function(){
+      document.getElementById('kiGo').disabled = false; loadPacks();
+    });
+  });
+
+  var rel = function(f){ return f.webkitRelativePath || f.name; };
+  var base = function(f){ return f.name; };
+
+  async function ensureIds(table, names, extra){
+    var have = await s.from(table).select('id,name').in('name', names);
+    if (have.error) throw have.error;
+    var known = {}; (have.data || []).forEach(function(r){ known[r.name] = r.id; });
+    var missing = names.filter(function(n){ return !known[n]; });
+    if (missing.length) {
+      var ins = await s.from(table).insert(missing.map(function(n){ return Object.assign({ name: n }, extra ? extra(n) : {}); })).select('id,name');
+      if (ins.error) throw ins.error;
+      ins.data.forEach(function(r){ known[r.name] = r.id; log('Created ' + table.replace('_', ' ') + ': ' + r.name); });
+    }
+    return names.map(function(n){ return known[n]; });
+  }
+
+  async function run(){
+    logEl.dataset.started = '0';
+    var payloadFile = picked.filter(function(f){ return base(f) === 'admin_payload.json'; })[0];
+    if (!payloadFile) throw new Error('admin_payload.json not found in what you picked.');
+    var P = JSON.parse(await payloadFile.text());
+    var slug = P.dataset.slug;
+    log('Dataset: ' + P.dataset.title + ' (' + slug + ')');
+
+    // folder
+    var f = await s.from('folders').select('id').eq('slug', P.folder).maybeSingle();
+    if (f.error) throw f.error;
+    var folderId = f.data && f.data.id;
+    if (!folderId) {
+      var fm = P.folder_meta || {};
+      var nf = await s.from('folders').insert({ slug: P.folder, title: fm.title || P.folder.replace(/-/g, ' ').toUpperCase(),
+        description: fm.description || '', color_key: fm.color_key || 'f-analyst', view_type: 'job', is_published: true, sort_order: fm.sort_order || 9 }).select('id').single();
+      if (nf.error) throw nf.error;
+      folderId = nf.data.id; log('Created folder: ' + P.folder);
+    }
+
+    // dataset row
+    var row = Object.assign({}, P.dataset, { folder_id: folderId });
+    var up = await s.from('datasets').upsert(row, { onConflict: 'slug' }).select('id').single();
+    if (up.error) throw up.error;
+    var id = up.data.id;
+    log('Saved dataset, price ₹' + P.dataset.price + (P.dataset.is_free ? ' (free)' : ''));
+
+    // columns
+    var del = await s.from('dataset_schema').delete().eq('dataset_id', id);
+    if (del.error) throw del.error;
+    var sch = await s.from('dataset_schema').insert((P.schema || []).map(function(c){ return Object.assign({ dataset_id: id }, c); }));
+    if (sch.error) throw sch.error;
+    log('Saved ' + (P.schema || []).length + ' column descriptions');
+
+    // tags and job titles (created if missing)
+    var tagIds = await ensureIds('tags', P.tags || [], function(n){ return { tag_type: TOOL_TAGS.indexOf(n) >= 0 ? 'tool' : 'domain' }; });
+    var tg = await s.from('dataset_tags').upsert(tagIds.map(function(t){ return { dataset_id: id, tag_id: t }; }), { onConflict: 'dataset_id,tag_id', ignoreDuplicates: true });
+    if (tg.error) throw tg.error;
+    var jobIds = await ensureIds('job_titles', P.jobs || []);
+    var jb = await s.from('dataset_job_titles').upsert(jobIds.map(function(j){ return { dataset_id: id, job_title_id: j }; }), { onConflict: 'dataset_id,job_title_id', ignoreDuplicates: true });
+    if (jb.error) throw jb.error;
+    log('Linked ' + tagIds.length + ' tags and ' + jobIds.length + ' job titles');
+
+    // data files
+    var dataFiles = picked.filter(function(f){
+      var r = rel(f);
+      if (r.indexOf('storage_upload/') >= 0) return r.indexOf('storage_upload/' + slug + '/') >= 0;
+      if (f.webkitRelativePath) return false;
+      return /\.(csv|xlsx|pdf)$/i.test(f.name) || ['data-dictionary.md', 'scenario-story.md', 'challenge-tasks.md'].indexOf(f.name) >= 0;
+    });
+    for (var i = 0; i < dataFiles.length; i++) {
+      var df = dataFiles[i];
+      log('Uploading ' + df.name + ' (' + (df.size / 1e6).toFixed(1) + ' MB)');
+      var u = await s.storage.from('datasets').upload((P.dataset.storage_path || slug) + '/' + df.name, df, { upsert: true, cacheControl: '3600' });
+      if (u.error) log('  failed: ' + u.error.message, true);
+    }
+    log('Uploaded ' + dataFiles.length + ' files');
+
+    // license packs
+    var licFile = picked.filter(function(f){ return base(f) === 'licenses.json'; })[0];
+    if (licFile) {
+      var L = JSON.parse(await licFile.text());
+      var rows = (L.rows || L).map(function(r){ return { dataset_id: id, license_code: r.license_code, tier: r.tier || 'standard', task_pack: r.task_pack }; });
+      for (var k = 0; k < rows.length; k += 25) {
+        var li = await s.from('dataset_licenses').upsert(rows.slice(k, k + 25), { onConflict: 'license_code', ignoreDuplicates: true });
+        if (li.error) {
+          if (/row-level security/i.test(li.error.message)) throw new Error('Supabase refused the license packs. Run supabase/schema-admin-final.sql once, then import again.');
+          throw li.error;
+        }
+      }
+      log('Loaded ' + rows.length + ' license packs');
+    } else {
+      log('No licenses.json in this package, license packs skipped', true);
+    }
+    log('Done. Open it in Folders and datasets to check the launch checklist.');
+    KA.toast('Imported ' + P.dataset.title);
+  }
+
+  async function loadPacks(){
+    var host = document.getElementById('kiPacks');
+    var r = await Promise.all([s.from('datasets').select('id,title,price,is_free,meta').order('title'),
+                               s.from('dataset_licenses').select('dataset_id,claimed_by')]);
+    if (r[0].error && /meta/.test(r[0].error.message)) {
+      r[0] = await s.from('datasets').select('id,title,price,is_free').order('title');
+      host.insertAdjacentHTML('beforebegin', '');
+      KA.toast('Run supabase/schema-admin-final.sql once to unlock license packs and Keep selling.', true);
+    }
+    if (r[0].error) { host.innerHTML = '<div class="ka-empty">' + KA.esc(r[0].error.message) + '</div>'; return; }
+    var cnt = {};
+    (r[1].data || []).forEach(function(x){ var c = cnt[x.dataset_id] = cnt[x.dataset_id] || { n: 0, c: 0 }; c.n++; if (x.claimed_by) c.c++; });
+    var h = '<table class="ki-table" style="width:100%; border-collapse:collapse;"><thead><tr><th>Dataset</th><th>Price</th>'
+      + '<th style="text-align:right">Packs</th><th style="text-align:right">Claimed</th><th style="text-align:right">Left</th><th>Keep selling</th></tr></thead><tbody>';
+    r[0].data.forEach(function(d){
+      var c = cnt[d.id] || { n: 0, c: 0 }, meta = d.meta || {};
+      var keep = d.is_free || meta.overflow === 'clone';
+      h += '<tr><td>' + KA.esc(d.title) + '</td><td>' + (d.is_free ? 'Free' : '₹' + Number(d.price).toFixed(0)) + '</td>'
+        + '<td class="num">' + c.n + '</td><td class="num">' + c.c + '</td><td class="num">' + (c.n - c.c) + '</td><td>'
+        + (d.is_free ? 'Always (free)' : '<label><input type="checkbox" data-keep="' + d.id + '"' + (keep ? ' checked' : '') + '> after packs run out</label>')
+        + '</td></tr>';
+    });
+    host.innerHTML = h + '</tbody></table>';
+    Array.prototype.forEach.call(host.querySelectorAll('[data-keep]'), function(cb){
+      cb.addEventListener('change', async function(){
+        var did = cb.getAttribute('data-keep');
+        var cur = r[0].data.filter(function(d){ return d.id === did; })[0];
+        var meta = Object.assign({}, cur.meta || {});
+        if (cb.checked) meta.overflow = 'clone'; else delete meta.overflow;
+        var u = await s.from('datasets').update({ meta: meta }).eq('id', did);
+        if (u.error) { cb.checked = !cb.checked; KA.toast(/meta/.test(u.error.message) ? 'Run supabase/schema-admin-final.sql once to enable this.' : u.error.message, true); return; }
+        cur.meta = meta; KA.toast(cb.checked ? 'Will keep selling after packs run out' : 'Stops at its last pack');
+      });
+    });
+  }
+  loadPacks();
+});
+</script>
+</body>
+</html>
