@@ -185,10 +185,20 @@ KA.boot('import', function(ctx){
     log('Loaded ' + rows.length + ' license packs');
   }
 
+  async function allLicenses(){
+    var all = [], from = 0;
+    while (true) {
+      var q = await s.from('dataset_licenses').select('dataset_id,claimed_by').order('id').range(from, from + 999);
+      if (q.error) return q;
+      all = all.concat(q.data || []);
+      if (!q.data || q.data.length < 1000) return { data: all, error: null };
+      from += 1000;
+    }
+  }
+
   async function loadPacks(){
     var host = document.getElementById('kiPacks');
-    var r = await Promise.all([s.from('datasets').select('id,title,price,is_free,meta').order('title'),
-                               s.from('dataset_licenses').select('dataset_id,claimed_by')]);
+    var r = await Promise.all([s.from('datasets').select('id,title,price,is_free,meta').order('title'), allLicenses()]);
     if (r[0].error && /meta/.test(r[0].error.message)) {
       r[0] = await s.from('datasets').select('id,title,price,is_free').order('title');
       host.insertAdjacentHTML('beforebegin', '');
