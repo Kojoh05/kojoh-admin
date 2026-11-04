@@ -2,6 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<script>
+// Served at kojohhi.com/admin: make relative links and assets resolve under /admin/.
+if (/^\/admin(\/|$)/.test(location.pathname)) document.write('<base href="/admin/">');
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
 <title>KOJOH Admin | Dataset editor</title>
@@ -47,7 +51,7 @@ KA.boot('content', function(ctx){
       +   '<div><h1 id="kaTitle">' + KA.esc(ds.title) + '</h1>'
       +   '<p><code>' + KA.esc(ds.slug) + '</code> &#183; '
       +   '<a href="content.html">Back to all content</a> &#183; '
-      +   '<a href="https://dataset-marketplace-kojoh.vercel.app/dataset.html?slug='
+      +   '<a href="https://www.kojohhi.com/dataset?slug='
       +   encodeURIComponent(ds.slug) + '" target="_blank" rel="noopener">View on the site</a></p></div>'
       +   '<label class="ka-toggle"><input type="checkbox" id="kaPub"' + (ds.is_published ? ' checked' : '') + '>'
       +     '<span class="ka-toggle-track"><span class="ka-toggle-knob"></span></span>'
@@ -630,7 +634,7 @@ KA.boot('content', function(ctx){
   function seoTab(host){
     var title = ds.seo_title || ds.title || '';
     var desc = ds.seo_description || ds.short_description || '';
-    var url = ds.canonical_url || ('https://dataset-marketplace-kojoh.vercel.app/dataset.html?slug=' + ds.slug);
+    var url = ds.canonical_url || ('https://www.kojohhi.com/dataset?slug=' + ds.slug);
 
     host.innerHTML =
         '<div class="ka-card">'

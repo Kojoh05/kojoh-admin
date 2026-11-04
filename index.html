@@ -2,6 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<script>
+// Served at kojohhi.com/admin: make relative links and assets resolve under /admin/.
+if (/^\/admin(\/|$)/.test(location.pathname)) document.write('<base href="/admin/">');
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
 <title>KOJOH Admin | Dashboard</title>
@@ -24,7 +28,7 @@ KA.boot('dashboard', function(ctx){
       '<div class="ka-head">'
     +   '<div><h1>Dashboard</h1>'
     +   '<p>Everything happening on KOJOH. The window control below scopes every number and chart on this page.</p></div>'
-    +   '<a class="ka-btn" href="https://dataset-marketplace-kojoh.vercel.app" target="_blank" rel="noopener">Open live site</a>'
+    +   '<a class="ka-btn" href="https://www.kojohhi.com" target="_blank" rel="noopener">Open live site</a>'
     + '</div>'
     + '<div class="ka-filters">'
     +   '<div class="ka-seg" id="kaWindow">'
