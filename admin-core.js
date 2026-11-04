@@ -81,42 +81,47 @@
       icon:'<path d="M12 3v12M7 10l5 5 5-5M5 21h14"/>' },
     { key:'practice', href:'practice.html', label:'Practice',
       icon:'<polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>' },
+    { key:'reviews', href:'practice-review.html', label:'Practice reviews',
+      icon:'<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>' },
     { key:'submissions', href:'submissions.html', label:'Challenge submissions',
       icon:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6l6 6v10a2 2 0 0 1-2 2h-1M9 15l2 2 4-4"/>' }
   ];
 
+  function icon(path){
+    return '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + path + '</svg>';
+  }
+  function initials(p){
+    var n = String(p.username || p.email || 'A').replace(/[^A-Za-z0-9 ]/g, ' ').trim().split(/\s+/);
+    return ((n[0] || 'A')[0] + (n[1] ? n[1][0] : (n[0] || '').slice(1, 2))).toUpperCase();
+  }
   function shellHtml(active, profile){
+    var cur = NAV.filter(function(n){ return n.key === active; })[0];
     var links = NAV.map(function(n){
       return '<a href="' + n.href + '"' + (n.key === active ? ' class="on" aria-current="page"' : '') + ' data-nav="' + n.key + '">'
-        + '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
-        + 'stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + n.icon + '</svg>'
-        + '<span>' + n.label + '</span><b class="ka-navbadge" hidden></b></a>';
+        + icon(n.icon) + '<span>' + n.label + '</span><b class="ka-navbadge" hidden></b></a>';
     }).join('');
-
     return '<div class="ka-shell">'
       + '<aside class="ka-side">'
-      +   '<div class="ka-brand"><div><div class="ka-brand-mark">KOJOH</div>'
-      +     '<div class="ka-brand-sub">Admin portal</div></div>'
-      +     '<button class="ka-menubtn" id="kaMenuBtn" type="button" aria-label="Open menu" aria-expanded="false">'
-      +     '<span></span><span></span><span></span></button></div>'
-      +   '<nav class="ka-nav">' + links
-      +     '<a href="#" id="kaTheme"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" '
-      +     'stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'
-      +     '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/>'
-      +     '</svg><span>Switch theme</span></a>'
-      +     '<a href="#" id="kaChangePw"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" '
-      +     'stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'
-      +     '<rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>'
-      +     '</svg><span>Change password</span></a>'
-      +     '<a href="#" id="kaSignOut"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" '
-      +     'stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'
-      +     '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>'
-      +     '</svg><span>Sign out</span></a>'
+      +   '<div class="ka-brand"><a class="ka-brand-mark" href="index.html">KOJOH<span>admin</span></a>'
+      +     '<button class="ka-menubtn" id="kaMenuBtn" type="button" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button></div>'
+      +   '<nav class="ka-nav">' + links + '</nav>'
+      +   '<div class="ka-promo" id="kaPromo"><b>Open the live site</b><p>See KOJOH the way your learners do.</p>'
+      +     '<a href="https://www.kojohhi.com" target="_blank" rel="noopener">Open kojohhi.com</a></div>'
+      +   '<nav class="ka-nav ka-nav-foot">'
+      +     '<a href="#" id="kaTheme">' + icon('<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/>') + '<span>Switch theme</span></a>'
+      +     '<a href="#" id="kaChangePw">' + icon('<rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>') + '<span>Change password</span></a>'
+      +     '<a href="#" id="kaSignOut">' + icon('<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>') + '<span>Log out</span></a>'
       +   '</nav>'
-      +   '<div class="ka-side-foot"><strong>' + KA.esc(profile.username || 'Admin') + '</strong>'
-      +     KA.esc(profile.email || '') + '</div>'
       + '</aside>'
-      + '<main class="ka-main" id="kaMain"></main>'
+      + '<div class="ka-mainwrap">'
+      +   '<header class="ka-top"><h1 class="ka-top-title">' + KA.esc(cur ? cur.label : 'Admin') + '</h1>'
+      +     '<div class="ka-search"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.5-4.5"/></svg>'
+      +       '<input id="kaSearch" type="search" placeholder="Search datasets..." autocomplete="off" aria-label="Search datasets"><div class="ka-search-res" id="kaSearchRes" hidden></div></div>'
+      +     '<a class="ka-iconbtn" id="kaBell" href="practice-review.html" aria-label="Notifications">' + icon('<path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/>') + '<i id="kaBellDot" hidden></i></a>'
+      +     '<div class="ka-avatar" title="' + KA.esc((profile.username || 'Admin') + ' · ' + (profile.email || '')) + '">' + KA.esc(initials(profile)) + '</div>'
+      +   '</header>'
+      +   '<main class="ka-main" id="kaMain"></main>'
+      + '</div>'
       + '<div class="ka-drawer" id="kaPwDrawer" hidden><div class="ka-drawer-panel" id="kaPwPanel"></div></div>'
       + '</div>';
   }
@@ -137,6 +142,20 @@
       });
     }
     if (!supa) return;
+    wireSearch(supa);
+    Promise.all([
+      supa.from('challenge_submissions').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
+      supa.from('practice_written').select('id', { count: 'exact', head: true }).eq('status', 'submitted'),
+      supa.from('practice_certificates').select('id', { count: 'exact', head: true }).eq('status', 'requested')
+    ]).then(function(r){
+      var sub = (!r[0].error && r[0].count) || 0, wr = (!r[1].error && r[1].count) || 0, ce = (!r[2].error && r[2].count) || 0;
+      var dot = document.getElementById('kaBellDot'), bell = document.getElementById('kaBell');
+      if (dot && (sub + wr + ce)) { dot.hidden = false; bell.title = wr + ' written answers, ' + ce + ' certificates, ' + sub + ' submissions waiting'; if (!wr && !ce) bell.href = 'submissions.html'; }
+      var rb = document.querySelector('[data-nav="reviews"] .ka-navbadge');
+      if (rb && (wr + ce)) { rb.textContent = String(wr + ce); rb.hidden = false; }
+      var promo = document.getElementById('kaPromo');
+      if (promo && (wr + ce)) promo.innerHTML = '<b>Learners are waiting</b><p>' + wr + ' written answer' + (wr === 1 ? '' : 's') + ' and ' + ce + ' certificate' + (ce === 1 ? '' : 's') + ' to review.</p><a href="practice-review.html">Review now</a>';
+    }, function(){});
     supa.from('challenge_submissions').select('id', { count: 'exact', head: true }).eq('status', 'pending')
       .then(function(r){
         if (r.error || !r.count) return;
@@ -146,6 +165,26 @@
         b.hidden = false;
         b.setAttribute('aria-label', r.count + ' waiting on review');
       }, function(){});
+  }
+  function wireSearch(supa){
+    var inp = document.getElementById('kaSearch'), box = document.getElementById('kaSearchRes'), t = null;
+    if (!inp) return;
+    inp.addEventListener('input', function(){
+      clearTimeout(t);
+      var q = inp.value.trim();
+      if (q.length < 2) { box.hidden = true; return; }
+      t = setTimeout(function(){
+        supa.from('datasets').select('id, title, slug, is_published').ilike('title', '%' + q.replace(/[%_]/g, '') + '%').limit(7).then(function(r){
+          var rows = r.data || [];
+          box.innerHTML = rows.length ? rows.map(function(d){
+            return '<a href="editor.html?id=' + encodeURIComponent(d.id) + '">' + KA.esc(d.title) + (d.is_published ? '' : ' <em>hidden</em>') + '</a>';
+          }).join('') : '<span>No dataset matches "' + KA.esc(q) + '"</span>';
+          box.hidden = false;
+        });
+      }, 220);
+    });
+    inp.addEventListener('keydown', function(e){ if (e.key === 'Escape') { inp.value = ''; box.hidden = true; } if (e.key === 'Enter') { var a = box.querySelector('a'); if (a) location.href = a.getAttribute('href'); } });
+    document.addEventListener('click', function(e){ if (!e.target.closest('.ka-search')) box.hidden = true; });
   }
   KA.refreshShellBadges = function(){
     if (!KA.supa) return;
@@ -253,7 +292,11 @@
       document.body.innerHTML = gateHtml('denied', 'Supabase is not configured. Fill in supabase-config.js.');
       return;
     }
-    var supa = KA.supa = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
+    // The admin keeps its own login, separate from the shop at kojohhi.com (same domain), so signing in
+    // to the shop as a learner never signs the admin out. Sessions refresh themselves and last until Log out.
+    var supa = KA.supa = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY, {
+      auth: { storageKey: 'kojoh-admin-auth', persistSession: true, autoRefreshToken: true, detectSessionInUrl: false }
+    });
 
     if (KA.SKIP_LOGIN) {
       var previewProfile = { username: 'Preview', email: 'Login gate is off', is_admin: true };

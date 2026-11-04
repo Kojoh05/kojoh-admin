@@ -30,7 +30,7 @@ if (/^\/admin(\/|$)/.test(location.pathname)) document.write('<base href="/admin
 <script src="supabase-config.js"></script>
 <script src="admin-core.js"></script>
 <script>
-KA.boot('practice', function (ctx) {
+KA.boot('reviews', function (ctx) {
   var main = ctx.main, supa = KA.supa, esc = KA.esc, view = 'written', rubrics = {}, people = {};
   var LV = { beginner: 'Beginner', intermediate: 'Intermediate', hard: 'Hard' };
   main.innerHTML = '<div class="ka-head"><div><h1>Practice reviews</h1><p>Mark written answers, then issue certificates. A certificate can be issued once every written answer in that level is marked. Score = (auto points + written marks) / (max points + max marks).</p></div>'

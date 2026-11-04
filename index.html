@@ -20,156 +20,161 @@ if (/^\/admin(\/|$)/.test(location.pathname)) document.write('<base href="/admin
 <script src="admin-core.js"></script>
 <script>
 KA.boot('dashboard', function(ctx){
-  var main = ctx.main;
-  var days = 30;
-  var firstLoad = true;
+  var main = ctx.main, supa = KA.supa, esc = KA.esc;
+  var PERIODS = [{ k: 'Day', d: 1 }, { k: 'Week', d: 7 }, { k: 'Month', d: 30 }, { k: 'Year', d: 365 }];
+  var days = 30, weekOffset = 0, cache = null;
+  var SITE = 'https://www.kojohhi.com/';
+  var MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  var DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-  main.innerHTML =
-      '<div class="ka-head">'
-    +   '<div><h1>Dashboard</h1>'
-    +   '<p>Everything happening on KOJOH. The window control below scopes every number and chart on this page.</p></div>'
-    +   '<a class="ka-btn" href="https://www.kojohhi.com" target="_blank" rel="noopener">Open live site</a>'
-    + '</div>'
-    + '<div class="ka-filters">'
-    +   '<div class="ka-seg" id="kaWindow">'
-    +     '<button data-d="7">7 days</button>'
-    +     '<button data-d="30" class="on">30 days</button>'
-    +     '<button data-d="90">90 days</button>'
-    +     '<button data-d="365">1 year</button>'
-    +   '</div>'
-    + '</div>'
-    + '<div id="kaBody"><div class="ka-empty">Loading</div></div>';
-
-  document.getElementById('kaWindow').addEventListener('click', function(e){
-    var b = e.target.closest('button');
-    if (!b) return;
-    Array.prototype.forEach.call(this.querySelectorAll('button'), function(x){ x.classList.remove('on'); });
-    b.classList.add('on');
-    days = Number(b.getAttribute('data-d'));
-    loadDash();
+  main.innerHTML = '<div class="kd-bar"><div class="kd-chips" id="kdChips">' + PERIODS.map(function (p) {
+      return '<button class="kd-chip' + (p.d === days ? ' on' : '') + '" data-d="' + p.d + '" type="button">' + p.k + '</button>'; }).join('') + '</div>'
+    + '<span class="kd-range"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><span id="kdRange"></span></span></div>'
+    + '<div id="kdBody"><div class="ka-empty">Loading</div></div>';
+  document.getElementById('kdChips').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-d]'); if (!b) return;
+    Array.prototype.forEach.call(this.children, function (x) { x.classList.toggle('on', x === b); });
+    days = +b.getAttribute('data-d'); load();
   });
 
-  function fillDays(series, key){
-    // continuous day axis so gaps read as zero, not as missing time
+  function since(d) { var t = new Date(); t.setHours(0, 0, 0, 0); t.setDate(t.getDate() - d + 1); return t; }
+  function fmtRange() {
+    var s = since(days), e = new Date(), o = { day: 'numeric', month: 'short', year: 'numeric' };
+    return days === 1 ? e.toLocaleDateString('en-IN', o) : s.toLocaleDateString('en-IN', o) + ' - ' + e.toLocaleDateString('en-IN', o);
+  }
+  function delta(now, prev, label) {
+    if (!prev) return now ? '<span class="kd-up">new</span> ' + label : 'no change ' + label;
+    var p = Math.round(1000 * (now - prev) / prev) / 10, up = p >= 0;
+    return '<span class="' + (up ? 'kd-up' : 'kd-down') + '">' + (up ? '&#8599; ' : '&#8600; ') + Math.abs(p) + '%</span> ' + label;
+  }
+  function money(list, from, to) { return list.reduce(function (a, x) { return a + (x.t >= from && x.t < to ? x.v : 0); }, 0); }
+
+  async function load() {
+    document.getElementById('kdRange').textContent = fmtRange();
+    var body = document.getElementById('kdBody');
+    body.style.opacity = cache ? 0.6 : 1;
+    var back = Math.max(days * 2, 190);
+    var from = since(back).toISOString();
+    var r = await Promise.all([
+      supa.rpc('admin_dashboard', { p_days: days }),
+      supa.rpc('admin_dashboard', { p_days: days * 2 }),
+      supa.from('purchases').select('price_paid, purchased_at').gte('purchased_at', from),
+      supa.from('payments').select('amount_paise, paid_at, kind').in('kind', ['pass', 'skip']).eq('status', 'paid').gte('paid_at', from),
+      supa.from('purchases').select('price_paid, purchased_at, user_id, dataset_id, datasets(title, slug, art_boy_url)').order('purchased_at', { ascending: false }).limit(8),
+      supa.from('payments').select('amount_paise, paid_at, kind, user_id, razorpay_payment_id, meta, pass_days').in('kind', ['pass', 'skip']).eq('status', 'paid').order('paid_at', { ascending: false }).limit(8)
+    ]);
+    body.style.opacity = 1;
+    if (r[0].error) { body.innerHTML = '<div class="ka-card"><h2>Could not load the dashboard</h2><p class="ka-card-sub">' + esc(r[0].error.message) + '</p></div>'; return; }
+    var d = r[0].data || {}, d2 = (r[1].data) || {};
+    var rev = [];
+    (r[2].data || []).forEach(function (p) { if (Number(p.price_paid)) rev.push({ t: new Date(p.purchased_at), v: Number(p.price_paid) }); });
+    (r[3].data || []).forEach(function (p) { rev.push({ t: new Date(p.paid_at), v: p.amount_paise / 100 }); });
+    var now = new Date(Date.now() + 1000), s1 = since(days), s0 = since(days * 2);
+    var revNow = money(rev, s1, now), revPrev = money(rev, s0, s1);
+    var newNow = Number(d.users_window || 0), newPrev = Math.max(0, Number(d2.users_window || 0) - newNow);
+    var lbl = days === 1 ? 'from yesterday' : 'from last ' + (days === 7 ? 'week' : days === 30 ? 'month' : 'year');
+    cache = { d: d, rev: rev };
+
+    var h = '<div class="kd-kpis">'
+      + kpi('Total Revenue', KA.inr(revNow), delta(revNow, revPrev, lbl), true)
+      + kpi('Active Users', KA.nf(d.active_30d), KA.nf(d.active_7d) + ' in the last 7 days')
+      + kpi('New Users', KA.nf(newNow), delta(newNow, newPrev, lbl))
+      + kpi('Total Users', KA.nf(d.users_total), KA.nf(d.licenses_claimed) + ' licenses claimed')
+      + '</div>';
+
+    // monthly revenue bars
+    var months = [], t = new Date(); t.setDate(1); t.setHours(0, 0, 0, 0);
+    for (var i = 5; i >= 0; i--) { var m = new Date(t.getFullYear(), t.getMonth() - i, 1); months.push({ m: m, n: new Date(m.getFullYear(), m.getMonth() + 1, 1) }); }
+    months.forEach(function (x) { x.v = money(rev, x.m, x.n); });
+    var max = Math.max.apply(null, months.map(function (x) { return x.v; }).concat([1]));
+    var step = niceStep(max / 5), top = step * 5;
+    h += '<div class="kd-row"><section class="kd-panel"><div class="kd-ph"><h2>Total Revenue</h2><a class="kd-round" href="#kdTables" aria-label="Details">&#8599;</a></div>'
+      + '<div class="kd-chart"><div class="kd-yax">' + [0, 1, 2, 3, 4, 5].map(function (k) { return '<span>' + KA.compact(step * k) + '</span>'; }).join('') + '</div>'
+      + '<div class="kd-bars" id="kdBars">' + months.map(function (x, i) {
+          var hl = i === months.length - 1;
+          return '<div class="kd-col' + (hl ? ' hl' : '') + '"><div class="kd-bw"><div class="kd-b' + (hl ? ' hl' : '') + '" style="height:' + Math.max(3, 100 * x.v / top) + '%" data-tip="' + MON[x.m.getMonth()] + ' ' + x.m.getFullYear() + ': ' + KA.inr(x.v) + '"></div></div><span>' + MON[x.m.getMonth()] + '</span></div>';
+        }).join('') + '</div></div></section>';
+
+    // week strip + ring
+    var claimed = Number(d.licenses_claimed || 0), total = Number(d.licenses_total || 0), pct = total ? Math.round(100 * claimed / total) : 0;
+    h += '<section class="kd-panel"><div class="kd-cal-h"><button type="button" id="kdPrev" aria-label="Previous week">&#8249;</button><b id="kdMonth"></b><button type="button" id="kdNext" aria-label="Next week">&#8250;</button></div>'
+      + '<div class="kd-week" id="kdWeek"></div>'
+      + '<div class="kd-growth"><div><h3>Licenses claimed</h3><div class="kd-kpi-d"><span class="kd-up">' + KA.nf(claimed) + '</span> of ' + KA.nf(total) + ' packs issued</div></div>'
+      + '<div class="kd-ring" style="--p:' + pct + '"><b>' + pct + '%</b></div></div></section></div>';
+
+    // recent purchases
+    var items = [];
+    (r[4].data || []).forEach(function (p) { items.push({ t: p.purchased_at, user: p.user_id, title: p.datasets ? p.datasets.title : 'Dataset', art: p.datasets && p.datasets.art_boy_url, id: (p.dataset_id || '').slice(0, 8).toUpperCase(), amount: Number(p.price_paid), status: Number(p.price_paid) ? 'Paid' : 'Free' }); });
+    (r[5].data || []).forEach(function (p) { items.push({ t: p.paid_at, user: p.user_id, title: p.kind === 'pass' ? 'Practice pass, ' + (p.pass_days || 30) + ' days' : 'Level skip: ' + ((p.meta && p.meta.level) || ''), art: null, id: (p.razorpay_payment_id || '').replace('pay_', '').slice(0, 10), amount: p.amount_paise / 100, status: p.kind === 'pass' ? 'Pass' : 'Skip' }); });
+    items.sort(function (a, b) { return new Date(b.t) - new Date(a.t); }); items = items.slice(0, 8);
+    var ids = items.map(function (x) { return x.user; }).filter(Boolean), names = {};
+    if (ids.length) { var pr = await supa.from('profiles').select('id, first_name, last_name, username').in('id', ids); (pr.data || []).forEach(function (u) { names[u.id] = [u.first_name, u.last_name].filter(Boolean).join(' ') || u.username; }); }
+    h += '<section class="kd-panel" id="kdTables"><div class="kd-ph"><h2>Recent Purchases</h2><div class="ka-btnrow"><button class="kd-round" type="button" id="kdReload" aria-label="Refresh">&#8635;</button><a class="kd-round" href="content.html" aria-label="All datasets">&#8599;</a></div></div>'
+      + (items.length ? '<div style="overflow-x:auto"><table class="kd-table"><thead><tr><th>Item</th><th>Buyer</th><th class="hide-sm">Order ID</th><th>Amount</th><th>Status</th></tr></thead><tbody>'
+        + items.map(function (x) {
+          return '<tr><td><div class="kd-item"><span class="kd-thumb"' + (x.art ? ' style="background-image:url(' + esc(SITE + x.art) + ')"' : '') + '>' + (x.art ? '' : esc(x.title.split(/\s+/).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase())) + '</span><span>' + esc(x.title) + '</span></div></td>'
+            + '<td>' + esc(names[x.user] || 'Learner') + '</td><td class="hide-sm">#' + esc(x.id) + '</td><td>' + KA.inr(x.amount) + '</td>'
+            + '<td><span class="kd-pill' + (x.status === 'Free' ? ' free' : x.status === 'Paid' ? '' : ' pass') + '">' + x.status + '</span></td></tr>';
+        }).join('') + '</tbody></table></div>' : '<div class="kd-empty">No purchases yet.</div>') + '</section>';
+
+    // the rest of the old dashboard
+    h += '<div class="kd-section"><h3 class="kd-section-h">Needs your attention</h3><div class="ka-card"><div id="kaAttn"><div class="ka-empty" style="padding:1rem;">Checking</div></div></div></div>'
+      + '<div class="ka-grid2">' + chartCard('Signups per day', 'New accounts in this period.', 'kaSignups') + chartCard('Sales per day', 'Dataset purchases in this period. Hover for the count.', 'kaSales') + '</div>'
+      + '<div class="ka-grid2">' + rankCard('Roles people pick at signup', 'What your audience says it is.', 'kaRoles') + rankCard('Most bookmarked', 'Wanted but not bought.', 'kaBookmarks')
+      + rankCard('Most purchased', 'What actually converts.', 'kaPurchased') + rankCard('Top searches', 'What people typed into search.', 'kaSearches') + '</div>'
+      + '<div class="ka-card"><div class="ka-card-head"><div><h2>Searches that found nothing</h2><p class="ka-card-sub">Demand you are not serving yet.</p></div></div><div id="kaEmptySearch"></div></div>';
+    body.innerHTML = h;
+
+    wireBars(); renderWeek();
+    document.getElementById('kdPrev').onclick = function () { weekOffset--; renderWeek(); };
+    document.getElementById('kdNext').onclick = function () { weekOffset++; renderWeek(); };
+    document.getElementById('kdReload').onclick = load;
+    loadAttention(d);
+    var span = Math.min(Math.max(days, 7), 90);
+    KA.columnChart(document.getElementById('kaSignups'), fillDays(d.signups_by_day, 'n', span), { id: 'signups', aria: 'Signups per day', xTitle: 'Day', yTitle: 'Signups', empty: 'No signups in this window.' });
+    KA.columnChart(document.getElementById('kaSales'), fillDays(d.sales_by_day, 'amount', span), { id: 'sales', aria: 'Revenue per day', xTitle: 'Day', yTitle: 'Revenue', format: KA.inr, empty: 'No purchases in this window.' });
+    KA.rankList(document.getElementById('kaRoles'), (d.top_roles || []).map(function (x) { return { name: x.name, value: x.n }; }), { empty: 'Nobody has picked a role yet.' });
+    KA.rankList(document.getElementById('kaBookmarks'), (d.top_bookmarked || []).map(function (x) { return { name: x.title, value: x.n }; }), { empty: 'No bookmarks yet.' });
+    KA.rankList(document.getElementById('kaPurchased'), (d.top_purchased || []).map(function (x) { return { name: x.title, value: x.n }; }), { empty: 'No purchases yet.' });
+    KA.rankList(document.getElementById('kaSearches'), (d.top_searches || []).map(function (x) { return { name: x.query, value: x.n }; }), { empty: 'No searches logged yet.' });
+    KA.rankList(document.getElementById('kaEmptySearch'), (d.empty_searches || []).map(function (x) { return { name: x.query, value: x.n }; }), { empty: 'Every search so far returned at least one result.' });
+  }
+  function niceStep(x) { if (x <= 0) return 1; var p = Math.pow(10, Math.floor(Math.log10(x))), n = x / p; var o = [1, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10]; for (var i = 0; i < o.length; i++) if (n <= o[i]) return o[i] * p; return 10 * p; }
+  function wireBars() {
+    var host = document.getElementById('kdBars'), tip = null;
+    host.addEventListener('mouseover', function (e) {
+      var b = e.target.closest('.kd-b'); if (!b) return;
+      if (!tip) { tip = document.createElement('div'); tip.className = 'kd-tip'; host.appendChild(tip); }
+      tip.textContent = b.getAttribute('data-tip');
+      var hb = host.getBoundingClientRect(), bb = b.getBoundingClientRect();
+      tip.style.left = (bb.left - hb.left + bb.width / 2) + 'px'; tip.style.top = (bb.top - hb.top) + 'px'; tip.hidden = false;
+    });
+    host.addEventListener('mouseleave', function () { if (tip) tip.hidden = true; });
+  }
+  function renderWeek() {
+    var today = new Date(); today.setHours(0, 0, 0, 0);
+    var c = new Date(today); c.setDate(c.getDate() + weekOffset * 5);
+    var cells = [];
+    for (var i = -2; i <= 2; i++) { var x = new Date(c); x.setDate(x.getDate() + i); cells.push(x); }
+    document.getElementById('kdMonth').textContent = c.toLocaleDateString('en-IN', { month: 'long', year: 'numeric' });
+    document.getElementById('kdWeek').innerHTML = cells.map(function (x) {
+      var n = new Date(x); n.setDate(n.getDate() + 1);
+      var v = cache ? money(cache.rev, x, n) : 0;
+      return '<div class="kd-day' + (+x === +today ? ' today' : '') + '"><span>' + DOW[x.getDay()] + '</span><b>' + x.getDate() + '</b><small>' + (v ? KA.compact(v) : '') + '</small></div>';
+    }).join('');
+  }
+  function fillDays(series, key, span) {
     var out = [], map = {};
-    (series || []).forEach(function(r){ map[r.day] = r; });
-    var span = Math.min(days, 90);
+    (series || []).forEach(function (r) { map[r.day] = r; });
     for (var i = span - 1; i >= 0; i--) {
-      var d = new Date();
-      d.setHours(0,0,0,0);
-      d.setDate(d.getDate() - i);
-      var iso = d.toISOString().slice(0, 10);
-      var hit = map[iso];
-      out.push({
-        label: KA.dayShort(iso),
-        value: hit ? Number(hit[key]) : 0,
-        sub: hit && key === 'amount' ? hit.n + (hit.n === 1 ? ' sale' : ' sales') : ''
-      });
+      var dd = new Date(); dd.setHours(0, 0, 0, 0); dd.setDate(dd.getDate() - i);
+      var iso = dd.toISOString().slice(0, 10), hit = map[iso];
+      out.push({ label: KA.dayShort(iso), value: hit ? Number(hit[key]) : 0, sub: hit && key === 'amount' ? hit.n + (hit.n === 1 ? ' sale' : ' sales') : '' });
     }
     return out;
   }
-
-  function loadDash(){
-    var body = document.getElementById('kaBody');
-    if (!firstLoad) body.classList.add('ka-refetching');
-
-    KA.supa.rpc('admin_dashboard', { p_days: days }).then(function(res){
-      body.classList.remove('ka-refetching');
-      firstLoad = false;
-
-      if (res.error) {
-        body.innerHTML = '<div class="ka-card"><h2>Could not load the dashboard</h2>'
-          + '<p class="ka-card-sub">' + KA.esc(res.error.message) + '</p>'
-          + '<p class="ka-card-sub">If this says the function does not exist, run admin-schema.sql in Supabase first.</p></div>';
-        return;
-      }
-
-      var d = res.data || {};
-      var label = days === 365 ? 'last year' : 'last ' + days + ' days';
-
-      var html = '';
-
-      // exactly one hero figure on the page
-      html += '<div class="ka-hero">'
-           +   '<div class="ka-hero-label">Total earnings, all time</div>'
-           +   '<div class="ka-hero-fig">' + KA.inr(d.earnings_total) + '</div>'
-           +   '<div class="ka-hero-note">' + KA.inr(d.earnings_window) + ' in the ' + label
-           +     ' across ' + KA.nf(d.purchases_window) + ' of ' + KA.nf(d.purchases_total) + ' total purchases.'
-           +     (Number(d.earnings_total) === 0
-                  ? ' Everything is free while the purchase flow is in beta, so this stays at zero until you switch pricing on.'
-                  : '')
-           +   '</div>'
-           + '</div>';
-
-      html += '<div class="ka-card"><div class="ka-card-head"><div><h2>Needs your attention</h2>'
-           +   '<p class="ka-card-sub">Work waiting on you, worst first.</p></div></div>'
-           +   '<div id="kaAttn"><div class="ka-empty" style="padding:1rem;">Checking</div></div></div>';
-
-      html += '<div class="ka-kpis">'
-           + kpi('Total users', KA.nf(d.users_total), KA.nf(d.users_window) + ' joined in the ' + label)
-           + kpi('Active, 30 days', KA.nf(d.active_30d), KA.nf(d.active_7d) + ' in the last 7 days')
-           + kpi('Licenses claimed', KA.nf(d.licenses_claimed), 'of ' + KA.nf(d.licenses_total) + ' issued')
-           + kpi('Published datasets', KA.nf(d.datasets_published), KA.nf(d.datasets_total) + ' total, '
-               + KA.nf(Number(d.datasets_total) - Number(d.datasets_published)) + ' hidden')
-           + kpi('Folders live', KA.nf(d.folders_published), KA.nf(d.folders_total) + ' total')
-           + kpi('Feedback', KA.nf(d.feedback_like) + ' up', KA.nf(d.feedback_dislike) + ' down, '
-               + KA.nf(d.suggestions_total) + ' suggestions')
-           + '</div>';
-
-      html += '<div class="ka-grid2">'
-           +   chartCard('Signups per day', 'New accounts created in the ' + label + '.', 'kaSignups')
-           +   chartCard('Sales per day', 'Purchases in the ' + label + '. Value is revenue, hover for the count.', 'kaSales')
-           + '</div>';
-
-      html += '<div class="ka-grid2">'
-           +   rankCard('Roles people pick at signup',
-                        'What your audience says it is. This is what to build datasets for next.', 'kaRoles')
-           +   rankCard('Most bookmarked',
-                        'Wanted but not bought. Your pricing and packaging signal.', 'kaBookmarks')
-           +   rankCard('Most purchased',
-                        'What actually converts.', 'kaPurchased')
-           +   rankCard('Top searches',
-                        'What people typed into search in the ' + label + '.', 'kaSearches')
-           + '</div>';
-
-      html += '<div class="ka-card">'
-           +   '<div class="ka-card-head"><div><h2>Searches that found nothing</h2>'
-           +   '<p class="ka-card-sub">Demand you are not serving yet. The most useful list on this page.</p></div></div>'
-           +   '<div id="kaEmptySearch"></div>'
-           + '</div>';
-
-      body.innerHTML = html;
-      loadAttention(d);
-
-      KA.columnChart(document.getElementById('kaSignups'), fillDays(d.signups_by_day, 'n'), {
-        id: 'signups', aria: 'Signups per day', xTitle: 'Day', yTitle: 'Signups',
-        empty: 'No signups in this window.'
-      });
-      KA.columnChart(document.getElementById('kaSales'), fillDays(d.sales_by_day, 'amount'), {
-        id: 'sales', aria: 'Revenue per day', xTitle: 'Day', yTitle: 'Revenue',
-        format: KA.inr, empty: 'No purchases in this window.'
-      });
-
-      KA.rankList(document.getElementById('kaRoles'),
-        (d.top_roles || []).map(function(r){ return { name: r.name, value: r.n }; }),
-        { empty: 'Nobody has picked a role yet.' });
-
-      KA.rankList(document.getElementById('kaBookmarks'),
-        (d.top_bookmarked || []).map(function(r){ return { name: r.title, value: r.n }; }),
-        { empty: 'No bookmarks yet.' });
-
-      KA.rankList(document.getElementById('kaPurchased'),
-        (d.top_purchased || []).map(function(r){ return { name: r.title, value: r.n }; }),
-        { empty: 'No purchases yet.' });
-
-      KA.rankList(document.getElementById('kaSearches'),
-        (d.top_searches || []).map(function(r){ return { name: r.query, value: r.n }; }),
-        { empty: 'No searches logged yet. This fills up once the live site starts logging them.' });
-
-      KA.rankList(document.getElementById('kaEmptySearch'),
-        (d.empty_searches || []).map(function(r){ return { name: r.query, value: r.n }; }),
-        { empty: 'Nothing yet. Every search so far returned at least one result.' });
-    });
+  function kpi(label, value, sub, dark) {
+    return '<div class="kd-kpi' + (dark ? ' dark' : '') + '"><div class="kd-kpi-l">' + esc(label) + '</div><div class="kd-kpi-v">' + value + '</div><div class="kd-kpi-d">' + sub + '</div></div>';
   }
 
   // The short list of things that need doing today: reviews, stock, gaps.
@@ -218,11 +223,6 @@ KA.boot('dashboard', function(ctx){
     });
   }
 
-  function kpi(label, value, sub){
-    return '<div class="ka-kpi"><div class="ka-kpi-label">' + KA.esc(label) + '</div>'
-      + '<div class="ka-kpi-value">' + value + '</div>'
-      + '<div class="ka-kpi-sub">' + sub + '</div></div>';
-  }
   function chartCard(title, sub, id){
     return '<div class="ka-card"><div class="ka-card-head"><div><h2>' + KA.esc(title) + '</h2>'
       + '<p class="ka-card-sub">' + KA.esc(sub) + '</p></div></div>'
@@ -234,7 +234,7 @@ KA.boot('dashboard', function(ctx){
       + '<div id="' + id + '"></div></div>';
   }
 
-  loadDash();
+  load();
 });
 </script>
 </body>
