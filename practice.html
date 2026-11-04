@@ -60,6 +60,9 @@ KA.boot('practice', function (ctx) {
   ];
   var LEVELS = ['Foundations', 'Applied', 'Business case', 'Interview'];
   var POINTS = { 'Foundations': 10, 'Applied': 20, 'Business case': 30, 'Interview': 40 };
+  var TOOLS = { sql: 'SQL', python: 'Python', excel: 'Excel', powerbi: 'Power BI' };
+  var PREFIX = { sql: 'sql', python: 'py', excel: 'xl', powerbi: 'bi' };
+  function isAns(tool) { return tool === 'excel' || tool === 'powerbi'; }
   var S = { manifest: null, srcs: {}, missing: {}, role: null, editing: null, dirty: {} };
 
   if (!KP) { main.innerHTML = '<div class="ka-empty">Could not load the practice engine from www.kojohhi.com. Deploy the site first, then reload.</div>'; return; }
@@ -72,8 +75,9 @@ KA.boot('practice', function (ctx) {
     + '<div class="ka-card"><div class="ka-card-head"><div><h2>Overview</h2><p class="ka-card-sub" id="kpPubInfo">Loading</p></div></div>'
     +   '<div class="kp-stats" id="kpStats"></div>'
     +   '<div class="ka-row" style="margin-top:1rem">'
-    +     '<div class="ka-field"><label class="ka-label">Free tasks per tool</label><input class="ka-input" id="kpFreeN" type="number" min="0" max="50" value="5">'
-    +       '<p class="ka-hint">The first N SQL and first N Python tasks of each role are free. Takes effect on the next publish.</p></div>'
+    +     '<div class="ka-field"><label class="ka-label">Free SQL / Python tasks per role</label><input class="ka-input" id="kpFreeN" type="number" min="0" max="50" value="5">'
+    +       '<label class="ka-label" style="margin-top:0.6rem">Free Excel / Power BI tasks per role</label><input class="ka-input" id="kpFreeBI" type="number" min="0" max="50" value="3">'
+    +       '<p class="ka-hint">The first N tasks of each tool are free. Takes effect on the next publish.</p></div>'
     +     '<div class="ka-field"><label class="ka-label">Give someone a pass</label><input class="ka-input" id="kpGiftEmail" type="email" placeholder="their account email">'
     +       '<div class="ka-btnrow" style="margin-top:0.4rem"><select class="ka-select" id="kpGiftDays" style="width:auto"><option value="30">30 days</option><option value="90">90 days</option><option value="365">1 year</option></select>'
     +       '<button class="ka-btn" id="kpGift" type="button">Give pass</button></div></div>'
@@ -88,6 +92,8 @@ KA.boot('practice', function (ctx) {
     el.scrollTop = el.scrollHeight;
   }
   function freeN() { var n = parseInt(document.getElementById('kpFreeN').value, 10); return isNaN(n) ? 5 : n; }
+  function freeBI() { var n = parseInt(document.getElementById('kpFreeBI').value, 10); return isNaN(n) ? 3 : n; }
+  function freeFor(tool) { return isAns(tool) ? freeBI() : freeN(); }
 
   // ---------------------------------------------------------------- storage helpers
   async function put(bucket, path, body, type, cache) {
@@ -126,9 +132,10 @@ KA.boot('practice', function (ctx) {
   async function loadOverview() {
     S.manifest = await getManifest();
     if (S.manifest && S.manifest.free_per_tool !== undefined) document.getElementById('kpFreeN').value = S.manifest.free_per_tool;
+    if (S.manifest && S.manifest.free_per_tool_bi !== undefined) document.getElementById('kpFreeBI').value = S.manifest.free_per_tool_bi;
     document.getElementById('kpPubInfo').textContent = S.manifest
       ? 'Last published ' + new Date(S.manifest.v).toLocaleString('en-IN') + '. Live at www.kojohhi.com/practice.'
-      : 'Nothing published yet. Click Load starter content to get 80 ready tasks across 4 roles.';
+      : 'Nothing published yet. Click Load starter content to get 94 ready tasks across 4 roles.';
     var now = new Date().toISOString();
     var q = await Promise.all([
       supa.from('practice_passes').select('user_id', { count: 'exact', head: true }).gt('expires_at', now),
@@ -177,7 +184,7 @@ KA.boot('practice', function (ctx) {
       };
       return;
     }
-    var count = {}, fn = freeN();
+    var count = {};
     var h = '<div class="ka-grid2">'
       + '<div class="ka-card"><div class="ka-card-head"><div><h2>Role</h2><p class="ka-card-sub">Shown at the top of the role page.</p></div></div>'
       +   '<div class="ka-row"><div class="ka-field"><label class="ka-label">Role title</label><input class="ka-input" id="kpTitle" value="' + esc(src.title) + '"></div>'
@@ -198,11 +205,11 @@ KA.boot('practice', function (ctx) {
       +   '<div class="ka-field"><label class="ka-label">CSV file</label><input class="ka-input" id="kpNewFile" type="file" accept=".csv,text/csv"></div></div>'
       +   '<button class="ka-btn" id="kpAddTable" type="button">Upload table</button></div>'
       + '</div>';
-    ['sql', 'python'].forEach(function (tool) {
-      var list = src.tasks.filter(function (t) { return t.tool === tool; });
-      h += '<div class="ka-card"><div class="ka-card-head"><div><h2>' + (tool === 'sql' ? 'SQL' : 'Python') + ' tasks (' + list.length + ')</h2>'
-        + '<p class="ka-card-sub">Order matters: the first ' + fn + ' are free. Dark number = free.</p></div>'
-        + '<div class="ka-btnrow"><button class="ka-btn ka-btn-sm" data-add="' + tool + '" type="button">Add ' + (tool === 'sql' ? 'SQL' : 'Python') + ' task</button></div></div>'
+    Object.keys(TOOLS).forEach(function (tool) {
+      var list = src.tasks.filter(function (t) { return t.tool === tool; }), fn = freeFor(tool);
+      h += '<div class="ka-card"><div class="ka-card-head"><div><h2>' + TOOLS[tool] + ' tasks (' + list.length + ')</h2>'
+        + '<p class="ka-card-sub">' + (isAns(tool) ? 'Learners download the data, work in ' + TOOLS[tool] + ' and type the numbers. ' : '') + 'Order matters: the first ' + fn + ' are free. Dark number = free.</p></div>'
+        + '<div class="ka-btnrow"><button class="ka-btn ka-btn-sm" data-add="' + tool + '" type="button">Add ' + TOOLS[tool] + ' task</button></div></div>'
         + '<div class="kp-list">' + list.map(function (t) {
           count[tool] = (count[tool] || 0) + 1;
           var n = count[tool], i = src.tasks.indexOf(t);
@@ -214,7 +221,7 @@ KA.boot('practice', function (ctx) {
             + '<button class="ka-btn ka-btn-sm" data-edit="' + i + '" type="button">Edit</button></div></div>';
         }).join('') + (list.length ? '' : '<div class="ka-empty">No tasks yet.</div>') + '</div></div>';
     });
-    h += '<div class="ka-card"><div class="ka-card-head"><div><h2>Bulk add tasks</h2><p class="ka-card-sub">Paste a JSON list. Each item needs tool (sql or python), level, title, question, solution; hint, ordered and points are optional.</p></div></div>'
+    h += '<div class="ka-card"><div class="ka-card-head"><div><h2>Bulk add tasks</h2><p class="ka-card-sub">Paste a JSON list. Each item needs tool (sql, python, excel or powerbi), level, title, question, solution; hint, ordered, points, explain are optional. Excel and Power BI items can add labels and checklist lists.</p></div></div>'
       + '<textarea class="ka-textarea kp-code" id="kpBulk" placeholder=\'[{"tool":"sql","level":"Foundations","title":"Orders per city","question":"...","solution":"SELECT ...","hint":"..."}]\'></textarea>'
       + '<div class="ka-btnrow" style="margin-top:0.5rem"><button class="ka-btn" id="kpBulkGo" type="button">Add these tasks</button></div></div>';
     h += '<div id="kpEditor"></div>';
@@ -229,7 +236,7 @@ KA.boot('practice', function (ctx) {
     return s;
   }
   function nextId(src, tool) {
-    var pre = src.short + '-' + (tool === 'python' ? 'py' : 'sql') + '-', max = 0;
+    var pre = src.short + '-' + PREFIX[tool] + '-', max = 0;
     src.tasks.forEach(function (t) { if (t.id.indexOf(pre) === 0) max = Math.max(max, parseInt(t.id.slice(pre.length), 10) || 0); });
     return pre + ('0' + (max + 1)).slice(-2);
   }
@@ -308,10 +315,11 @@ KA.boot('practice', function (ctx) {
         if (!Array.isArray(arr)) arr = [arr];
         readRoleFields(src);
         arr.forEach(function (x) {
-          if (['sql', 'python'].indexOf(x.tool) < 0 || !x.title || !x.solution) throw new Error('Each task needs tool (sql/python), title and solution.');
+          if (!TOOLS[x.tool] || !x.title || !x.solution) throw new Error('Each task needs tool (sql, python, excel or powerbi), title and solution.');
           var lv = LEVELS.indexOf(x.level) >= 0 ? x.level : 'Foundations';
           src.tasks.push({ id: nextId(src, x.tool), tool: x.tool, level: lv, points: x.points || POINTS[lv], title: x.title, question: x.question || '',
-            hint: x.hint || '', solution: String(x.solution).trim(), ordered: !!x.ordered, explain: x.explain || '' });
+            hint: x.hint || '', solution: String(x.solution).trim(), ordered: !!x.ordered, explain: x.explain || '',
+            labels: x.labels || undefined, checklist: x.checklist || undefined });
         });
         touch(src); renderRole(); KA.toast(arr.length + ' tasks added. Save draft or Publish.');
       } catch (e) { KA.toast(e.message, true); }
@@ -322,17 +330,23 @@ KA.boot('practice', function (ctx) {
   function editTask(src, t) {
     S.editing = t;
     var box = document.getElementById('kpEditor');
-    box.innerHTML = '<div class="ka-card"><div class="ka-card-head"><div><h2>' + (t._new ? 'New ' : 'Edit ') + (t.tool === 'sql' ? 'SQL' : 'Python') + ' task</h2>'
-      + '<p class="ka-card-sub">' + esc(t.id) + (t.tool === 'python' ? '. The solution must store its answer in a variable called result.' : '. Tables: ' + src.tables.map(function (x) { return x.name; }).join(', ')) + '</p></div></div>'
+    var ans = isAns(t.tool), tnames = src.tables.map(function (x) { return x.name; }).join(', ');
+    box.innerHTML = '<div class="ka-card"><div class="ka-card-head"><div><h2>' + (t._new ? 'New ' : 'Edit ') + TOOLS[t.tool] + ' task</h2>'
+      + '<p class="ka-card-sub">' + esc(t.id) + (t.tool === 'python' ? '. The solution must store its answer in a variable called result.'
+        : ans ? '. Write a SQL query that returns ONE row; each column is one answer the learner types. Tables: ' + tnames
+        : '. Tables: ' + tnames) + '</p></div></div>'
       + '<div class="ka-row"><div class="ka-field"><label class="ka-label">Title</label><input class="ka-input" id="kpT" value="' + esc(t.title) + '"></div>'
       + '<div class="ka-field"><label class="ka-label">Level</label><select class="ka-select" id="kpL">' + LEVELS.map(function (l) { return '<option' + (l === t.level ? ' selected' : '') + '>' + l + '</option>'; }).join('') + '</select></div>'
       + '<div class="ka-field"><label class="ka-label">Points</label><input class="ka-input" id="kpP" type="number" min="0" value="' + (t.points || 0) + '"></div></div>'
       + '<div class="ka-field"><label class="ka-label">Question</label><textarea class="ka-textarea" id="kpQ">' + esc(t.question) + '</textarea>'
       + '<p class="ka-hint">Say exactly which columns to return and how to round (answers are compared at 2 decimals). Row order is ignored unless you tick Ordered.</p></div>'
-      + '<div class="ka-field"><label class="ka-label">Solution</label><textarea class="ka-textarea kp-code" id="kpS" spellcheck="false">' + esc(t.solution) + '</textarea></div>'
+      + '<div class="ka-field"><label class="ka-label">' + (ans ? 'Answer query (SQL)' : 'Solution') + '</label><textarea class="ka-textarea kp-code" id="kpS" spellcheck="false">' + esc(t.solution) + '</textarea></div>'
+      + (ans ? '<div class="ka-row"><div class="ka-field"><label class="ka-label">Answer labels, one per line</label><textarea class="ka-textarea" id="kpLab">' + esc((t.labels || []).join('\n')) + '</textarea>'
+          + '<p class="ka-hint">Same order as the query columns. Leave empty to use the column names.</p></div>'
+          + '<div class="ka-field"><label class="ka-label">Build checklist, one per line (optional)</label><textarea class="ka-textarea" id="kpChk">' + esc((t.checklist || []).join('\n')) + '</textarea></div></div>' : '')
       + '<div class="ka-row"><div class="ka-field"><label class="ka-label">Hint</label><input class="ka-input" id="kpH" value="' + esc(t.hint || '') + '"></div>'
-      + '<div class="ka-field"><label class="ka-label">Explanation (pass holders, optional)</label><input class="ka-input" id="kpE" value="' + esc(t.explain || '') + '"></div></div>'
-      + '<label class="kp-check"><input type="checkbox" id="kpO"' + (t.ordered ? ' checked' : '') + '> Ordered: the row order must match too</label>'
+      + '<div class="ka-field"><label class="ka-label">' + (ans ? 'Method (pass holders see it with the answers)' : 'Explanation (pass holders, optional)') + '</label><input class="ka-input" id="kpE" value="' + esc(t.explain || '') + '"></div></div>'
+      + (ans ? '<input type="checkbox" id="kpO" hidden>' : '<label class="kp-check"><input type="checkbox" id="kpO"' + (t.ordered ? ' checked' : '') + '> Ordered: the row order must match too</label>')
       + '<div class="ka-btnrow" style="margin-top:1rem"><button class="ka-btn" id="kpTest" type="button">Test solution</button>'
       + '<button class="ka-btn ka-btn-primary" id="kpKeep" type="button">Keep changes</button>'
       + '<button class="ka-btn" id="kpCancel" type="button">Close</button>'
@@ -355,7 +369,8 @@ KA.boot('practice', function (ctx) {
         await KP.load(t.tool, files);
         var res = await KP.run(t.tool, codeEl.value);
         var fp = await KP.fingerprint(res, document.getElementById('kpO').checked);
-        out.innerHTML = '<p class="ka-hint">' + fp.rows + ' rows &middot; ' + fp.cols + ' columns &middot; ' + res.ms + ' ms. This is the answer learners must match.</p>'
+        if (ans && res.rows.length !== 1) throw new Error('The answer query returned ' + res.rows.length + ' rows. It must return exactly one row.');
+        out.innerHTML = '<p class="ka-hint">' + fp.rows + ' rows &middot; ' + fp.cols + ' columns &middot; ' + res.ms + ' ms. ' + (ans ? 'Learners must type these values.' : 'This is the answer learners must match.') + '</p>'
           + '<div class="kp-res"><table><thead><tr>' + res.columns.map(function (c) { return '<th>' + esc(c) + '</th>'; }).join('') + '</tr></thead><tbody>'
           + res.rows.slice(0, 30).map(function (r) { return '<tr>' + r.map(function (v) { return '<td>' + esc(v === null ? 'null' : v) + '</td>'; }).join('') + '</tr>'; }).join('')
           + '</tbody></table></div>' + (res.out ? '<div class="kp-log">' + esc(res.out) + '</div>' : '');
@@ -368,8 +383,16 @@ KA.boot('practice', function (ctx) {
       t.title = title; t.level = document.getElementById('kpL').value; t.points = parseInt(document.getElementById('kpP').value, 10) || 0;
       t.question = document.getElementById('kpQ').value.trim(); t.solution = sol; t.hint = document.getElementById('kpH').value.trim();
       t.explain = document.getElementById('kpE').value.trim(); t.ordered = document.getElementById('kpO').checked;
+      if (ans) {
+        var lines = function (id) { return document.getElementById(id).value.split('\n').map(function (x) { return x.trim(); }).filter(Boolean); };
+        var lb = lines('kpLab'), ck = lines('kpChk');
+        if (lb.length) t.labels = lb; else delete t.labels;
+        if (ck.length) t.checklist = ck; else delete t.checklist;
+        if (changed || true) delete t.hash;
+      }
       if (changed) delete t.hash;
-      if (!t.starter || t._new) t.starter = t.tool === 'sql'
+      if (ans) t.starter = '';
+      else if (!t.starter || t._new) t.starter = t.tool === 'sql'
         ? '-- ' + t.title + '\nSELECT *\nFROM ' + ((src.tables[0] || {}).name || 'table_name') + '\nLIMIT 10;'
         : '# ' + t.title + '\n# DataFrames ready: ' + src.tables.map(function (x) { return x.name; }).join(', ') + '\n# Put your final answer in a variable called result\nresult = ' + ((src.tables[0] || {}).name || 'df') + '.head()';
       if (t._new) { delete t._new; src.tasks.push(t); }
@@ -384,13 +407,13 @@ KA.boot('practice', function (ctx) {
 
   // ---------------------------------------------------------------- publish
   async function publish(ids) {
-    var fn = freeN(), manifest = (await getManifest()) || { roles: [] };
+    var fn = freeN(), fb = freeBI(), manifest = (await getManifest()) || { roles: [] };
     log('Publishing ' + ids.length + ' role(s)', true);
     for (var i = 0; i < ids.length; i++) {
       var src = S.srcs[ids[i]] || await getSrc(ids[i]);
       if (!src) { log('Skipped ' + ids[i] + ': no content'); continue; }
       if (!src.tables.length || !src.tasks.length) { log('Skipped ' + src.title + ': needs at least one table and one task'); continue; }
-      var r = await KP.buildPacks(src, { dataBase: PUB + 'data/', freeN: fn, onProgress: function (m) { log('  ' + m); } });
+      var r = await KP.buildPacks(src, { dataBase: PUB + 'data/', freeN: fn, freeBI: fb, onProgress: function (m) { log('  ' + m); } });
       var hard = r.errors.filter(function (e) { return !e.warn; });
       r.errors.filter(function (e) { return e.warn; }).forEach(function (e) { log('  warning ' + e.id + ': ' + e.error); });
       if (hard.length) {
@@ -407,7 +430,7 @@ KA.boot('practice', function (ctx) {
         var o = DEFAULT_ROLES.map(function (d) { return d.id; }), ia = o.indexOf(a.id), ib = o.indexOf(b.id);
         return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib);
       });
-      manifest.v = Date.now(); manifest.free_per_tool = fn;
+      manifest.v = Date.now(); manifest.free_per_tool = fn; manifest.free_per_tool_bi = fb;
       await put('practice', 'manifest.json', manifest, 'application/json', '30');
       log('Published ' + src.title + ': ' + r.summary.tasks + ' tasks, ' + r.summary.free + ' free');
     }
@@ -416,7 +439,7 @@ KA.boot('practice', function (ctx) {
   }
 
   async function loadStarter() {
-    if (!KA.confirm('Load the starter content? This uploads 15 CSV files and 80 tasks for 4 roles, replacing any draft with the same role, and then publishes everything.')) return;
+    if (!KA.confirm('Load the starter content? This uploads 15 CSV files and 94 tasks for 4 roles, replacing any draft with the same role, and then publishes everything.')) return;
     log('Loading starter content', true);
     for (var i = 0; i < DEFAULT_ROLES.length; i++) {
       var id = DEFAULT_ROLES[i].id;
