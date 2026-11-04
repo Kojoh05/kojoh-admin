@@ -1,0 +1,2001 @@
+user_id,signup_date,plan,acquisition_channel,age_band,city_tier,monthly_minutes,support_tickets,churned
+1,2024-01-30,Free,Paid Social,35-44,Tier 3,390,4,0
+2,2024-05-04,Free,Organic,18-24,Tier 3,500,2,0
+3,2024-04-29,Pro,Search Ads,18-24,Tier 1,559,0,0
+4,2024-06-25,Free,Organic,25-34,Tier 1,128,1,1
+5,2024-06-22,Pro,Search Ads,25-34,Tier 1,172,1,1
+6,2024-03-01,Plus,Referral,18-24,Tier 2,386,0,0
+7,2024-02-17,Free,Search Ads,35-44,Tier 3,318,0,0
+8,2024-06-15,Pro,Referral,18-24,Tier 2,138,0,0
+9,2024-02-27,Free,Search Ads,18-24,Tier 1,114,3,1
+10,2024-01-16,Free,Search Ads,25-34,Tier 3,267,1,0
+11,2024-06-30,Plus,Paid Social,45+,Tier 3,347,2,1
+12,2024-06-07,Pro,Search Ads,25-34,Tier 3,245,0,0
+13,2024-06-04,Free,Search Ads,18-24,Tier 2,244,2,0
+14,2024-01-10,Free,Search Ads,25-34,Tier 1,347,0,0
+15,2024-02-13,Free,Paid Social,25-34,Tier 2,114,1,0
+16,2024-02-02,Pro,Search Ads,18-24,Tier 2,114,0,0
+17,2024-03-21,Pro,Paid Social,18-24,Tier 3,149,1,1
+18,2024-05-26,Pro,Organic,25-34,Tier 2,229,1,1
+19,2024-05-18,Plus,Organic,45+,Tier 1,327,2,0
+20,2024-06-19,Free,Referral,35-44,Tier 2,285,0,0
+21,2024-04-02,Free,Paid Social,35-44,Tier 1,68,1,1
+22,2024-04-17,Plus,Organic,18-24,Tier 1,710,0,0
+23,2024-06-01,Pro,Organic,25-34,Tier 3,203,0,0
+24,2024-06-05,Free,Organic,18-24,Tier 1,225,0,0
+25,2024-06-18,Free,Referral,25-34,Tier 1,667,0,0
+26,2024-01-23,Plus,Organic,35-44,Tier 1,204,0,0
+27,2024-01-09,Free,Referral,18-24,Tier 1,117,1,1
+28,2024-06-06,Plus,Organic,35-44,Tier 3,623,1,0
+29,2024-05-10,Free,Organic,35-44,Tier 2,404,2,1
+30,2024-02-21,Plus,Search Ads,25-34,Tier 2,236,1,0
+31,2024-06-13,Plus,Search Ads,35-44,Tier 2,177,2,0
+32,2024-06-20,Free,Paid Social,18-24,Tier 1,58,3,1
+33,2024-06-17,Free,Organic,45+,Tier 2,50,1,0
+34,2024-03-18,Plus,Organic,25-34,Tier 2,269,0,0
+35,2024-05-08,Pro,Paid Social,25-34,Tier 3,35,0,1
+36,2024-05-22,Free,Referral,35-44,Tier 1,225,1,0
+37,2024-01-27,Free,Paid Social,35-44,Tier 1,304,2,0
+38,2024-05-06,Pro,Search Ads,35-44,Tier 1,143,0,0
+39,2024-02-18,Free,Referral,25-34,Tier 3,340,3,1
+40,2024-01-04,Free,Search Ads,35-44,Tier 1,253,0,1
+41,2024-06-13,Free,Referral,35-44,Tier 3,248,1,1
+42,2024-02-09,Plus,Organic,25-34,Tier 2,144,0,0
+43,2024-03-25,Free,Organic,25-34,Tier 3,173,0,0
+44,2024-04-13,Free,Organic,25-34,Tier 2,316,0,0
+45,2024-05-08,Free,Organic,35-44,Tier 1,129,1,0
+46,2024-02-10,Plus,Organic,35-44,Tier 1,725,0,0
+47,2024-03-08,Free,Referral,18-24,Tier 2,226,1,1
+48,2024-05-23,Free,Organic,25-34,Tier 1,323,0,0
+49,2024-05-23,Plus,Paid Social,25-34,Tier 2,152,1,1
+50,2024-05-29,Free,Search Ads,18-24,Tier 1,249,1,1
+51,2024-04-06,Plus,Organic,18-24,Tier 3,135,0,0
+52,2024-01-04,Pro,Paid Social,25-34,Tier 1,228,0,1
+53,2024-06-11,Free,Paid Social,18-24,Tier 2,50,0,1
+54,2024-04-19,Free,Search Ads,18-24,Tier 2,349,1,0
+55,2024-03-12,Free,Search Ads,25-34,Tier 3,256,0,0
+56,2024-06-29,Plus,Search Ads,25-34,Tier 2,910,0,0
+57,2024-06-15,Free,Organic,18-24,Tier 2,193,1,1
+58,2024-04-06,Free,Search Ads,35-44,Tier 1,114,0,0
+59,2024-05-01,Pro,Search Ads,25-34,Tier 1,828,1,0
+60,2024-06-03,Plus,Paid Social,18-24,Tier 1,1859,1,0
+61,2024-01-15,Free,Paid Social,18-24,Tier 1,390,0,0
+62,2024-01-21,Pro,Organic,45+,Tier 3,730,0,1
+63,2024-01-27,Free,Search Ads,25-34,Tier 1,112,2,0
+64,2024-05-12,Free,Organic,35-44,Tier 2,166,2,1
+65,2024-04-28,Free,Paid Social,45+,Tier 1,390,2,1
+66,2024-02-07,Plus,Referral,25-34,Tier 3,365,0,0
+67,2024-04-23,Plus,Search Ads,18-24,Tier 3,423,0,0
+68,2024-02-21,Free,Referral,25-34,Tier 2,108,0,1
+69,2024-04-30,Plus,Paid Social,18-24,Tier 3,384,1,0
+70,2024-03-31,Free,Organic,25-34,Tier 2,267,0,1
+71,2024-03-27,Free,Search Ads,18-24,Tier 1,150,2,0
+72,2024-06-19,Pro,Organic,35-44,Tier 3,1050,1,0
+73,2024-05-21,Free,Search Ads,18-24,Tier 1,221,1,0
+74,2024-05-03,Free,Organic,35-44,Tier 1,304,1,1
+75,2024-05-26,Free,Paid Social,25-34,Tier 3,355,3,0
+76,2024-06-17,Plus,Paid Social,25-34,Tier 1,301,0,1
+77,2024-03-14,Free,Referral,18-24,Tier 2,136,2,0
+78,2024-05-14,Free,Referral,35-44,Tier 3,143,0,0
+79,2024-04-17,Free,Organic,35-44,Tier 3,375,0,1
+80,2024-05-17,Plus,Organic,25-34,Tier 3,234,1,1
+81,2024-06-06,Free,Referral,18-24,Tier 3,598,1,1
+82,2024-06-04,Plus,Organic,25-34,Tier 1,109,0,1
+83,2024-04-08,Free,Search Ads,35-44,Tier 3,592,1,1
+84,2024-02-29,Plus,Search Ads,18-24,Tier 1,508,0,0
+85,2024-02-18,Free,Organic,35-44,Tier 1,216,1,0
+86,2024-05-23,Plus,Referral,35-44,Tier 1,159,2,0
+87,2024-04-12,Plus,Organic,45+,Tier 2,202,2,0
+88,2024-06-02,Pro,Organic,25-34,Tier 1,392,1,0
+89,2024-03-25,Plus,Organic,25-34,Tier 1,244,0,0
+90,2024-05-14,Pro,Referral,18-24,Tier 1,192,0,0
+91,2024-02-19,Pro,Organic,35-44,Tier 1,349,0,0
+92,2024-05-04,Free,Organic,25-34,Tier 1,159,1,1
+93,2024-01-29,Free,Referral,25-34,Tier 1,454,1,1
+94,2024-02-04,Free,Organic,35-44,Tier 1,336,0,1
+95,2024-06-03,Free,Organic,35-44,Tier 1,335,0,1
+96,2024-06-23,Plus,Search Ads,18-24,Tier 2,395,0,1
+97,2024-03-19,Free,Search Ads,25-34,Tier 1,97,0,1
+98,2024-02-21,Pro,Referral,35-44,Tier 2,403,1,0
+99,2024-06-07,Plus,Paid Social,18-24,Tier 1,446,0,0
+100,2024-03-16,Free,Referral,18-24,Tier 1,286,0,0
+101,2024-05-03,Plus,Paid Social,45+,Tier 1,405,1,1
+102,2024-01-13,Plus,Organic,35-44,Tier 1,40,0,1
+103,2024-05-28,Free,Paid Social,35-44,Tier 1,393,3,0
+104,2024-01-04,Pro,Referral,25-34,Tier 3,150,0,0
+105,2024-05-17,Free,Paid Social,45+,Tier 2,147,2,1
+106,2024-01-31,Free,Paid Social,25-34,Tier 3,235,1,0
+107,2024-06-15,Plus,Search Ads,25-34,Tier 2,381,0,0
+108,2024-04-23,Plus,Organic,18-24,Tier 1,197,0,0
+109,2024-04-03,Free,Paid Social,18-24,Tier 3,142,5,1
+110,2024-02-23,Free,Organic,25-34,Tier 1,146,0,0
+111,2024-02-13,Pro,Paid Social,45+,Tier 3,107,0,0
+112,2024-06-09,Free,Paid Social,25-34,Tier 1,101,0,1
+113,2024-03-09,Plus,Organic,45+,Tier 2,632,0,0
+114,2024-01-04,Free,Organic,18-24,Tier 2,287,0,0
+115,2024-01-16,Plus,Referral,18-24,Tier 1,591,1,0
+116,2024-02-05,Free,Paid Social,18-24,Tier 1,605,0,1
+117,2024-06-17,Plus,Search Ads,25-34,Tier 2,459,1,0
+118,2024-01-15,Pro,Search Ads,25-34,Tier 2,82,1,0
+119,2024-05-10,Plus,Search Ads,35-44,Tier 1,381,0,0
+120,2024-01-19,Free,Paid Social,25-34,Tier 2,292,2,1
+121,2024-01-06,Free,Paid Social,18-24,Tier 2,217,2,1
+122,2024-02-13,Pro,Referral,18-24,Tier 2,186,0,0
+123,2024-01-16,Plus,Organic,25-34,Tier 1,452,0,0
+124,2024-06-06,Pro,Organic,35-44,Tier 1,606,1,0
+125,2024-06-17,Free,Organic,18-24,Tier 1,245,0,0
+126,2024-06-04,Plus,Search Ads,18-24,Tier 2,639,1,0
+127,2024-04-09,Free,Organic,35-44,Tier 3,209,2,0
+128,2024-02-29,Free,Search Ads,25-34,Tier 2,222,1,1
+129,2024-06-28,Plus,Paid Social,25-34,Tier 1,242,1,0
+130,2024-01-14,Plus,Search Ads,18-24,Tier 3,506,1,1
+131,2024-02-29,Plus,Referral,18-24,Tier 1,433,0,0
+132,2024-05-04,Free,Organic,35-44,Tier 2,194,0,0
+133,2024-02-26,Free,Paid Social,25-34,Tier 1,540,1,0
+134,2024-05-06,Pro,Organic,25-34,Tier 2,1018,2,0
+135,2024-06-07,Free,Organic,35-44,Tier 2,208,1,0
+136,2024-06-17,Plus,Paid Social,35-44,Tier 3,813,0,0
+137,2024-01-22,Plus,Paid Social,18-24,Tier 1,530,0,0
+138,2024-06-16,Plus,Paid Social,45+,Tier 1,686,0,0
+139,2024-06-25,Free,Paid Social,25-34,Tier 1,60,3,0
+140,2024-02-17,Plus,Organic,18-24,Tier 2,381,1,1
+141,2024-01-06,Pro,Organic,25-34,Tier 3,316,0,1
+142,2024-06-10,Plus,Search Ads,25-34,Tier 3,596,0,0
+143,2024-06-14,Free,Paid Social,35-44,Tier 1,182,3,1
+144,2024-04-06,Free,Organic,45+,Tier 2,305,1,0
+145,2024-02-21,Plus,Paid Social,18-24,Tier 1,803,1,0
+146,2024-06-15,Plus,Referral,35-44,Tier 3,319,0,0
+147,2024-05-23,Free,Paid Social,25-34,Tier 1,113,2,1
+148,2024-05-02,Plus,Organic,45+,Tier 2,531,0,0
+149,2024-03-28,Pro,Organic,18-24,Tier 2,442,1,0
+150,2024-03-25,Free,Paid Social,35-44,Tier 2,120,1,0
+151,2024-06-15,Free,Paid Social,45+,Tier 2,262,0,1
+152,2024-04-15,Plus,Paid Social,25-34,Tier 1,507,1,0
+153,2024-03-07,Plus,Organic,25-34,Tier 2,663,0,0
+154,2024-02-12,Plus,Paid Social,25-34,Tier 2,111,0,0
+155,2024-04-08,Free,Search Ads,18-24,Tier 3,187,1,0
+156,2024-04-13,Plus,Paid Social,25-34,Tier 1,282,0,1
+157,2024-05-19,Plus,Paid Social,25-34,Tier 1,295,1,1
+158,2024-02-19,Pro,Organic,18-24,Tier 1,599,0,0
+159,2024-05-30,Free,Paid Social,45+,Tier 2,207,1,0
+160,2024-03-21,Plus,Paid Social,25-34,Tier 3,574,1,0
+161,2024-04-29,Free,Organic,35-44,Tier 2,162,3,0
+162,2024-02-24,Pro,Paid Social,18-24,Tier 1,540,0,0
+163,2024-03-30,Plus,Paid Social,25-34,Tier 1,549,0,0
+164,2024-03-21,Plus,Organic,45+,Tier 1,126,1,0
+165,2024-05-09,Free,Referral,25-34,Tier 1,477,1,0
+166,2024-06-05,Free,Referral,25-34,Tier 2,178,0,0
+167,2024-03-30,Plus,Paid Social,35-44,Tier 2,167,1,0
+168,2024-04-13,Free,Paid Social,18-24,Tier 1,245,0,1
+169,2024-05-08,Plus,Organic,35-44,Tier 1,226,0,1
+170,2024-01-09,Free,Paid Social,18-24,Tier 2,285,2,1
+171,2024-04-15,Plus,Search Ads,18-24,Tier 3,401,0,0
+172,2024-05-06,Free,Search Ads,45+,Tier 1,375,0,0
+173,2024-02-19,Plus,Search Ads,18-24,Tier 3,423,0,0
+174,2024-04-30,Free,Search Ads,35-44,Tier 1,173,2,0
+175,2024-01-15,Pro,Search Ads,25-34,Tier 1,407,2,0
+176,2024-01-17,Plus,Paid Social,18-24,Tier 3,231,0,0
+177,2024-02-06,Free,Organic,25-34,Tier 3,74,0,0
+178,2024-02-26,Plus,Search Ads,18-24,Tier 2,336,0,1
+179,2024-05-20,Plus,Referral,18-24,Tier 1,176,1,0
+180,2024-02-16,Free,Organic,25-34,Tier 1,242,2,1
+181,2024-04-08,Free,Organic,25-34,Tier 1,199,1,0
+182,2024-03-24,Free,Referral,25-34,Tier 2,241,0,0
+183,2024-01-19,Free,Referral,25-34,Tier 1,135,1,0
+184,2024-03-10,Free,Organic,18-24,Tier 3,141,2,1
+185,2024-05-10,Free,Paid Social,25-34,Tier 1,358,2,1
+186,2024-05-30,Plus,Paid Social,25-34,Tier 2,277,0,0
+187,2024-04-10,Plus,Paid Social,35-44,Tier 1,413,0,1
+188,2024-03-12,Free,Paid Social,18-24,Tier 3,159,2,1
+189,2024-02-21,Pro,Organic,18-24,Tier 1,498,0,0
+190,2024-01-22,Free,Paid Social,25-34,Tier 1,213,2,1
+191,2024-01-07,Plus,Organic,25-34,Tier 1,746,0,0
+192,2024-02-21,Free,Paid Social,18-24,Tier 2,376,1,1
+193,2024-05-01,Free,Paid Social,18-24,Tier 2,188,1,1
+194,2024-01-26,Plus,Organic,35-44,Tier 3,658,0,0
+195,2024-03-25,Plus,Search Ads,18-24,Tier 1,220,0,0
+196,2024-02-29,Free,Paid Social,25-34,Tier 3,356,4,1
+197,2024-03-04,Free,Organic,35-44,Tier 1,322,0,0
+198,2024-06-03,Plus,Paid Social,25-34,Tier 2,344,0,1
+199,2024-02-29,Pro,Paid Social,25-34,Tier 1,684,1,0
+200,2024-04-06,Plus,Search Ads,35-44,Tier 1,77,2,0
+201,2024-04-03,Free,Search Ads,25-34,Tier 2,71,0,0
+202,2024-03-06,Free,Referral,18-24,Tier 1,364,0,0
+203,2024-04-26,Free,Referral,18-24,Tier 3,218,0,0
+204,2024-06-12,Free,Paid Social,45+,Tier 2,237,1,0
+205,2024-03-19,Free,Organic,35-44,Tier 2,665,0,0
+206,2024-03-24,Free,Paid Social,35-44,Tier 3,557,0,0
+207,2024-06-05,Plus,Paid Social,18-24,Tier 2,381,0,0
+208,2024-05-13,Plus,Paid Social,18-24,Tier 3,280,0,0
+209,2024-03-23,Free,Paid Social,25-34,Tier 2,279,2,0
+210,2024-02-06,Plus,Paid Social,35-44,Tier 3,339,2,1
+211,2024-05-16,Plus,Referral,35-44,Tier 1,430,0,0
+212,2024-03-08,Free,Search Ads,25-34,Tier 3,228,1,0
+213,2024-04-25,Free,Paid Social,35-44,Tier 2,253,2,1
+214,2024-04-02,Plus,Paid Social,25-34,Tier 1,282,0,1
+215,2024-04-10,Plus,Referral,18-24,Tier 2,422,0,0
+216,2024-04-03,Free,Organic,18-24,Tier 3,269,0,1
+217,2024-05-02,Free,Paid Social,25-34,Tier 2,515,2,0
+218,2024-05-25,Free,Organic,18-24,Tier 1,242,1,1
+219,2024-05-20,Plus,Organic,25-34,Tier 3,212,0,1
+220,2024-04-15,Pro,Paid Social,18-24,Tier 1,318,0,1
+221,2024-01-30,Free,Organic,18-24,Tier 2,389,0,0
+222,2024-06-12,Plus,Paid Social,35-44,Tier 2,563,2,1
+223,2024-04-13,Plus,Search Ads,45+,Tier 2,108,1,1
+224,2024-06-15,Pro,Referral,25-34,Tier 2,233,0,0
+225,2024-06-18,Plus,Paid Social,18-24,Tier 1,159,2,0
+226,2024-03-19,Pro,Organic,45+,Tier 1,255,1,0
+227,2024-03-11,Pro,Organic,18-24,Tier 2,349,1,0
+228,2024-05-04,Free,Search Ads,18-24,Tier 1,195,2,1
+229,2024-01-28,Free,Referral,25-34,Tier 1,444,0,1
+230,2024-05-22,Free,Organic,18-24,Tier 2,600,1,1
+231,2024-05-27,Plus,Paid Social,35-44,Tier 2,366,0,1
+232,2024-03-07,Free,Search Ads,25-34,Tier 1,147,2,0
+233,2024-03-05,Pro,Search Ads,25-34,Tier 2,278,1,0
+234,2024-02-21,Pro,Paid Social,45+,Tier 1,544,0,0
+235,2024-02-16,Free,Paid Social,25-34,Tier 3,51,3,1
+236,2024-06-08,Plus,Paid Social,25-34,Tier 1,496,1,1
+237,2024-06-14,Free,Organic,25-34,Tier 3,203,0,0
+238,2024-04-18,Free,Paid Social,25-34,Tier 1,281,3,1
+239,2024-03-13,Plus,Paid Social,25-34,Tier 2,157,1,0
+240,2024-02-04,Free,Organic,18-24,Tier 2,218,1,0
+241,2024-01-15,Free,Organic,18-24,Tier 2,174,2,1
+242,2024-04-15,Pro,Paid Social,35-44,Tier 3,627,2,1
+243,2024-03-27,Plus,Paid Social,18-24,Tier 1,108,2,1
+244,2024-02-10,Plus,Referral,18-24,Tier 3,225,0,0
+245,2024-01-13,Plus,Organic,25-34,Tier 2,237,2,1
+246,2024-03-25,Plus,Organic,18-24,Tier 3,279,1,0
+247,2024-02-16,Plus,Search Ads,45+,Tier 3,223,0,0
+248,2024-05-03,Free,Organic,25-34,Tier 1,575,2,1
+249,2024-01-02,Free,Organic,45+,Tier 3,207,0,0
+250,2024-05-31,Free,Search Ads,35-44,Tier 2,307,0,0
+251,2024-04-05,Plus,Organic,25-34,Tier 2,952,0,0
+252,2024-03-14,Plus,Paid Social,25-34,Tier 1,471,1,0
+253,2024-05-15,Free,Search Ads,25-34,Tier 1,262,3,1
+254,2024-01-19,Plus,Organic,18-24,Tier 1,516,0,0
+255,2024-01-21,Free,Paid Social,25-34,Tier 1,327,1,0
+256,2024-05-21,Plus,Search Ads,45+,Tier 1,301,0,0
+257,2024-03-09,Free,Organic,18-24,Tier 2,66,3,0
+258,2024-04-30,Pro,Referral,45+,Tier 2,292,0,0
+259,2024-05-24,Free,Paid Social,18-24,Tier 1,379,1,0
+260,2024-04-23,Free,Referral,18-24,Tier 2,658,0,1
+261,2024-01-28,Free,Paid Social,45+,Tier 2,406,1,1
+262,2024-02-26,Free,Referral,18-24,Tier 1,272,0,1
+263,2024-01-28,Plus,Paid Social,45+,Tier 1,594,0,0
+264,2024-01-09,Free,Search Ads,25-34,Tier 1,272,1,0
+265,2024-06-21,Plus,Organic,35-44,Tier 1,135,0,0
+266,2024-04-18,Free,Organic,25-34,Tier 1,112,2,0
+267,2024-02-10,Pro,Organic,18-24,Tier 2,764,0,0
+268,2024-05-21,Free,Referral,35-44,Tier 2,216,1,0
+269,2024-01-16,Free,Paid Social,35-44,Tier 2,228,5,0
+270,2024-02-25,Plus,Paid Social,18-24,Tier 2,290,0,1
+271,2024-02-28,Plus,Organic,18-24,Tier 3,388,0,1
+272,2024-05-04,Plus,Organic,25-34,Tier 2,536,0,0
+273,2024-05-09,Free,Organic,18-24,Tier 1,300,1,1
+274,2024-01-24,Plus,Paid Social,18-24,Tier 3,456,1,1
+275,2024-02-02,Free,Paid Social,35-44,Tier 1,230,4,1
+276,2024-05-12,Plus,Search Ads,35-44,Tier 1,305,0,0
+277,2024-06-10,Free,Organic,25-34,Tier 2,141,1,1
+278,2024-06-04,Free,Organic,25-34,Tier 2,318,0,0
+279,2024-04-04,Plus,Paid Social,25-34,Tier 2,261,2,0
+280,2024-03-11,Pro,Paid Social,18-24,Tier 2,684,0,0
+281,2024-03-17,Free,Paid Social,25-34,Tier 2,227,2,1
+282,2024-01-25,Free,Search Ads,25-34,Tier 1,321,0,0
+283,2024-04-27,Free,Paid Social,18-24,Tier 3,317,3,1
+284,2024-03-29,Pro,Organic,18-24,Tier 1,466,0,0
+285,2024-01-30,Free,Search Ads,25-34,Tier 2,297,0,1
+286,2024-04-16,Plus,Paid Social,45+,Tier 1,180,2,1
+287,2024-05-22,Free,Organic,45+,Tier 1,474,1,1
+288,2024-01-22,Plus,Organic,18-24,Tier 1,1062,1,0
+289,2024-03-12,Pro,Paid Social,25-34,Tier 1,361,1,1
+290,2024-02-05,Free,Search Ads,25-34,Tier 2,224,0,0
+291,2024-06-04,Plus,Organic,25-34,Tier 1,498,0,0
+292,2024-01-12,Plus,Search Ads,18-24,Tier 2,373,0,0
+293,2024-01-14,Free,Organic,35-44,Tier 3,243,2,0
+294,2024-06-03,Pro,Referral,25-34,Tier 1,353,0,0
+295,2024-04-04,Plus,Organic,35-44,Tier 1,223,0,0
+296,2024-03-10,Free,Organic,18-24,Tier 3,253,4,1
+297,2024-05-15,Free,Search Ads,35-44,Tier 3,152,2,0
+298,2024-04-11,Plus,Paid Social,35-44,Tier 2,435,0,0
+299,2024-05-08,Free,Search Ads,25-34,Tier 1,117,3,1
+300,2024-05-05,Pro,Organic,35-44,Tier 2,145,1,0
+301,2024-02-13,Free,Paid Social,25-34,Tier 1,416,2,1
+302,2024-02-16,Pro,Organic,18-24,Tier 2,854,2,0
+303,2024-05-29,Free,Search Ads,25-34,Tier 1,116,2,0
+304,2024-05-19,Plus,Paid Social,25-34,Tier 2,151,1,1
+305,2024-05-25,Pro,Paid Social,25-34,Tier 3,742,1,0
+306,2024-01-31,Free,Organic,18-24,Tier 1,517,1,0
+307,2024-03-02,Plus,Organic,35-44,Tier 3,1588,1,0
+308,2024-06-28,Plus,Paid Social,45+,Tier 3,260,0,0
+309,2024-03-06,Plus,Organic,25-34,Tier 2,212,0,0
+310,2024-03-26,Free,Organic,25-34,Tier 3,170,4,0
+311,2024-06-14,Plus,Referral,35-44,Tier 1,67,0,0
+312,2024-03-30,Pro,Referral,18-24,Tier 2,1052,1,0
+313,2024-06-10,Free,Organic,18-24,Tier 3,30,2,0
+314,2024-04-11,Plus,Search Ads,18-24,Tier 2,475,2,1
+315,2024-06-20,Free,Search Ads,18-24,Tier 1,350,0,0
+316,2024-02-22,Free,Search Ads,18-24,Tier 2,395,0,0
+317,2024-06-22,Free,Organic,18-24,Tier 3,240,2,0
+318,2024-03-23,Pro,Referral,25-34,Tier 2,572,1,0
+319,2024-02-18,Plus,Referral,18-24,Tier 2,234,1,0
+320,2024-01-08,Pro,Referral,35-44,Tier 1,228,1,0
+321,2024-06-03,Free,Organic,45+,Tier 3,49,1,0
+322,2024-05-31,Plus,Paid Social,18-24,Tier 1,278,0,1
+323,2024-03-02,Plus,Organic,18-24,Tier 1,220,0,0
+324,2024-06-20,Free,Search Ads,18-24,Tier 1,153,2,1
+325,2024-01-22,Free,Organic,18-24,Tier 2,214,2,1
+326,2024-03-09,Free,Search Ads,25-34,Tier 1,434,0,0
+327,2024-06-18,Free,Referral,35-44,Tier 1,301,0,0
+328,2024-06-02,Plus,Organic,25-34,Tier 3,196,1,0
+329,2024-04-28,Free,Paid Social,35-44,Tier 1,150,1,1
+330,2024-04-27,Free,Paid Social,45+,Tier 2,184,0,0
+331,2024-02-28,Plus,Organic,18-24,Tier 2,326,1,1
+332,2024-02-24,Free,Paid Social,25-34,Tier 3,599,0,0
+333,2024-06-18,Plus,Organic,18-24,Tier 3,535,0,0
+334,2024-02-10,Free,Organic,25-34,Tier 1,130,0,1
+335,2024-02-22,Free,Referral,18-24,Tier 1,105,0,0
+336,2024-04-13,Plus,Paid Social,18-24,Tier 1,647,1,0
+337,2024-05-15,Plus,Search Ads,18-24,Tier 2,969,0,0
+338,2024-02-18,Free,Search Ads,35-44,Tier 2,366,0,0
+339,2024-02-11,Free,Organic,25-34,Tier 1,291,0,1
+340,2024-05-04,Free,Referral,35-44,Tier 2,163,1,1
+341,2024-01-23,Pro,Organic,18-24,Tier 2,621,1,0
+342,2024-02-17,Pro,Paid Social,18-24,Tier 1,803,1,0
+343,2024-04-11,Pro,Organic,18-24,Tier 2,205,0,0
+344,2024-06-04,Plus,Organic,35-44,Tier 1,126,2,0
+345,2024-04-05,Plus,Search Ads,35-44,Tier 2,382,0,1
+346,2024-06-07,Pro,Organic,18-24,Tier 2,414,0,0
+347,2024-03-21,Pro,Paid Social,35-44,Tier 2,1167,0,0
+348,2024-03-30,Pro,Search Ads,35-44,Tier 1,475,0,0
+349,2024-04-22,Free,Organic,18-24,Tier 1,198,2,0
+350,2024-04-16,Plus,Paid Social,18-24,Tier 3,782,0,1
+351,2024-03-13,Free,Organic,25-34,Tier 1,232,2,0
+352,2024-03-06,Plus,Organic,18-24,Tier 1,131,1,1
+353,2024-04-20,Free,Organic,18-24,Tier 1,348,0,0
+354,2024-06-08,Free,Organic,35-44,Tier 2,468,3,0
+355,2024-05-26,Pro,Organic,35-44,Tier 3,167,0,1
+356,2024-06-10,Plus,Paid Social,18-24,Tier 2,358,1,0
+357,2024-06-08,Free,Paid Social,18-24,Tier 2,157,2,1
+358,2024-04-23,Pro,Organic,18-24,Tier 2,320,0,0
+359,2024-01-11,Free,Organic,25-34,Tier 1,230,1,0
+360,2024-01-22,Pro,Referral,18-24,Tier 1,190,0,0
+361,2024-05-14,Free,Search Ads,18-24,Tier 1,257,0,0
+362,2024-04-03,Free,Search Ads,25-34,Tier 1,249,2,0
+363,2024-01-28,Free,Organic,18-24,Tier 1,353,3,1
+364,2024-05-05,Pro,Paid Social,25-34,Tier 3,421,0,0
+365,2024-01-03,Plus,Organic,18-24,Tier 1,528,1,0
+366,2024-06-18,Free,Paid Social,25-34,Tier 1,128,3,1
+367,2024-06-14,Plus,Paid Social,18-24,Tier 2,1037,1,0
+368,2024-06-18,Pro,Paid Social,18-24,Tier 2,715,2,0
+369,2024-02-28,Pro,Organic,25-34,Tier 1,345,0,0
+370,2024-05-21,Free,Paid Social,35-44,Tier 2,181,3,1
+371,2024-02-26,Plus,Paid Social,18-24,Tier 2,469,0,0
+372,2024-01-03,Pro,Search Ads,18-24,Tier 1,206,0,0
+373,2024-03-18,Pro,Organic,25-34,Tier 2,431,0,0
+374,2024-03-15,Pro,Paid Social,25-34,Tier 1,258,1,0
+375,2024-02-24,Pro,Search Ads,25-34,Tier 1,150,1,0
+376,2024-06-18,Pro,Paid Social,25-34,Tier 1,297,1,0
+377,2024-03-05,Free,Paid Social,25-34,Tier 2,296,2,1
+378,2024-03-09,Pro,Organic,18-24,Tier 2,384,0,0
+379,2024-06-16,Plus,Paid Social,25-34,Tier 2,486,0,0
+380,2024-04-20,Free,Paid Social,18-24,Tier 2,270,0,1
+381,2024-06-22,Free,Referral,25-34,Tier 1,201,0,0
+382,2024-05-31,Free,Paid Social,18-24,Tier 1,154,2,1
+383,2024-01-24,Plus,Paid Social,25-34,Tier 3,635,1,0
+384,2024-02-06,Free,Referral,35-44,Tier 2,203,0,1
+385,2024-04-04,Free,Organic,45+,Tier 3,185,2,0
+386,2024-02-05,Plus,Organic,35-44,Tier 1,161,0,0
+387,2024-04-08,Plus,Paid Social,18-24,Tier 2,349,0,0
+388,2024-06-17,Free,Search Ads,25-34,Tier 2,39,1,1
+389,2024-04-14,Plus,Organic,18-24,Tier 2,732,0,0
+390,2024-06-01,Plus,Organic,25-34,Tier 3,453,0,0
+391,2024-01-11,Free,Referral,25-34,Tier 1,421,2,1
+392,2024-03-20,Plus,Paid Social,35-44,Tier 2,460,0,0
+393,2024-02-24,Free,Referral,18-24,Tier 2,191,0,1
+394,2024-06-15,Pro,Paid Social,25-34,Tier 2,708,0,0
+395,2024-05-24,Free,Organic,35-44,Tier 1,141,0,0
+396,2024-04-12,Free,Paid Social,25-34,Tier 1,315,0,0
+397,2024-06-26,Pro,Organic,25-34,Tier 1,526,0,0
+398,2024-02-09,Free,Paid Social,25-34,Tier 1,185,1,0
+399,2024-02-12,Free,Paid Social,25-34,Tier 2,258,1,1
+400,2024-03-05,Plus,Paid Social,25-34,Tier 1,313,0,1
+401,2024-06-20,Free,Organic,18-24,Tier 2,182,1,0
+402,2024-05-28,Plus,Organic,25-34,Tier 1,253,0,0
+403,2024-01-21,Free,Paid Social,35-44,Tier 1,192,2,0
+404,2024-04-09,Free,Organic,45+,Tier 2,202,1,1
+405,2024-04-15,Free,Referral,18-24,Tier 2,189,0,1
+406,2024-01-05,Free,Paid Social,18-24,Tier 2,287,0,1
+407,2024-02-19,Free,Search Ads,35-44,Tier 1,223,2,0
+408,2024-04-02,Plus,Organic,25-34,Tier 3,304,1,0
+409,2024-03-17,Pro,Paid Social,35-44,Tier 2,293,0,0
+410,2024-01-03,Free,Search Ads,25-34,Tier 3,325,1,0
+411,2024-05-10,Free,Organic,25-34,Tier 1,270,0,0
+412,2024-01-31,Free,Search Ads,45+,Tier 1,46,1,0
+413,2024-05-05,Plus,Organic,25-34,Tier 2,480,1,0
+414,2024-04-28,Pro,Organic,18-24,Tier 2,418,0,0
+415,2024-03-23,Free,Referral,35-44,Tier 1,255,1,1
+416,2024-04-23,Free,Search Ads,18-24,Tier 1,449,0,0
+417,2024-02-19,Pro,Search Ads,18-24,Tier 1,443,0,0
+418,2024-04-08,Free,Organic,25-34,Tier 2,100,2,0
+419,2024-06-24,Plus,Organic,25-34,Tier 1,610,0,0
+420,2024-04-22,Free,Referral,25-34,Tier 2,193,0,0
+421,2024-01-12,Free,Search Ads,35-44,Tier 1,161,1,0
+422,2024-03-16,Free,Paid Social,25-34,Tier 1,498,1,0
+423,2024-04-20,Plus,Referral,35-44,Tier 2,876,0,0
+424,2024-01-02,Plus,Paid Social,45+,Tier 1,99,2,0
+425,2024-04-15,Free,Paid Social,18-24,Tier 3,210,0,1
+426,2024-04-29,Pro,Search Ads,35-44,Tier 1,176,0,1
+427,2024-03-25,Pro,Search Ads,25-34,Tier 3,794,0,0
+428,2024-05-11,Free,Paid Social,25-34,Tier 2,498,1,0
+429,2024-06-24,Free,Organic,18-24,Tier 2,729,0,0
+430,2024-04-12,Free,Paid Social,45+,Tier 2,344,2,1
+431,2024-06-15,Free,Referral,25-34,Tier 2,289,0,0
+432,2024-04-20,Free,Organic,25-34,Tier 1,260,1,1
+433,2024-05-25,Plus,Paid Social,18-24,Tier 1,190,0,0
+434,2024-02-03,Free,Paid Social,35-44,Tier 2,186,1,0
+435,2024-06-20,Free,Paid Social,25-34,Tier 1,204,0,0
+436,2024-02-16,Plus,Paid Social,18-24,Tier 1,368,0,0
+437,2024-01-05,Pro,Paid Social,18-24,Tier 1,276,1,0
+438,2024-04-08,Free,Referral,45+,Tier 2,548,1,0
+439,2024-06-27,Plus,Paid Social,18-24,Tier 2,98,3,1
+440,2024-02-22,Plus,Search Ads,35-44,Tier 1,341,0,0
+441,2024-01-12,Free,Organic,18-24,Tier 3,225,1,1
+442,2024-02-10,Plus,Search Ads,25-34,Tier 2,505,1,0
+443,2024-04-14,Free,Search Ads,18-24,Tier 1,40,2,0
+444,2024-05-22,Plus,Referral,25-34,Tier 2,632,0,0
+445,2024-06-28,Free,Search Ads,18-24,Tier 2,339,0,1
+446,2024-04-22,Free,Paid Social,35-44,Tier 3,428,2,0
+447,2024-05-09,Free,Organic,18-24,Tier 2,119,3,1
+448,2024-01-19,Free,Paid Social,35-44,Tier 1,267,2,1
+449,2024-05-27,Free,Search Ads,35-44,Tier 1,57,0,0
+450,2024-06-01,Free,Paid Social,25-34,Tier 2,111,2,1
+451,2024-02-02,Free,Search Ads,45+,Tier 3,80,0,1
+452,2024-04-07,Pro,Referral,25-34,Tier 2,334,1,0
+453,2024-05-30,Free,Organic,18-24,Tier 2,189,4,0
+454,2024-05-16,Free,Search Ads,25-34,Tier 3,191,1,0
+455,2024-03-21,Pro,Organic,18-24,Tier 2,435,0,0
+456,2024-04-09,Free,Search Ads,35-44,Tier 3,101,4,1
+457,2024-03-03,Pro,Organic,35-44,Tier 1,97,1,1
+458,2024-03-27,Free,Organic,18-24,Tier 2,29,1,0
+459,2024-02-25,Free,Organic,18-24,Tier 2,130,3,0
+460,2024-05-09,Free,Search Ads,18-24,Tier 1,200,5,1
+461,2024-05-19,Free,Referral,25-34,Tier 1,155,0,0
+462,2024-03-27,Plus,Organic,25-34,Tier 1,384,0,1
+463,2024-02-01,Plus,Organic,18-24,Tier 1,938,0,0
+464,2024-04-26,Free,Search Ads,25-34,Tier 1,198,2,1
+465,2024-01-29,Free,Organic,25-34,Tier 1,264,1,1
+466,2024-04-13,Pro,Referral,25-34,Tier 1,401,0,0
+467,2024-02-02,Free,Referral,35-44,Tier 1,393,2,0
+468,2024-05-10,Free,Organic,18-24,Tier 3,202,1,0
+469,2024-03-29,Free,Paid Social,25-34,Tier 1,86,3,0
+470,2024-05-22,Free,Search Ads,25-34,Tier 2,112,1,0
+471,2024-05-05,Free,Organic,25-34,Tier 1,396,1,0
+472,2024-05-08,Free,Search Ads,25-34,Tier 1,159,3,0
+473,2024-02-28,Plus,Organic,45+,Tier 2,203,0,1
+474,2024-06-16,Free,Referral,18-24,Tier 3,218,0,0
+475,2024-04-06,Free,Referral,25-34,Tier 1,380,1,1
+476,2024-06-19,Free,Organic,35-44,Tier 1,186,1,0
+477,2024-05-04,Plus,Organic,45+,Tier 2,434,1,0
+478,2024-01-20,Plus,Referral,35-44,Tier 1,1156,1,0
+479,2024-02-21,Plus,Paid Social,25-34,Tier 3,693,0,0
+480,2024-04-21,Free,Referral,18-24,Tier 2,255,0,0
+481,2024-01-08,Plus,Organic,25-34,Tier 1,353,1,0
+482,2024-04-16,Free,Referral,35-44,Tier 1,460,1,0
+483,2024-06-02,Plus,Referral,25-34,Tier 2,1386,0,0
+484,2024-01-09,Free,Paid Social,25-34,Tier 1,496,0,0
+485,2024-01-09,Free,Organic,18-24,Tier 2,252,0,1
+486,2024-03-10,Free,Organic,18-24,Tier 1,133,0,0
+487,2024-06-20,Plus,Organic,35-44,Tier 1,199,0,0
+488,2024-02-18,Free,Paid Social,18-24,Tier 1,375,0,0
+489,2024-02-25,Free,Organic,25-34,Tier 1,133,3,1
+490,2024-03-17,Pro,Organic,25-34,Tier 1,289,1,0
+491,2024-02-09,Free,Organic,25-34,Tier 1,225,0,1
+492,2024-05-20,Free,Paid Social,25-34,Tier 2,118,0,1
+493,2024-04-23,Plus,Organic,35-44,Tier 1,214,1,0
+494,2024-02-22,Plus,Search Ads,25-34,Tier 2,163,1,0
+495,2024-04-11,Free,Organic,18-24,Tier 1,302,1,1
+496,2024-06-17,Free,Organic,25-34,Tier 1,282,1,0
+497,2024-06-21,Free,Paid Social,35-44,Tier 1,333,2,1
+498,2024-06-09,Free,Paid Social,18-24,Tier 3,477,0,1
+499,2024-03-26,Free,Search Ads,18-24,Tier 2,127,3,1
+500,2024-04-25,Plus,Referral,18-24,Tier 2,140,2,0
+501,2024-02-07,Free,Paid Social,45+,Tier 3,189,1,1
+502,2024-06-28,Free,Organic,18-24,Tier 1,254,1,0
+503,2024-05-05,Free,Search Ads,35-44,Tier 2,30,0,0
+504,2024-01-03,Pro,Organic,45+,Tier 1,730,2,0
+505,2024-06-21,Free,Organic,25-34,Tier 1,207,1,1
+506,2024-03-04,Free,Paid Social,25-34,Tier 2,441,2,0
+507,2024-02-15,Plus,Referral,25-34,Tier 2,376,1,0
+508,2024-02-15,Free,Search Ads,45+,Tier 2,36,3,1
+509,2024-01-30,Plus,Paid Social,18-24,Tier 1,408,1,0
+510,2024-01-26,Free,Paid Social,35-44,Tier 3,220,0,0
+511,2024-03-06,Free,Search Ads,25-34,Tier 1,62,1,0
+512,2024-05-19,Free,Search Ads,25-34,Tier 1,712,0,0
+513,2024-04-12,Free,Paid Social,18-24,Tier 1,466,0,1
+514,2024-04-02,Free,Organic,25-34,Tier 3,397,0,0
+515,2024-03-26,Free,Paid Social,18-24,Tier 1,669,0,0
+516,2024-06-16,Free,Paid Social,25-34,Tier 2,109,1,1
+517,2024-05-28,Free,Paid Social,35-44,Tier 1,268,1,0
+518,2024-03-13,Pro,Organic,18-24,Tier 1,490,1,0
+519,2024-06-17,Free,Referral,25-34,Tier 1,495,0,0
+520,2024-06-23,Free,Search Ads,25-34,Tier 1,104,0,1
+521,2024-06-11,Free,Referral,35-44,Tier 1,218,0,0
+522,2024-04-26,Free,Organic,35-44,Tier 2,386,1,1
+523,2024-03-20,Free,Paid Social,25-34,Tier 3,508,5,0
+524,2024-03-07,Free,Paid Social,25-34,Tier 1,144,1,0
+525,2024-05-09,Plus,Referral,18-24,Tier 1,534,0,1
+526,2024-04-28,Free,Search Ads,25-34,Tier 2,258,0,0
+527,2024-01-06,Pro,Paid Social,25-34,Tier 2,285,0,0
+528,2024-06-10,Free,Search Ads,18-24,Tier 2,107,3,0
+529,2024-01-31,Plus,Search Ads,35-44,Tier 1,768,1,0
+530,2024-01-11,Free,Referral,25-34,Tier 1,469,0,0
+531,2024-05-16,Free,Search Ads,35-44,Tier 3,381,0,0
+532,2024-03-20,Free,Paid Social,25-34,Tier 1,157,0,0
+533,2024-05-21,Free,Organic,25-34,Tier 1,228,0,0
+534,2024-01-10,Pro,Paid Social,25-34,Tier 1,629,1,0
+535,2024-06-21,Free,Paid Social,25-34,Tier 2,156,1,1
+536,2024-04-23,Pro,Organic,18-24,Tier 2,132,1,0
+537,2024-01-13,Plus,Organic,25-34,Tier 2,627,1,0
+538,2024-01-03,Pro,Paid Social,18-24,Tier 2,191,0,0
+539,2024-03-19,Pro,Referral,18-24,Tier 2,579,0,0
+540,2024-04-03,Free,Paid Social,25-34,Tier 3,66,1,1
+541,2024-02-03,Free,Organic,25-34,Tier 2,271,1,1
+542,2024-02-05,Pro,Search Ads,35-44,Tier 1,1243,0,0
+543,2024-01-05,Free,Organic,18-24,Tier 1,475,1,0
+544,2024-02-05,Free,Paid Social,25-34,Tier 1,279,1,1
+545,2024-03-04,Free,Paid Social,45+,Tier 3,425,2,0
+546,2024-05-14,Plus,Search Ads,18-24,Tier 1,267,1,0
+547,2024-05-02,Free,Paid Social,25-34,Tier 2,271,0,0
+548,2024-02-01,Plus,Paid Social,18-24,Tier 3,72,1,0
+549,2024-02-26,Free,Paid Social,25-34,Tier 1,379,2,0
+550,2024-01-11,Plus,Organic,45+,Tier 1,622,0,0
+551,2024-06-19,Plus,Organic,25-34,Tier 2,696,0,0
+552,2024-03-11,Free,Paid Social,35-44,Tier 2,308,0,1
+553,2024-05-18,Free,Search Ads,35-44,Tier 2,564,1,1
+554,2024-03-22,Free,Paid Social,25-34,Tier 1,351,0,0
+555,2024-02-17,Plus,Paid Social,25-34,Tier 1,307,1,0
+556,2024-03-04,Free,Organic,35-44,Tier 2,350,0,0
+557,2024-06-22,Plus,Paid Social,18-24,Tier 3,569,0,0
+558,2024-04-04,Free,Paid Social,18-24,Tier 3,166,2,1
+559,2024-05-08,Free,Paid Social,25-34,Tier 2,315,4,1
+560,2024-03-07,Free,Referral,45+,Tier 1,125,1,1
+561,2024-01-22,Free,Organic,35-44,Tier 1,145,5,0
+562,2024-02-23,Plus,Search Ads,18-24,Tier 1,288,1,1
+563,2024-04-30,Plus,Referral,35-44,Tier 2,580,0,0
+564,2024-04-02,Plus,Organic,25-34,Tier 2,124,3,0
+565,2024-05-17,Free,Search Ads,18-24,Tier 1,816,1,0
+566,2024-01-06,Plus,Organic,25-34,Tier 1,1175,0,0
+567,2024-03-01,Free,Paid Social,18-24,Tier 2,181,1,1
+568,2024-01-04,Pro,Paid Social,18-24,Tier 1,399,0,0
+569,2024-02-06,Free,Paid Social,35-44,Tier 3,309,2,0
+570,2024-06-07,Free,Paid Social,45+,Tier 1,149,1,0
+571,2024-02-25,Plus,Search Ads,25-34,Tier 3,356,0,0
+572,2024-04-30,Free,Search Ads,18-24,Tier 1,350,2,0
+573,2024-01-05,Free,Organic,18-24,Tier 2,283,0,0
+574,2024-03-03,Plus,Organic,25-34,Tier 3,142,1,1
+575,2024-02-29,Free,Search Ads,18-24,Tier 1,427,1,1
+576,2024-03-05,Free,Paid Social,35-44,Tier 2,668,0,1
+577,2024-04-27,Pro,Referral,25-34,Tier 1,660,0,0
+578,2024-03-05,Free,Paid Social,25-34,Tier 1,170,0,0
+579,2024-01-04,Free,Search Ads,25-34,Tier 1,170,0,0
+580,2024-06-06,Plus,Paid Social,18-24,Tier 1,303,0,1
+581,2024-04-30,Plus,Paid Social,45+,Tier 1,589,0,0
+582,2024-06-25,Free,Organic,35-44,Tier 3,316,0,0
+583,2024-05-19,Free,Organic,25-34,Tier 3,345,1,0
+584,2024-02-24,Free,Search Ads,18-24,Tier 1,327,1,0
+585,2024-06-06,Plus,Paid Social,45+,Tier 2,1490,1,0
+586,2024-05-07,Free,Paid Social,25-34,Tier 2,386,1,0
+587,2024-02-22,Plus,Referral,35-44,Tier 1,118,1,0
+588,2024-02-15,Free,Search Ads,18-24,Tier 1,56,1,1
+589,2024-01-06,Free,Paid Social,18-24,Tier 2,72,0,1
+590,2024-05-14,Pro,Search Ads,25-34,Tier 1,437,0,0
+591,2024-01-21,Pro,Organic,25-34,Tier 1,340,0,0
+592,2024-06-22,Pro,Organic,45+,Tier 1,221,0,1
+593,2024-02-17,Plus,Organic,45+,Tier 2,65,0,1
+594,2024-01-07,Plus,Organic,18-24,Tier 1,803,1,0
+595,2024-06-09,Free,Referral,35-44,Tier 1,199,1,1
+596,2024-01-12,Free,Paid Social,25-34,Tier 1,558,1,1
+597,2024-03-09,Free,Referral,25-34,Tier 1,242,0,0
+598,2024-05-24,Free,Paid Social,18-24,Tier 2,162,2,1
+599,2024-03-10,Free,Paid Social,18-24,Tier 2,143,1,1
+600,2024-03-23,Free,Organic,25-34,Tier 3,123,0,0
+601,2024-05-11,Free,Paid Social,25-34,Tier 1,293,5,0
+602,2024-04-11,Plus,Search Ads,45+,Tier 1,231,1,0
+603,2024-02-08,Pro,Paid Social,45+,Tier 1,433,1,0
+604,2024-03-11,Pro,Paid Social,35-44,Tier 1,1069,1,0
+605,2024-03-07,Plus,Search Ads,35-44,Tier 3,127,1,0
+606,2024-01-10,Pro,Paid Social,18-24,Tier 1,252,1,0
+607,2024-05-31,Free,Paid Social,25-34,Tier 2,161,2,0
+608,2024-03-14,Free,Search Ads,35-44,Tier 1,275,0,0
+609,2024-02-27,Pro,Organic,25-34,Tier 3,389,2,0
+610,2024-01-28,Pro,Search Ads,18-24,Tier 1,396,0,0
+611,2024-03-25,Pro,Search Ads,18-24,Tier 2,840,2,0
+612,2024-02-29,Plus,Paid Social,25-34,Tier 1,286,0,0
+613,2024-02-03,Free,Paid Social,35-44,Tier 1,106,2,0
+614,2024-02-01,Plus,Organic,18-24,Tier 1,347,1,0
+615,2024-06-19,Free,Paid Social,18-24,Tier 1,341,2,1
+616,2024-06-04,Plus,Paid Social,45+,Tier 2,217,1,0
+617,2024-04-25,Free,Organic,18-24,Tier 2,42,5,1
+618,2024-02-15,Plus,Paid Social,18-24,Tier 2,1518,2,0
+619,2024-01-17,Pro,Search Ads,25-34,Tier 2,302,0,0
+620,2024-04-16,Free,Paid Social,35-44,Tier 2,258,1,0
+621,2024-01-17,Free,Organic,45+,Tier 2,264,0,0
+622,2024-06-28,Plus,Organic,25-34,Tier 2,371,1,0
+623,2024-04-19,Plus,Organic,18-24,Tier 2,166,1,1
+624,2024-06-29,Free,Organic,25-34,Tier 3,156,2,0
+625,2024-04-14,Free,Organic,25-34,Tier 1,321,0,1
+626,2024-04-29,Free,Search Ads,18-24,Tier 3,125,2,1
+627,2024-03-26,Plus,Referral,25-34,Tier 3,885,1,0
+628,2024-02-26,Pro,Referral,18-24,Tier 2,288,0,0
+629,2024-01-02,Free,Organic,45+,Tier 2,265,0,0
+630,2024-04-01,Plus,Search Ads,18-24,Tier 1,982,0,0
+631,2024-06-12,Plus,Search Ads,35-44,Tier 2,139,0,0
+632,2024-04-02,Free,Referral,35-44,Tier 1,153,0,1
+633,2024-05-11,Pro,Search Ads,25-34,Tier 2,319,0,0
+634,2024-06-08,Free,Referral,18-24,Tier 1,195,0,0
+635,2024-03-08,Pro,Organic,25-34,Tier 2,125,2,0
+636,2024-05-10,Free,Paid Social,35-44,Tier 2,282,1,1
+637,2024-04-10,Free,Organic,25-34,Tier 1,292,1,1
+638,2024-06-09,Free,Organic,25-34,Tier 2,282,0,0
+639,2024-05-03,Free,Referral,25-34,Tier 1,386,0,0
+640,2024-01-03,Plus,Paid Social,25-34,Tier 2,113,0,1
+641,2024-01-07,Plus,Paid Social,35-44,Tier 2,408,0,1
+642,2024-06-26,Free,Search Ads,45+,Tier 3,206,3,0
+643,2024-03-13,Free,Organic,18-24,Tier 2,95,1,0
+644,2024-05-04,Free,Search Ads,35-44,Tier 1,141,3,0
+645,2024-06-12,Pro,Referral,25-34,Tier 1,238,0,0
+646,2024-06-18,Plus,Organic,45+,Tier 3,177,0,0
+647,2024-05-13,Free,Paid Social,25-34,Tier 1,277,1,1
+648,2024-05-24,Free,Organic,45+,Tier 2,158,0,0
+649,2024-05-20,Plus,Organic,18-24,Tier 2,589,1,1
+650,2024-05-08,Free,Referral,25-34,Tier 1,392,0,1
+651,2024-06-24,Plus,Search Ads,25-34,Tier 1,774,0,0
+652,2024-01-14,Free,Referral,18-24,Tier 2,66,1,0
+653,2024-02-20,Plus,Organic,25-34,Tier 2,55,1,0
+654,2024-01-27,Free,Organic,25-34,Tier 1,114,1,1
+655,2024-05-22,Free,Paid Social,35-44,Tier 2,221,1,1
+656,2024-02-08,Plus,Organic,25-34,Tier 1,277,1,0
+657,2024-01-29,Free,Search Ads,18-24,Tier 2,328,0,0
+658,2024-03-30,Pro,Organic,25-34,Tier 1,335,2,0
+659,2024-02-04,Free,Search Ads,18-24,Tier 2,332,1,0
+660,2024-05-20,Plus,Organic,18-24,Tier 2,182,0,0
+661,2024-03-18,Pro,Organic,25-34,Tier 1,440,1,1
+662,2024-02-12,Pro,Organic,25-34,Tier 1,178,2,1
+663,2024-04-14,Pro,Search Ads,25-34,Tier 2,279,0,1
+664,2024-06-27,Pro,Paid Social,25-34,Tier 2,286,0,0
+665,2024-05-14,Plus,Referral,18-24,Tier 2,202,0,0
+666,2024-04-30,Free,Organic,18-24,Tier 1,381,1,1
+667,2024-05-06,Free,Organic,25-34,Tier 1,102,1,1
+668,2024-05-14,Plus,Organic,25-34,Tier 2,105,0,0
+669,2024-04-23,Plus,Organic,18-24,Tier 2,158,0,0
+670,2024-06-13,Plus,Organic,18-24,Tier 3,432,1,0
+671,2024-02-18,Free,Organic,35-44,Tier 2,209,0,0
+672,2024-04-03,Free,Paid Social,35-44,Tier 1,121,0,1
+673,2024-05-11,Plus,Paid Social,25-34,Tier 3,218,0,1
+674,2024-01-27,Free,Paid Social,25-34,Tier 3,254,0,0
+675,2024-03-27,Plus,Paid Social,18-24,Tier 1,845,0,0
+676,2024-03-18,Free,Organic,35-44,Tier 2,33,1,0
+677,2024-02-25,Free,Paid Social,25-34,Tier 1,282,3,0
+678,2024-04-06,Free,Search Ads,18-24,Tier 3,906,0,0
+679,2024-05-08,Free,Paid Social,25-34,Tier 3,306,3,1
+680,2024-06-25,Free,Search Ads,18-24,Tier 1,157,0,0
+681,2024-03-21,Free,Search Ads,18-24,Tier 1,270,0,0
+682,2024-01-14,Free,Organic,25-34,Tier 1,445,1,0
+683,2024-06-28,Free,Organic,18-24,Tier 3,287,1,0
+684,2024-02-29,Free,Organic,18-24,Tier 2,884,0,0
+685,2024-03-12,Free,Paid Social,25-34,Tier 1,649,0,0
+686,2024-05-15,Free,Search Ads,35-44,Tier 2,147,3,1
+687,2024-02-29,Free,Search Ads,25-34,Tier 2,101,2,1
+688,2024-05-08,Free,Paid Social,45+,Tier 2,532,0,1
+689,2024-01-02,Free,Paid Social,18-24,Tier 2,377,3,0
+690,2024-06-01,Plus,Search Ads,25-34,Tier 1,573,1,0
+691,2024-04-04,Free,Paid Social,25-34,Tier 2,140,0,0
+692,2024-06-23,Free,Paid Social,18-24,Tier 1,82,6,0
+693,2024-04-20,Pro,Organic,18-24,Tier 2,532,0,1
+694,2024-04-12,Plus,Paid Social,18-24,Tier 1,289,0,0
+695,2024-03-30,Plus,Organic,35-44,Tier 1,473,0,0
+696,2024-06-04,Free,Organic,25-34,Tier 3,424,0,0
+697,2024-02-02,Plus,Organic,25-34,Tier 2,346,0,0
+698,2024-06-24,Free,Paid Social,18-24,Tier 3,306,2,1
+699,2024-03-07,Pro,Paid Social,25-34,Tier 1,489,0,0
+700,2024-01-24,Plus,Search Ads,25-34,Tier 1,643,1,0
+701,2024-01-28,Free,Paid Social,45+,Tier 2,158,3,0
+702,2024-04-16,Free,Organic,18-24,Tier 2,125,2,1
+703,2024-06-16,Free,Paid Social,45+,Tier 1,229,0,1
+704,2024-03-23,Plus,Paid Social,45+,Tier 1,161,1,0
+705,2024-02-03,Free,Search Ads,45+,Tier 2,328,1,1
+706,2024-05-20,Pro,Search Ads,35-44,Tier 2,1380,0,1
+707,2024-02-24,Plus,Paid Social,25-34,Tier 2,263,1,1
+708,2024-02-06,Free,Organic,35-44,Tier 1,272,0,0
+709,2024-04-28,Pro,Paid Social,18-24,Tier 1,829,0,0
+710,2024-06-05,Plus,Organic,25-34,Tier 2,262,0,0
+711,2024-06-21,Free,Organic,45+,Tier 2,130,0,0
+712,2024-03-22,Pro,Organic,18-24,Tier 1,85,0,1
+713,2024-06-21,Plus,Paid Social,25-34,Tier 2,848,2,0
+714,2024-03-07,Free,Referral,35-44,Tier 1,147,0,1
+715,2024-03-30,Free,Paid Social,35-44,Tier 1,273,1,1
+716,2024-05-10,Plus,Organic,25-34,Tier 1,507,0,0
+717,2024-06-15,Free,Paid Social,35-44,Tier 1,222,0,1
+718,2024-03-01,Free,Organic,25-34,Tier 1,110,1,0
+719,2024-02-14,Pro,Organic,25-34,Tier 2,876,0,0
+720,2024-06-11,Plus,Paid Social,35-44,Tier 2,150,1,0
+721,2024-01-26,Plus,Organic,25-34,Tier 3,679,0,0
+722,2024-06-08,Free,Paid Social,18-24,Tier 1,115,1,1
+723,2024-03-29,Plus,Referral,35-44,Tier 1,425,0,0
+724,2024-01-06,Plus,Search Ads,25-34,Tier 1,743,0,1
+725,2024-05-13,Free,Search Ads,45+,Tier 2,110,1,1
+726,2024-02-03,Plus,Paid Social,25-34,Tier 1,431,0,0
+727,2024-03-24,Free,Organic,18-24,Tier 1,621,1,0
+728,2024-05-13,Free,Paid Social,25-34,Tier 2,182,0,1
+729,2024-03-24,Free,Paid Social,35-44,Tier 1,236,2,1
+730,2024-04-08,Plus,Paid Social,18-24,Tier 1,83,0,1
+731,2024-02-07,Free,Organic,35-44,Tier 1,106,1,1
+732,2024-01-15,Pro,Organic,45+,Tier 1,141,2,0
+733,2024-02-08,Plus,Search Ads,25-34,Tier 3,288,0,1
+734,2024-03-15,Pro,Search Ads,35-44,Tier 2,560,0,0
+735,2024-02-23,Free,Organic,18-24,Tier 1,326,0,1
+736,2024-01-07,Free,Referral,25-34,Tier 1,164,0,1
+737,2024-03-22,Plus,Organic,35-44,Tier 2,445,2,0
+738,2024-02-17,Plus,Organic,18-24,Tier 2,762,0,0
+739,2024-05-28,Free,Organic,25-34,Tier 1,233,3,0
+740,2024-02-02,Plus,Search Ads,25-34,Tier 2,162,0,0
+741,2024-04-15,Plus,Paid Social,45+,Tier 1,233,0,1
+742,2024-05-30,Free,Paid Social,25-34,Tier 1,911,1,0
+743,2024-03-26,Free,Search Ads,25-34,Tier 1,202,1,1
+744,2024-06-04,Free,Paid Social,25-34,Tier 2,252,0,0
+745,2024-05-14,Plus,Organic,25-34,Tier 1,112,1,0
+746,2024-05-30,Free,Paid Social,18-24,Tier 1,97,2,1
+747,2024-02-29,Free,Organic,25-34,Tier 3,288,0,0
+748,2024-01-05,Plus,Paid Social,25-34,Tier 2,113,1,1
+749,2024-05-15,Free,Referral,25-34,Tier 3,255,0,1
+750,2024-05-16,Plus,Search Ads,18-24,Tier 1,567,2,0
+751,2024-06-15,Free,Paid Social,25-34,Tier 2,186,0,0
+752,2024-04-20,Plus,Paid Social,35-44,Tier 2,601,0,0
+753,2024-04-08,Free,Referral,18-24,Tier 1,335,1,0
+754,2024-05-05,Plus,Organic,35-44,Tier 1,373,1,1
+755,2024-05-13,Pro,Paid Social,25-34,Tier 2,241,0,0
+756,2024-01-09,Plus,Organic,25-34,Tier 1,153,0,0
+757,2024-05-06,Free,Organic,25-34,Tier 1,154,2,0
+758,2024-02-07,Free,Organic,45+,Tier 2,185,0,1
+759,2024-04-09,Plus,Paid Social,25-34,Tier 2,339,0,1
+760,2024-02-08,Plus,Organic,35-44,Tier 1,641,1,0
+761,2024-03-23,Free,Referral,25-34,Tier 1,174,1,0
+762,2024-01-30,Free,Organic,35-44,Tier 2,182,3,0
+763,2024-06-09,Free,Search Ads,18-24,Tier 1,421,0,0
+764,2024-04-14,Free,Organic,45+,Tier 1,329,0,0
+765,2024-01-06,Free,Referral,18-24,Tier 2,257,0,1
+766,2024-03-01,Plus,Search Ads,25-34,Tier 3,470,0,0
+767,2024-01-15,Pro,Search Ads,25-34,Tier 3,431,0,0
+768,2024-03-24,Free,Search Ads,25-34,Tier 3,413,1,1
+769,2024-02-13,Plus,Organic,25-34,Tier 3,85,0,1
+770,2024-05-10,Free,Paid Social,25-34,Tier 2,235,1,1
+771,2024-06-23,Free,Search Ads,45+,Tier 1,275,1,1
+772,2024-04-09,Free,Organic,25-34,Tier 2,346,0,0
+773,2024-01-02,Pro,Search Ads,18-24,Tier 2,298,0,0
+774,2024-03-23,Free,Paid Social,18-24,Tier 2,58,0,0
+775,2024-06-23,Free,Organic,18-24,Tier 3,128,0,1
+776,2024-06-14,Pro,Organic,45+,Tier 1,374,0,0
+777,2024-04-06,Plus,Search Ads,35-44,Tier 2,428,0,0
+778,2024-04-26,Free,Organic,25-34,Tier 2,227,4,1
+779,2024-03-04,Free,Paid Social,35-44,Tier 1,58,0,0
+780,2024-05-04,Free,Organic,25-34,Tier 1,476,0,0
+781,2024-06-08,Free,Referral,35-44,Tier 1,138,0,0
+782,2024-02-02,Free,Search Ads,18-24,Tier 2,100,5,0
+783,2024-06-17,Plus,Search Ads,25-34,Tier 2,198,2,0
+784,2024-04-19,Plus,Search Ads,35-44,Tier 1,185,0,0
+785,2024-01-12,Free,Search Ads,18-24,Tier 3,426,2,1
+786,2024-04-03,Free,Referral,18-24,Tier 2,243,0,0
+787,2024-01-27,Free,Paid Social,35-44,Tier 2,202,1,0
+788,2024-06-20,Free,Organic,18-24,Tier 2,68,3,0
+789,2024-06-18,Plus,Organic,35-44,Tier 1,611,0,0
+790,2024-05-14,Free,Organic,25-34,Tier 1,498,1,1
+791,2024-02-04,Plus,Referral,25-34,Tier 3,874,0,0
+792,2024-06-01,Free,Organic,25-34,Tier 2,245,1,1
+793,2024-06-26,Free,Organic,35-44,Tier 2,489,0,1
+794,2024-04-29,Plus,Paid Social,25-34,Tier 1,986,0,0
+795,2024-04-04,Plus,Organic,18-24,Tier 2,142,1,0
+796,2024-02-29,Free,Search Ads,35-44,Tier 2,202,0,0
+797,2024-04-13,Free,Search Ads,25-34,Tier 1,352,0,0
+798,2024-04-30,Plus,Paid Social,35-44,Tier 1,376,1,0
+799,2024-02-10,Free,Search Ads,35-44,Tier 2,228,1,0
+800,2024-06-25,Plus,Paid Social,25-34,Tier 2,547,0,0
+801,2024-04-18,Plus,Paid Social,25-34,Tier 1,84,5,0
+802,2024-02-28,Plus,Search Ads,35-44,Tier 2,253,0,0
+803,2024-01-11,Free,Search Ads,25-34,Tier 1,441,1,0
+804,2024-02-01,Plus,Referral,45+,Tier 1,596,1,0
+805,2024-05-11,Free,Referral,25-34,Tier 1,501,0,1
+806,2024-02-26,Pro,Referral,35-44,Tier 1,535,0,0
+807,2024-02-02,Free,Paid Social,25-34,Tier 2,103,1,1
+808,2024-05-21,Free,Referral,18-24,Tier 2,195,0,0
+809,2024-05-22,Free,Paid Social,35-44,Tier 1,153,3,1
+810,2024-01-16,Free,Search Ads,18-24,Tier 2,141,0,0
+811,2024-03-01,Free,Search Ads,35-44,Tier 1,164,3,1
+812,2024-06-18,Plus,Organic,18-24,Tier 1,449,1,0
+813,2024-01-23,Plus,Paid Social,18-24,Tier 3,301,0,0
+814,2024-05-10,Free,Referral,25-34,Tier 2,151,0,0
+815,2024-03-07,Free,Organic,25-34,Tier 2,440,0,1
+816,2024-04-20,Free,Organic,18-24,Tier 2,185,2,0
+817,2024-04-20,Free,Paid Social,45+,Tier 2,454,1,0
+818,2024-02-02,Free,Referral,25-34,Tier 2,147,0,0
+819,2024-05-06,Plus,Organic,25-34,Tier 1,591,1,1
+820,2024-04-09,Plus,Search Ads,25-34,Tier 3,679,0,0
+821,2024-03-02,Free,Paid Social,25-34,Tier 1,194,2,1
+822,2024-01-03,Plus,Organic,18-24,Tier 2,403,2,0
+823,2024-06-30,Plus,Search Ads,18-24,Tier 2,628,0,1
+824,2024-04-13,Free,Paid Social,25-34,Tier 1,271,2,1
+825,2024-02-29,Free,Organic,25-34,Tier 1,493,2,0
+826,2024-02-24,Free,Search Ads,25-34,Tier 2,226,2,1
+827,2024-03-03,Plus,Search Ads,45+,Tier 1,117,1,1
+828,2024-04-07,Free,Search Ads,35-44,Tier 3,206,1,0
+829,2024-06-20,Plus,Paid Social,35-44,Tier 2,443,0,1
+830,2024-03-06,Plus,Paid Social,18-24,Tier 2,121,2,1
+831,2024-05-31,Plus,Search Ads,18-24,Tier 1,104,2,0
+832,2024-03-21,Free,Paid Social,18-24,Tier 3,226,2,1
+833,2024-04-07,Free,Organic,25-34,Tier 1,149,1,1
+834,2024-04-11,Free,Referral,45+,Tier 1,268,0,0
+835,2024-06-12,Free,Search Ads,18-24,Tier 1,115,2,1
+836,2024-06-22,Free,Paid Social,35-44,Tier 3,158,4,1
+837,2024-04-15,Plus,Organic,18-24,Tier 2,154,1,1
+838,2024-06-27,Plus,Search Ads,25-34,Tier 1,123,1,1
+839,2024-03-20,Pro,Paid Social,18-24,Tier 2,240,0,0
+840,2024-04-21,Plus,Organic,25-34,Tier 1,247,0,1
+841,2024-06-07,Free,Search Ads,25-34,Tier 1,120,1,1
+842,2024-01-26,Plus,Referral,25-34,Tier 1,215,1,1
+843,2024-05-20,Free,Paid Social,25-34,Tier 1,226,0,0
+844,2024-01-09,Plus,Paid Social,25-34,Tier 3,209,0,0
+845,2024-01-12,Free,Search Ads,18-24,Tier 2,98,0,0
+846,2024-06-29,Plus,Organic,25-34,Tier 1,231,0,0
+847,2024-01-16,Plus,Paid Social,25-34,Tier 1,210,0,0
+848,2024-04-24,Free,Paid Social,18-24,Tier 3,235,1,1
+849,2024-04-26,Free,Search Ads,25-34,Tier 1,130,1,0
+850,2024-04-18,Plus,Search Ads,45+,Tier 2,482,0,0
+851,2024-01-17,Free,Referral,25-34,Tier 1,249,0,1
+852,2024-01-08,Pro,Paid Social,18-24,Tier 1,618,1,0
+853,2024-01-05,Free,Paid Social,18-24,Tier 2,55,1,0
+854,2024-06-20,Free,Organic,35-44,Tier 1,594,0,0
+855,2024-05-16,Pro,Search Ads,25-34,Tier 2,257,0,0
+856,2024-01-29,Free,Search Ads,25-34,Tier 2,462,1,0
+857,2024-03-27,Plus,Referral,35-44,Tier 1,286,0,0
+858,2024-04-08,Plus,Organic,18-24,Tier 1,328,1,0
+859,2024-03-12,Plus,Paid Social,45+,Tier 3,497,1,0
+860,2024-02-24,Free,Search Ads,25-34,Tier 2,214,1,1
+861,2024-01-22,Pro,Search Ads,45+,Tier 1,807,0,0
+862,2024-03-10,Free,Organic,25-34,Tier 2,558,1,1
+863,2024-01-06,Plus,Referral,35-44,Tier 1,255,2,1
+864,2024-03-01,Free,Search Ads,25-34,Tier 3,490,1,0
+865,2024-05-07,Free,Referral,18-24,Tier 2,64,0,1
+866,2024-02-17,Plus,Paid Social,45+,Tier 1,384,0,0
+867,2024-06-26,Free,Paid Social,25-34,Tier 1,273,1,1
+868,2024-02-17,Plus,Referral,25-34,Tier 2,252,0,1
+869,2024-06-07,Free,Organic,35-44,Tier 2,98,1,0
+870,2024-01-15,Plus,Search Ads,25-34,Tier 2,188,0,0
+871,2024-04-13,Free,Organic,25-34,Tier 1,263,0,0
+872,2024-01-04,Plus,Search Ads,35-44,Tier 2,367,0,1
+873,2024-03-24,Plus,Search Ads,25-34,Tier 3,229,1,0
+874,2024-03-14,Free,Organic,25-34,Tier 1,88,0,1
+875,2024-01-18,Pro,Search Ads,35-44,Tier 2,480,0,1
+876,2024-01-15,Pro,Organic,35-44,Tier 1,657,0,0
+877,2024-05-09,Pro,Paid Social,18-24,Tier 2,421,1,0
+878,2024-03-03,Plus,Organic,18-24,Tier 2,611,1,0
+879,2024-02-13,Free,Organic,25-34,Tier 1,220,1,1
+880,2024-02-13,Pro,Organic,25-34,Tier 3,183,1,0
+881,2024-03-29,Plus,Organic,18-24,Tier 3,276,0,0
+882,2024-03-31,Free,Search Ads,45+,Tier 2,203,1,0
+883,2024-05-22,Plus,Search Ads,18-24,Tier 2,595,1,0
+884,2024-04-24,Plus,Organic,18-24,Tier 1,184,2,0
+885,2024-05-04,Free,Referral,18-24,Tier 1,41,0,1
+886,2024-03-11,Free,Organic,18-24,Tier 2,185,3,1
+887,2024-06-17,Plus,Search Ads,25-34,Tier 3,318,0,0
+888,2024-03-24,Free,Referral,18-24,Tier 2,369,0,0
+889,2024-05-30,Free,Referral,25-34,Tier 3,79,0,0
+890,2024-06-29,Plus,Organic,25-34,Tier 3,215,0,0
+891,2024-05-15,Plus,Paid Social,18-24,Tier 1,345,0,0
+892,2024-03-20,Free,Paid Social,35-44,Tier 2,35,1,1
+893,2024-06-23,Plus,Search Ads,35-44,Tier 2,192,1,0
+894,2024-03-16,Free,Referral,25-34,Tier 3,94,1,0
+895,2024-01-12,Plus,Organic,25-34,Tier 1,588,1,1
+896,2024-04-13,Free,Organic,18-24,Tier 1,110,1,0
+897,2024-04-11,Free,Search Ads,25-34,Tier 1,313,0,0
+898,2024-01-06,Free,Organic,25-34,Tier 2,842,0,0
+899,2024-06-05,Pro,Paid Social,25-34,Tier 2,692,1,1
+900,2024-03-30,Free,Paid Social,18-24,Tier 2,332,2,1
+901,2024-06-01,Plus,Paid Social,18-24,Tier 3,934,0,0
+902,2024-01-08,Pro,Organic,35-44,Tier 2,713,1,0
+903,2024-02-18,Free,Paid Social,18-24,Tier 3,390,0,1
+904,2024-02-20,Free,Organic,35-44,Tier 1,163,4,1
+905,2024-05-26,Pro,Paid Social,25-34,Tier 1,403,0,0
+906,2024-05-21,Free,Organic,25-34,Tier 3,168,0,1
+907,2024-01-09,Free,Paid Social,25-34,Tier 1,323,0,0
+908,2024-02-07,Free,Referral,18-24,Tier 1,41,0,0
+909,2024-02-03,Free,Organic,25-34,Tier 1,261,0,1
+910,2024-03-30,Free,Search Ads,25-34,Tier 1,409,0,0
+911,2024-05-15,Free,Paid Social,25-34,Tier 2,145,2,1
+912,2024-05-06,Free,Search Ads,35-44,Tier 3,124,5,0
+913,2024-01-14,Free,Paid Social,18-24,Tier 2,248,2,0
+914,2024-06-26,Pro,Organic,35-44,Tier 1,520,0,0
+915,2024-06-15,Plus,Referral,25-34,Tier 2,190,0,1
+916,2024-04-26,Plus,Paid Social,25-34,Tier 1,397,1,0
+917,2024-06-14,Free,Organic,18-24,Tier 1,328,1,0
+918,2024-06-09,Plus,Organic,25-34,Tier 1,550,0,0
+919,2024-06-12,Free,Search Ads,25-34,Tier 3,88,0,1
+920,2024-02-07,Pro,Paid Social,45+,Tier 1,113,0,0
+921,2024-04-27,Free,Referral,25-34,Tier 3,162,0,0
+922,2024-01-14,Free,Paid Social,25-34,Tier 1,420,2,0
+923,2024-01-03,Plus,Search Ads,18-24,Tier 1,321,1,0
+924,2024-03-30,Plus,Organic,18-24,Tier 3,371,1,0
+925,2024-06-22,Pro,Organic,25-34,Tier 1,377,0,0
+926,2024-04-13,Free,Paid Social,25-34,Tier 2,62,3,0
+927,2024-06-19,Free,Paid Social,18-24,Tier 1,272,0,1
+928,2024-02-28,Free,Paid Social,35-44,Tier 1,509,1,0
+929,2024-04-29,Plus,Organic,35-44,Tier 3,130,1,0
+930,2024-05-10,Plus,Referral,18-24,Tier 1,545,1,1
+931,2024-01-11,Free,Referral,35-44,Tier 2,692,0,0
+932,2024-04-10,Plus,Paid Social,45+,Tier 2,1031,0,0
+933,2024-05-27,Free,Paid Social,25-34,Tier 1,142,1,1
+934,2024-04-17,Plus,Referral,25-34,Tier 3,452,1,0
+935,2024-06-06,Free,Search Ads,18-24,Tier 1,209,1,0
+936,2024-06-12,Free,Paid Social,25-34,Tier 1,333,2,0
+937,2024-06-30,Pro,Organic,25-34,Tier 1,577,3,0
+938,2024-01-31,Pro,Paid Social,25-34,Tier 1,377,0,0
+939,2024-04-27,Plus,Organic,25-34,Tier 1,196,0,1
+940,2024-02-29,Free,Organic,18-24,Tier 2,350,1,1
+941,2024-02-02,Free,Search Ads,18-24,Tier 3,110,4,1
+942,2024-05-18,Free,Paid Social,25-34,Tier 1,172,1,1
+943,2024-06-25,Free,Paid Social,18-24,Tier 3,176,0,0
+944,2024-03-31,Free,Organic,18-24,Tier 2,525,0,0
+945,2024-03-01,Free,Referral,25-34,Tier 1,86,0,0
+946,2024-06-10,Plus,Paid Social,45+,Tier 2,365,0,0
+947,2024-01-04,Plus,Organic,25-34,Tier 1,177,0,1
+948,2024-01-29,Free,Organic,35-44,Tier 1,140,0,1
+949,2024-04-25,Plus,Paid Social,25-34,Tier 3,86,3,1
+950,2024-03-24,Plus,Search Ads,45+,Tier 1,236,1,1
+951,2024-01-03,Free,Organic,25-34,Tier 1,68,0,0
+952,2024-05-19,Free,Organic,45+,Tier 3,171,2,0
+953,2024-06-02,Free,Search Ads,35-44,Tier 1,185,1,0
+954,2024-04-24,Free,Referral,35-44,Tier 1,173,0,1
+955,2024-05-09,Free,Search Ads,45+,Tier 1,426,1,1
+956,2024-01-27,Free,Organic,35-44,Tier 3,200,0,1
+957,2024-01-23,Plus,Referral,45+,Tier 2,390,2,0
+958,2024-05-07,Plus,Organic,25-34,Tier 1,450,1,0
+959,2024-03-10,Free,Organic,18-24,Tier 2,304,0,1
+960,2024-04-09,Pro,Paid Social,25-34,Tier 1,394,1,1
+961,2024-06-03,Free,Paid Social,25-34,Tier 1,522,1,1
+962,2024-06-26,Free,Paid Social,18-24,Tier 2,133,3,0
+963,2024-01-09,Free,Paid Social,35-44,Tier 1,279,3,0
+964,2024-04-25,Plus,Referral,18-24,Tier 1,178,0,0
+965,2024-06-11,Free,Organic,25-34,Tier 2,92,0,0
+966,2024-02-28,Free,Organic,18-24,Tier 3,262,0,0
+967,2024-04-12,Free,Referral,25-34,Tier 1,272,0,0
+968,2024-04-08,Plus,Search Ads,18-24,Tier 3,374,0,0
+969,2024-05-17,Free,Search Ads,35-44,Tier 2,234,1,0
+970,2024-01-25,Free,Paid Social,25-34,Tier 2,74,3,1
+971,2024-03-12,Free,Paid Social,18-24,Tier 2,154,0,0
+972,2024-05-16,Free,Organic,18-24,Tier 1,553,0,1
+973,2024-03-23,Pro,Paid Social,18-24,Tier 1,524,0,1
+974,2024-06-05,Plus,Organic,35-44,Tier 2,655,0,0
+975,2024-02-19,Free,Referral,25-34,Tier 3,327,0,0
+976,2024-04-16,Pro,Referral,25-34,Tier 1,710,0,0
+977,2024-06-13,Plus,Search Ads,35-44,Tier 1,283,0,1
+978,2024-04-13,Free,Paid Social,18-24,Tier 1,280,2,0
+979,2024-05-09,Free,Organic,18-24,Tier 1,305,1,0
+980,2024-01-20,Free,Search Ads,35-44,Tier 1,489,0,0
+981,2024-02-15,Pro,Paid Social,18-24,Tier 3,449,1,0
+982,2024-02-02,Plus,Paid Social,25-34,Tier 2,145,2,0
+983,2024-05-30,Plus,Organic,25-34,Tier 3,315,0,0
+984,2024-06-23,Free,Paid Social,25-34,Tier 3,396,1,1
+985,2024-06-30,Free,Paid Social,18-24,Tier 3,225,3,1
+986,2024-03-13,Free,Referral,18-24,Tier 1,486,1,0
+987,2024-02-12,Free,Organic,25-34,Tier 2,325,0,1
+988,2024-05-21,Pro,Paid Social,25-34,Tier 1,874,2,0
+989,2024-03-11,Pro,Organic,18-24,Tier 2,187,1,0
+990,2024-06-11,Free,Paid Social,45+,Tier 2,247,1,0
+991,2024-02-17,Free,Search Ads,45+,Tier 3,195,2,1
+992,2024-01-17,Pro,Paid Social,35-44,Tier 1,863,0,0
+993,2024-02-17,Free,Paid Social,25-34,Tier 2,194,2,1
+994,2024-06-10,Free,Paid Social,35-44,Tier 2,232,0,1
+995,2024-02-24,Free,Organic,35-44,Tier 2,170,3,1
+996,2024-02-01,Free,Paid Social,25-34,Tier 1,261,2,1
+997,2024-04-23,Pro,Search Ads,18-24,Tier 1,323,2,0
+998,2024-05-20,Pro,Search Ads,18-24,Tier 1,357,1,1
+999,2024-04-03,Free,Organic,35-44,Tier 1,134,1,1
+1000,2024-02-18,Plus,Referral,45+,Tier 2,550,0,0
+1001,2024-06-14,Free,Paid Social,25-34,Tier 3,217,1,1
+1002,2024-06-03,Plus,Search Ads,35-44,Tier 3,548,1,0
+1003,2024-04-21,Pro,Paid Social,35-44,Tier 1,151,0,1
+1004,2024-03-24,Free,Organic,25-34,Tier 1,147,2,0
+1005,2024-05-26,Free,Organic,18-24,Tier 2,90,0,1
+1006,2024-03-25,Plus,Referral,18-24,Tier 1,357,1,0
+1007,2024-04-18,Pro,Referral,18-24,Tier 1,926,0,0
+1008,2024-04-15,Free,Search Ads,18-24,Tier 1,317,0,0
+1009,2024-04-06,Pro,Organic,18-24,Tier 2,515,0,0
+1010,2024-06-04,Plus,Search Ads,25-34,Tier 2,705,1,1
+1011,2024-03-16,Free,Organic,25-34,Tier 2,353,0,0
+1012,2024-02-24,Plus,Paid Social,18-24,Tier 1,183,1,0
+1013,2024-04-01,Plus,Paid Social,25-34,Tier 2,386,0,0
+1014,2024-06-27,Plus,Organic,35-44,Tier 1,259,1,0
+1015,2024-03-30,Free,Paid Social,45+,Tier 1,473,2,1
+1016,2024-05-31,Free,Organic,35-44,Tier 3,184,1,1
+1017,2024-06-09,Free,Search Ads,35-44,Tier 1,183,0,0
+1018,2024-03-11,Free,Paid Social,18-24,Tier 2,217,4,1
+1019,2024-04-05,Free,Organic,35-44,Tier 2,336,0,0
+1020,2024-01-05,Plus,Paid Social,25-34,Tier 1,299,0,0
+1021,2024-03-13,Free,Search Ads,25-34,Tier 1,330,0,0
+1022,2024-02-01,Free,Search Ads,45+,Tier 1,245,1,1
+1023,2024-01-23,Pro,Referral,18-24,Tier 2,91,0,0
+1024,2024-04-11,Plus,Search Ads,35-44,Tier 1,401,1,0
+1025,2024-04-24,Free,Referral,25-34,Tier 1,365,0,1
+1026,2024-05-31,Free,Organic,25-34,Tier 1,267,0,0
+1027,2024-04-13,Free,Paid Social,45+,Tier 2,190,1,0
+1028,2024-06-20,Free,Organic,18-24,Tier 1,618,0,1
+1029,2024-02-12,Pro,Paid Social,18-24,Tier 3,415,0,0
+1030,2024-03-10,Free,Organic,45+,Tier 1,124,1,0
+1031,2024-06-11,Free,Referral,25-34,Tier 2,428,0,1
+1032,2024-01-08,Plus,Organic,18-24,Tier 2,193,0,0
+1033,2024-05-04,Free,Organic,18-24,Tier 2,306,0,0
+1034,2024-05-08,Pro,Search Ads,18-24,Tier 1,259,1,0
+1035,2024-02-23,Free,Search Ads,35-44,Tier 1,101,1,1
+1036,2024-02-26,Plus,Paid Social,18-24,Tier 1,436,1,0
+1037,2024-04-09,Pro,Organic,18-24,Tier 1,298,1,0
+1038,2024-04-18,Plus,Organic,45+,Tier 1,542,0,0
+1039,2024-01-26,Free,Organic,35-44,Tier 2,406,0,0
+1040,2024-03-14,Free,Referral,18-24,Tier 1,394,1,1
+1041,2024-05-29,Pro,Paid Social,45+,Tier 1,444,1,0
+1042,2024-04-24,Free,Paid Social,35-44,Tier 1,249,2,1
+1043,2024-01-25,Free,Search Ads,25-34,Tier 2,259,0,0
+1044,2024-02-15,Free,Paid Social,25-34,Tier 2,532,4,1
+1045,2024-01-07,Pro,Organic,25-34,Tier 1,260,1,0
+1046,2024-01-29,Free,Search Ads,25-34,Tier 1,545,0,1
+1047,2024-01-11,Plus,Paid Social,18-24,Tier 2,149,1,1
+1048,2024-02-01,Plus,Organic,45+,Tier 2,845,1,0
+1049,2024-05-21,Pro,Search Ads,18-24,Tier 1,458,1,0
+1050,2024-06-16,Pro,Organic,18-24,Tier 1,901,0,0
+1051,2024-06-15,Free,Referral,35-44,Tier 2,156,0,0
+1052,2024-06-06,Free,Organic,25-34,Tier 3,328,2,1
+1053,2024-01-06,Plus,Search Ads,25-34,Tier 2,632,0,0
+1054,2024-06-04,Free,Paid Social,18-24,Tier 2,574,1,1
+1055,2024-04-28,Plus,Organic,25-34,Tier 3,978,1,0
+1056,2024-04-21,Plus,Paid Social,25-34,Tier 1,393,0,1
+1057,2024-01-17,Free,Paid Social,18-24,Tier 1,183,2,0
+1058,2024-03-15,Free,Search Ads,35-44,Tier 2,220,1,1
+1059,2024-02-23,Free,Paid Social,18-24,Tier 3,434,0,1
+1060,2024-02-10,Free,Paid Social,35-44,Tier 2,291,2,0
+1061,2024-04-25,Free,Organic,25-34,Tier 3,629,0,1
+1062,2024-04-28,Free,Organic,18-24,Tier 3,560,0,0
+1063,2024-01-22,Pro,Organic,25-34,Tier 2,542,2,1
+1064,2024-02-28,Free,Organic,25-34,Tier 2,441,0,0
+1065,2024-04-04,Free,Organic,18-24,Tier 2,200,4,0
+1066,2024-04-18,Free,Organic,25-34,Tier 2,388,1,1
+1067,2024-02-16,Plus,Referral,35-44,Tier 1,562,1,0
+1068,2024-03-06,Plus,Paid Social,18-24,Tier 1,638,1,0
+1069,2024-03-10,Plus,Organic,25-34,Tier 1,191,0,0
+1070,2024-01-03,Plus,Organic,25-34,Tier 1,796,0,0
+1071,2024-05-07,Plus,Organic,18-24,Tier 2,624,0,0
+1072,2024-04-22,Plus,Paid Social,18-24,Tier 1,348,1,0
+1073,2024-06-07,Free,Paid Social,35-44,Tier 1,139,1,1
+1074,2024-06-28,Plus,Referral,35-44,Tier 2,384,0,1
+1075,2024-05-07,Free,Paid Social,25-34,Tier 2,484,0,0
+1076,2024-03-27,Free,Organic,18-24,Tier 1,225,2,0
+1077,2024-01-25,Plus,Paid Social,35-44,Tier 3,360,0,0
+1078,2024-01-28,Pro,Search Ads,18-24,Tier 1,209,0,0
+1079,2024-01-19,Free,Paid Social,25-34,Tier 2,337,0,0
+1080,2024-05-15,Free,Organic,25-34,Tier 3,123,2,0
+1081,2024-03-21,Plus,Paid Social,25-34,Tier 3,407,1,0
+1082,2024-04-01,Pro,Search Ads,25-34,Tier 2,84,0,0
+1083,2024-06-02,Plus,Paid Social,25-34,Tier 2,467,0,0
+1084,2024-05-09,Plus,Organic,35-44,Tier 1,496,0,0
+1085,2024-04-08,Free,Search Ads,25-34,Tier 1,112,3,0
+1086,2024-06-09,Free,Organic,35-44,Tier 2,93,1,0
+1087,2024-04-21,Pro,Paid Social,25-34,Tier 1,626,1,1
+1088,2024-02-20,Free,Search Ads,45+,Tier 3,169,1,1
+1089,2024-06-02,Plus,Organic,25-34,Tier 2,484,0,0
+1090,2024-02-16,Free,Paid Social,35-44,Tier 1,551,0,1
+1091,2024-01-03,Free,Search Ads,18-24,Tier 1,83,1,1
+1092,2024-03-26,Free,Search Ads,18-24,Tier 1,172,0,0
+1093,2024-05-30,Free,Organic,18-24,Tier 3,116,0,0
+1094,2024-01-16,Plus,Referral,18-24,Tier 2,433,0,0
+1095,2024-05-31,Free,Organic,35-44,Tier 1,556,1,0
+1096,2024-01-19,Free,Paid Social,18-24,Tier 1,205,0,0
+1097,2024-05-24,Pro,Referral,18-24,Tier 1,265,1,0
+1098,2024-04-02,Free,Paid Social,18-24,Tier 1,502,1,1
+1099,2024-04-07,Free,Search Ads,18-24,Tier 1,176,1,0
+1100,2024-03-12,Free,Paid Social,25-34,Tier 1,116,0,1
+1101,2024-05-31,Free,Organic,25-34,Tier 1,428,1,1
+1102,2024-03-13,Plus,Organic,18-24,Tier 3,277,0,0
+1103,2024-04-13,Pro,Referral,18-24,Tier 2,320,1,1
+1104,2024-04-27,Plus,Paid Social,45+,Tier 3,442,0,0
+1105,2024-01-24,Free,Referral,18-24,Tier 1,711,0,0
+1106,2024-06-18,Plus,Paid Social,25-34,Tier 2,572,1,0
+1107,2024-02-07,Free,Paid Social,25-34,Tier 1,239,4,1
+1108,2024-06-19,Pro,Paid Social,25-34,Tier 1,563,0,0
+1109,2024-04-28,Free,Paid Social,25-34,Tier 2,332,1,0
+1110,2024-03-14,Free,Paid Social,25-34,Tier 3,180,1,1
+1111,2024-06-15,Pro,Organic,18-24,Tier 1,435,0,0
+1112,2024-04-28,Free,Organic,18-24,Tier 1,469,1,0
+1113,2024-03-28,Free,Search Ads,45+,Tier 1,158,2,0
+1114,2024-03-13,Pro,Search Ads,25-34,Tier 1,143,0,0
+1115,2024-02-03,Pro,Referral,25-34,Tier 1,255,0,0
+1116,2024-05-15,Free,Paid Social,18-24,Tier 2,243,2,1
+1117,2024-03-06,Free,Paid Social,25-34,Tier 2,313,1,0
+1118,2024-04-01,Pro,Organic,25-34,Tier 1,259,0,0
+1119,2024-01-01,Free,Search Ads,18-24,Tier 2,301,0,0
+1120,2024-01-23,Free,Organic,25-34,Tier 1,315,0,0
+1121,2024-01-22,Free,Referral,18-24,Tier 1,169,0,1
+1122,2024-04-09,Free,Paid Social,25-34,Tier 2,533,2,0
+1123,2024-04-02,Free,Organic,18-24,Tier 1,94,4,1
+1124,2024-06-29,Free,Referral,25-34,Tier 2,73,0,1
+1125,2024-03-02,Free,Organic,35-44,Tier 2,156,5,1
+1126,2024-02-19,Free,Paid Social,25-34,Tier 3,120,2,0
+1127,2024-04-04,Free,Search Ads,35-44,Tier 1,258,1,0
+1128,2024-05-19,Free,Paid Social,25-34,Tier 2,136,3,0
+1129,2024-04-07,Plus,Search Ads,25-34,Tier 1,316,2,0
+1130,2024-02-22,Free,Paid Social,45+,Tier 1,143,0,1
+1131,2024-03-05,Free,Paid Social,35-44,Tier 2,207,1,0
+1132,2024-05-12,Free,Search Ads,18-24,Tier 1,214,0,0
+1133,2024-05-24,Plus,Referral,25-34,Tier 2,137,0,0
+1134,2024-03-27,Free,Paid Social,18-24,Tier 2,158,1,0
+1135,2024-04-15,Free,Organic,18-24,Tier 3,230,2,1
+1136,2024-05-10,Free,Organic,25-34,Tier 1,149,4,0
+1137,2024-01-02,Free,Referral,18-24,Tier 1,353,1,1
+1138,2024-05-31,Plus,Paid Social,45+,Tier 2,551,2,0
+1139,2024-03-18,Pro,Organic,35-44,Tier 2,1339,2,0
+1140,2024-01-04,Free,Organic,25-34,Tier 2,297,0,1
+1141,2024-06-06,Pro,Organic,18-24,Tier 1,113,1,1
+1142,2024-04-26,Free,Paid Social,18-24,Tier 2,440,1,1
+1143,2024-05-21,Plus,Referral,18-24,Tier 2,172,0,1
+1144,2024-01-13,Free,Referral,25-34,Tier 1,200,0,0
+1145,2024-03-26,Free,Organic,25-34,Tier 1,547,0,0
+1146,2024-06-21,Pro,Referral,18-24,Tier 3,85,0,0
+1147,2024-03-09,Pro,Search Ads,35-44,Tier 2,79,0,0
+1148,2024-04-03,Free,Search Ads,18-24,Tier 1,472,1,1
+1149,2024-03-12,Free,Paid Social,35-44,Tier 1,103,1,1
+1150,2024-02-23,Free,Referral,45+,Tier 2,198,0,0
+1151,2024-06-05,Free,Organic,25-34,Tier 1,105,0,0
+1152,2024-05-02,Plus,Referral,35-44,Tier 1,391,0,0
+1153,2024-04-01,Pro,Organic,45+,Tier 2,133,0,0
+1154,2024-05-04,Pro,Paid Social,18-24,Tier 2,462,0,1
+1155,2024-03-26,Free,Paid Social,18-24,Tier 1,170,1,1
+1156,2024-03-24,Free,Paid Social,25-34,Tier 3,259,1,0
+1157,2024-04-10,Plus,Paid Social,45+,Tier 2,889,2,0
+1158,2024-06-12,Plus,Referral,25-34,Tier 1,541,0,0
+1159,2024-05-03,Free,Organic,18-24,Tier 3,775,0,0
+1160,2024-06-24,Plus,Search Ads,25-34,Tier 1,372,0,0
+1161,2024-06-18,Plus,Organic,18-24,Tier 1,398,0,0
+1162,2024-03-24,Free,Organic,18-24,Tier 1,137,0,0
+1163,2024-01-16,Free,Search Ads,35-44,Tier 2,21,3,0
+1164,2024-05-09,Free,Referral,45+,Tier 2,548,0,0
+1165,2024-03-30,Free,Organic,45+,Tier 1,484,0,0
+1166,2024-01-02,Free,Paid Social,18-24,Tier 1,154,1,0
+1167,2024-01-12,Pro,Organic,45+,Tier 2,518,0,0
+1168,2024-02-25,Plus,Paid Social,18-24,Tier 1,466,0,1
+1169,2024-03-02,Pro,Search Ads,18-24,Tier 1,60,0,1
+1170,2024-06-01,Pro,Paid Social,18-24,Tier 3,332,0,0
+1171,2024-04-14,Free,Paid Social,35-44,Tier 2,150,0,0
+1172,2024-01-23,Free,Search Ads,18-24,Tier 2,68,1,1
+1173,2024-04-06,Plus,Paid Social,25-34,Tier 3,353,1,0
+1174,2024-01-07,Free,Paid Social,25-34,Tier 3,148,0,0
+1175,2024-03-28,Free,Organic,18-24,Tier 2,184,0,0
+1176,2024-05-04,Plus,Paid Social,18-24,Tier 1,527,1,0
+1177,2024-03-12,Plus,Referral,18-24,Tier 1,342,1,0
+1178,2024-03-09,Pro,Paid Social,18-24,Tier 2,619,0,0
+1179,2024-06-18,Plus,Paid Social,25-34,Tier 2,283,1,1
+1180,2024-06-10,Free,Organic,25-34,Tier 2,274,2,1
+1181,2024-04-03,Free,Organic,18-24,Tier 2,59,2,0
+1182,2024-06-24,Free,Search Ads,25-34,Tier 1,187,0,1
+1183,2024-04-23,Free,Organic,18-24,Tier 1,274,0,0
+1184,2024-03-03,Free,Paid Social,18-24,Tier 1,219,1,1
+1185,2024-01-26,Free,Referral,35-44,Tier 2,266,0,1
+1186,2024-06-25,Pro,Organic,18-24,Tier 2,126,0,1
+1187,2024-01-12,Plus,Organic,25-34,Tier 1,216,1,0
+1188,2024-05-06,Free,Organic,25-34,Tier 1,193,2,0
+1189,2024-05-03,Free,Paid Social,35-44,Tier 1,176,1,0
+1190,2024-03-22,Pro,Organic,35-44,Tier 1,545,1,0
+1191,2024-05-26,Free,Organic,18-24,Tier 1,66,0,0
+1192,2024-04-09,Plus,Paid Social,18-24,Tier 1,1092,0,0
+1193,2024-03-21,Free,Organic,25-34,Tier 2,168,1,1
+1194,2024-06-13,Free,Organic,25-34,Tier 1,477,0,1
+1195,2024-01-24,Plus,Organic,18-24,Tier 1,157,1,0
+1196,2024-01-18,Plus,Search Ads,25-34,Tier 1,454,0,1
+1197,2024-01-19,Free,Search Ads,45+,Tier 2,494,1,0
+1198,2024-03-04,Pro,Paid Social,18-24,Tier 3,493,2,0
+1199,2024-05-23,Free,Organic,35-44,Tier 1,212,2,0
+1200,2024-03-10,Free,Paid Social,18-24,Tier 3,160,1,1
+1201,2024-02-07,Free,Search Ads,35-44,Tier 2,36,0,1
+1202,2024-03-15,Free,Search Ads,35-44,Tier 2,360,0,0
+1203,2024-02-14,Free,Paid Social,25-34,Tier 1,143,0,1
+1204,2024-04-20,Plus,Organic,35-44,Tier 1,519,0,0
+1205,2024-03-25,Free,Organic,35-44,Tier 2,416,0,0
+1206,2024-02-05,Free,Search Ads,35-44,Tier 2,252,0,1
+1207,2024-05-01,Free,Search Ads,25-34,Tier 2,226,3,1
+1208,2024-04-15,Plus,Referral,18-24,Tier 2,574,0,0
+1209,2024-06-23,Free,Organic,25-34,Tier 2,421,0,0
+1210,2024-06-19,Plus,Organic,18-24,Tier 1,207,0,0
+1211,2024-03-18,Free,Paid Social,45+,Tier 1,214,2,0
+1212,2024-03-27,Plus,Organic,25-34,Tier 1,470,0,0
+1213,2024-05-14,Free,Organic,25-34,Tier 2,278,0,1
+1214,2024-03-16,Free,Search Ads,25-34,Tier 2,230,3,0
+1215,2024-04-18,Pro,Organic,18-24,Tier 1,516,0,0
+1216,2024-01-22,Plus,Organic,18-24,Tier 1,914,0,0
+1217,2024-03-11,Free,Organic,18-24,Tier 1,256,0,1
+1218,2024-05-13,Free,Search Ads,25-34,Tier 2,75,1,1
+1219,2024-06-24,Free,Organic,25-34,Tier 1,59,3,1
+1220,2024-05-06,Free,Paid Social,18-24,Tier 2,131,0,1
+1221,2024-01-18,Free,Search Ads,35-44,Tier 1,235,3,0
+1222,2024-04-28,Free,Search Ads,18-24,Tier 2,394,0,1
+1223,2024-02-03,Free,Referral,25-34,Tier 2,179,0,0
+1224,2024-06-23,Free,Referral,18-24,Tier 3,368,1,0
+1225,2024-03-22,Pro,Referral,25-34,Tier 3,598,1,0
+1226,2024-03-12,Plus,Organic,25-34,Tier 1,214,1,0
+1227,2024-05-07,Plus,Organic,35-44,Tier 2,213,1,1
+1228,2024-04-13,Free,Organic,35-44,Tier 2,33,2,0
+1229,2024-03-07,Free,Paid Social,25-34,Tier 2,385,0,0
+1230,2024-06-13,Free,Referral,45+,Tier 2,149,1,0
+1231,2024-04-25,Plus,Paid Social,25-34,Tier 2,279,0,0
+1232,2024-05-12,Plus,Organic,25-34,Tier 3,440,2,0
+1233,2024-03-30,Pro,Referral,25-34,Tier 1,96,0,0
+1234,2024-04-27,Plus,Paid Social,25-34,Tier 1,273,0,1
+1235,2024-06-28,Plus,Search Ads,25-34,Tier 1,269,1,1
+1236,2024-04-29,Free,Search Ads,25-34,Tier 2,53,1,1
+1237,2024-03-10,Free,Paid Social,18-24,Tier 2,238,2,0
+1238,2024-02-19,Plus,Paid Social,18-24,Tier 2,768,0,0
+1239,2024-06-09,Plus,Paid Social,25-34,Tier 2,254,0,1
+1240,2024-01-18,Free,Paid Social,25-34,Tier 1,343,0,0
+1241,2024-05-16,Pro,Paid Social,35-44,Tier 2,248,0,0
+1242,2024-01-08,Free,Referral,35-44,Tier 1,172,0,1
+1243,2024-01-18,Plus,Paid Social,25-34,Tier 2,716,0,1
+1244,2024-04-30,Free,Organic,18-24,Tier 1,113,3,0
+1245,2024-03-10,Plus,Organic,25-34,Tier 1,322,3,1
+1246,2024-03-29,Plus,Referral,18-24,Tier 2,847,2,0
+1247,2024-05-15,Free,Paid Social,45+,Tier 3,138,1,0
+1248,2024-06-10,Plus,Referral,35-44,Tier 1,584,2,0
+1249,2024-04-30,Free,Paid Social,18-24,Tier 2,358,3,1
+1250,2024-01-05,Plus,Referral,25-34,Tier 3,524,0,0
+1251,2024-02-22,Plus,Paid Social,25-34,Tier 1,463,1,0
+1252,2024-04-25,Pro,Search Ads,35-44,Tier 3,610,1,0
+1253,2024-03-30,Free,Paid Social,45+,Tier 2,52,1,1
+1254,2024-02-01,Free,Referral,25-34,Tier 1,453,0,0
+1255,2024-06-11,Free,Paid Social,18-24,Tier 1,239,1,1
+1256,2024-03-22,Free,Search Ads,18-24,Tier 2,250,2,1
+1257,2024-05-27,Plus,Referral,25-34,Tier 1,362,1,0
+1258,2024-06-03,Free,Paid Social,25-34,Tier 2,79,0,1
+1259,2024-02-26,Plus,Organic,45+,Tier 1,875,0,0
+1260,2024-03-12,Plus,Paid Social,18-24,Tier 1,116,2,1
+1261,2024-05-06,Free,Search Ads,18-24,Tier 2,153,0,1
+1262,2024-04-03,Plus,Referral,25-34,Tier 1,777,1,0
+1263,2024-05-19,Free,Paid Social,25-34,Tier 2,367,0,1
+1264,2024-05-20,Plus,Paid Social,25-34,Tier 3,226,0,0
+1265,2024-02-07,Pro,Organic,35-44,Tier 3,141,0,0
+1266,2024-01-04,Plus,Organic,25-34,Tier 1,338,0,1
+1267,2024-04-08,Free,Paid Social,18-24,Tier 2,87,0,1
+1268,2024-01-02,Free,Search Ads,18-24,Tier 1,55,4,0
+1269,2024-05-27,Free,Referral,35-44,Tier 2,299,0,1
+1270,2024-05-20,Free,Organic,25-34,Tier 2,791,1,0
+1271,2024-05-15,Free,Organic,35-44,Tier 1,116,1,0
+1272,2024-03-14,Plus,Referral,25-34,Tier 1,729,2,0
+1273,2024-02-25,Free,Search Ads,25-34,Tier 1,293,1,0
+1274,2024-06-03,Free,Organic,35-44,Tier 2,258,0,1
+1275,2024-06-06,Plus,Organic,45+,Tier 1,406,0,0
+1276,2024-05-27,Plus,Organic,18-24,Tier 1,69,0,0
+1277,2024-03-20,Free,Search Ads,18-24,Tier 1,253,0,1
+1278,2024-05-17,Plus,Paid Social,18-24,Tier 3,274,0,0
+1279,2024-01-04,Plus,Organic,18-24,Tier 2,220,1,1
+1280,2024-06-25,Free,Paid Social,35-44,Tier 2,527,0,1
+1281,2024-01-08,Free,Referral,25-34,Tier 1,299,0,0
+1282,2024-04-05,Free,Paid Social,25-34,Tier 1,109,1,0
+1283,2024-06-29,Free,Search Ads,25-34,Tier 1,273,0,0
+1284,2024-01-30,Free,Search Ads,35-44,Tier 1,181,0,1
+1285,2024-05-28,Plus,Paid Social,35-44,Tier 1,226,0,1
+1286,2024-03-08,Plus,Paid Social,35-44,Tier 1,246,0,1
+1287,2024-03-02,Free,Organic,18-24,Tier 3,292,0,0
+1288,2024-06-10,Free,Organic,25-34,Tier 3,437,0,1
+1289,2024-06-15,Pro,Search Ads,25-34,Tier 2,333,1,0
+1290,2024-04-30,Pro,Search Ads,25-34,Tier 1,546,0,0
+1291,2024-02-07,Free,Organic,18-24,Tier 1,222,2,1
+1292,2024-04-19,Plus,Organic,25-34,Tier 3,256,0,0
+1293,2024-04-06,Plus,Referral,45+,Tier 1,167,1,0
+1294,2024-01-11,Plus,Paid Social,25-34,Tier 1,277,0,1
+1295,2024-04-18,Plus,Paid Social,18-24,Tier 2,296,2,0
+1296,2024-05-08,Free,Organic,35-44,Tier 2,61,1,1
+1297,2024-03-02,Plus,Organic,25-34,Tier 1,726,1,0
+1298,2024-05-02,Plus,Organic,25-34,Tier 1,739,0,1
+1299,2024-01-04,Plus,Organic,25-34,Tier 1,422,0,0
+1300,2024-05-23,Plus,Organic,35-44,Tier 1,837,1,0
+1301,2024-06-10,Free,Paid Social,18-24,Tier 2,113,3,0
+1302,2024-05-18,Free,Search Ads,25-34,Tier 2,90,0,1
+1303,2024-06-16,Free,Organic,35-44,Tier 2,304,0,0
+1304,2024-03-17,Plus,Referral,35-44,Tier 1,237,0,0
+1305,2024-06-27,Free,Organic,35-44,Tier 3,563,0,0
+1306,2024-01-22,Plus,Paid Social,25-34,Tier 3,378,0,1
+1307,2024-04-03,Free,Organic,35-44,Tier 1,386,2,0
+1308,2024-02-16,Free,Organic,35-44,Tier 1,140,2,1
+1309,2024-01-01,Plus,Organic,35-44,Tier 1,239,1,0
+1310,2024-02-21,Pro,Organic,18-24,Tier 2,564,0,1
+1311,2024-01-17,Plus,Organic,18-24,Tier 2,299,0,0
+1312,2024-06-22,Free,Organic,45+,Tier 1,188,1,1
+1313,2024-02-29,Pro,Organic,35-44,Tier 3,206,0,0
+1314,2024-03-03,Free,Organic,35-44,Tier 1,348,0,0
+1315,2024-06-18,Plus,Search Ads,25-34,Tier 3,549,0,0
+1316,2024-01-23,Free,Referral,25-34,Tier 2,130,0,0
+1317,2024-03-16,Free,Organic,25-34,Tier 2,163,1,0
+1318,2024-06-24,Free,Paid Social,35-44,Tier 1,165,1,0
+1319,2024-06-29,Free,Paid Social,25-34,Tier 2,147,3,1
+1320,2024-05-14,Free,Paid Social,18-24,Tier 1,298,2,1
+1321,2024-02-27,Free,Organic,25-34,Tier 2,266,0,0
+1322,2024-03-05,Free,Referral,25-34,Tier 3,131,1,1
+1323,2024-01-09,Free,Organic,35-44,Tier 1,566,0,1
+1324,2024-01-02,Free,Paid Social,35-44,Tier 2,267,2,0
+1325,2024-01-05,Plus,Referral,25-34,Tier 2,291,0,0
+1326,2024-01-01,Plus,Search Ads,25-34,Tier 3,248,0,0
+1327,2024-05-01,Plus,Organic,35-44,Tier 1,260,2,1
+1328,2024-03-24,Plus,Organic,45+,Tier 3,119,0,0
+1329,2024-02-29,Free,Paid Social,18-24,Tier 1,89,3,0
+1330,2024-06-06,Plus,Paid Social,35-44,Tier 2,339,0,0
+1331,2024-01-12,Pro,Paid Social,18-24,Tier 2,390,1,1
+1332,2024-04-28,Plus,Search Ads,18-24,Tier 1,400,0,1
+1333,2024-02-12,Free,Paid Social,35-44,Tier 1,129,1,0
+1334,2024-01-08,Free,Search Ads,18-24,Tier 3,136,4,0
+1335,2024-04-02,Plus,Referral,18-24,Tier 2,657,1,0
+1336,2024-01-29,Free,Search Ads,18-24,Tier 2,166,2,0
+1337,2024-03-20,Free,Referral,25-34,Tier 2,265,0,1
+1338,2024-05-12,Pro,Organic,25-34,Tier 1,453,0,0
+1339,2024-04-17,Plus,Referral,25-34,Tier 1,214,0,0
+1340,2024-03-21,Free,Organic,45+,Tier 1,483,3,0
+1341,2024-02-09,Free,Organic,18-24,Tier 2,1026,1,0
+1342,2024-05-09,Free,Search Ads,45+,Tier 1,366,0,0
+1343,2024-03-07,Pro,Search Ads,18-24,Tier 1,491,0,0
+1344,2024-06-13,Free,Organic,18-24,Tier 1,370,2,1
+1345,2024-05-22,Plus,Paid Social,18-24,Tier 1,669,0,1
+1346,2024-05-13,Free,Search Ads,35-44,Tier 1,253,1,1
+1347,2024-04-20,Plus,Organic,25-34,Tier 2,545,1,0
+1348,2024-04-29,Free,Search Ads,25-34,Tier 2,245,2,1
+1349,2024-04-01,Free,Search Ads,25-34,Tier 2,253,0,0
+1350,2024-06-02,Plus,Search Ads,25-34,Tier 2,849,1,0
+1351,2024-05-25,Free,Search Ads,18-24,Tier 2,297,1,1
+1352,2024-03-21,Free,Paid Social,35-44,Tier 1,325,2,0
+1353,2024-04-05,Free,Search Ads,25-34,Tier 2,277,0,1
+1354,2024-04-27,Free,Organic,25-34,Tier 3,275,0,0
+1355,2024-04-05,Pro,Organic,25-34,Tier 3,1272,2,0
+1356,2024-05-28,Free,Referral,45+,Tier 1,361,0,0
+1357,2024-05-05,Plus,Organic,35-44,Tier 1,691,0,0
+1358,2024-06-06,Plus,Paid Social,35-44,Tier 1,469,1,0
+1359,2024-04-18,Free,Paid Social,35-44,Tier 1,313,0,0
+1360,2024-03-08,Free,Paid Social,45+,Tier 2,447,2,1
+1361,2024-01-26,Plus,Organic,18-24,Tier 1,706,1,0
+1362,2024-03-02,Plus,Search Ads,45+,Tier 2,272,0,0
+1363,2024-06-02,Plus,Referral,35-44,Tier 2,317,0,0
+1364,2024-02-09,Plus,Organic,35-44,Tier 1,146,1,1
+1365,2024-01-26,Free,Paid Social,25-34,Tier 1,165,2,1
+1366,2024-06-06,Plus,Paid Social,18-24,Tier 1,140,0,0
+1367,2024-05-11,Free,Referral,25-34,Tier 1,115,2,1
+1368,2024-04-15,Pro,Paid Social,35-44,Tier 1,491,0,0
+1369,2024-06-02,Free,Organic,18-24,Tier 1,164,2,0
+1370,2024-04-13,Free,Search Ads,35-44,Tier 1,278,2,0
+1371,2024-02-16,Free,Paid Social,35-44,Tier 2,171,5,0
+1372,2024-02-13,Plus,Search Ads,18-24,Tier 1,721,0,0
+1373,2024-03-10,Plus,Paid Social,25-34,Tier 1,144,2,0
+1374,2024-03-05,Free,Paid Social,25-34,Tier 3,214,0,1
+1375,2024-02-13,Pro,Paid Social,18-24,Tier 1,287,0,0
+1376,2024-01-15,Free,Paid Social,25-34,Tier 1,89,0,1
+1377,2024-01-03,Plus,Search Ads,25-34,Tier 1,152,1,1
+1378,2024-02-27,Free,Organic,35-44,Tier 2,245,1,0
+1379,2024-05-08,Free,Search Ads,45+,Tier 2,232,2,0
+1380,2024-06-26,Free,Search Ads,45+,Tier 1,91,0,1
+1381,2024-01-30,Free,Referral,25-34,Tier 1,26,0,0
+1382,2024-04-21,Pro,Paid Social,45+,Tier 3,550,0,0
+1383,2024-05-23,Plus,Paid Social,25-34,Tier 2,360,1,1
+1384,2024-05-03,Pro,Referral,45+,Tier 2,680,0,0
+1385,2024-05-01,Free,Search Ads,25-34,Tier 1,167,0,1
+1386,2024-04-21,Free,Organic,35-44,Tier 1,455,0,0
+1387,2024-06-04,Free,Search Ads,25-34,Tier 1,142,0,1
+1388,2024-04-29,Plus,Organic,35-44,Tier 1,161,0,1
+1389,2024-06-30,Free,Paid Social,25-34,Tier 1,321,2,1
+1390,2024-06-14,Plus,Paid Social,35-44,Tier 1,126,0,1
+1391,2024-05-30,Free,Organic,35-44,Tier 1,412,0,0
+1392,2024-06-17,Free,Organic,18-24,Tier 2,213,1,0
+1393,2024-02-27,Plus,Search Ads,25-34,Tier 2,732,2,0
+1394,2024-01-08,Free,Search Ads,25-34,Tier 3,482,0,0
+1395,2024-02-14,Pro,Search Ads,18-24,Tier 1,357,0,1
+1396,2024-02-18,Free,Organic,18-24,Tier 1,241,2,1
+1397,2024-05-09,Free,Organic,45+,Tier 1,289,2,0
+1398,2024-02-01,Plus,Organic,35-44,Tier 1,1014,0,0
+1399,2024-06-10,Pro,Referral,25-34,Tier 1,311,0,0
+1400,2024-06-14,Free,Organic,18-24,Tier 1,170,2,0
+1401,2024-03-14,Free,Referral,25-34,Tier 1,388,1,0
+1402,2024-05-24,Free,Organic,25-34,Tier 2,125,3,0
+1403,2024-03-20,Free,Referral,35-44,Tier 1,59,0,0
+1404,2024-06-18,Free,Organic,25-34,Tier 2,484,0,1
+1405,2024-03-08,Pro,Search Ads,25-34,Tier 3,218,0,0
+1406,2024-01-07,Pro,Organic,35-44,Tier 2,965,1,0
+1407,2024-01-06,Plus,Organic,25-34,Tier 2,483,0,1
+1408,2024-04-20,Pro,Organic,45+,Tier 2,122,0,1
+1409,2024-04-18,Plus,Organic,18-24,Tier 1,232,0,0
+1410,2024-01-09,Free,Referral,45+,Tier 1,143,0,0
+1411,2024-05-20,Free,Paid Social,45+,Tier 2,217,2,1
+1412,2024-02-01,Plus,Paid Social,25-34,Tier 1,694,1,0
+1413,2024-06-14,Plus,Paid Social,35-44,Tier 2,329,0,1
+1414,2024-05-29,Free,Referral,45+,Tier 1,158,1,0
+1415,2024-05-05,Plus,Referral,45+,Tier 1,696,0,0
+1416,2024-04-23,Plus,Paid Social,25-34,Tier 2,192,0,0
+1417,2024-04-21,Free,Organic,45+,Tier 2,368,1,0
+1418,2024-04-07,Free,Organic,18-24,Tier 2,370,0,0
+1419,2024-01-21,Free,Organic,25-34,Tier 2,297,2,1
+1420,2024-01-06,Free,Organic,45+,Tier 2,44,1,0
+1421,2024-05-26,Free,Paid Social,45+,Tier 1,261,2,0
+1422,2024-02-21,Free,Search Ads,35-44,Tier 3,154,4,0
+1423,2024-06-25,Free,Organic,18-24,Tier 2,182,2,0
+1424,2024-03-05,Free,Search Ads,45+,Tier 2,79,1,0
+1425,2024-04-03,Free,Paid Social,35-44,Tier 2,38,0,1
+1426,2024-03-18,Free,Organic,45+,Tier 1,211,1,1
+1427,2024-03-31,Plus,Referral,35-44,Tier 1,441,1,0
+1428,2024-01-23,Free,Referral,18-24,Tier 2,248,2,1
+1429,2024-01-18,Free,Referral,35-44,Tier 1,168,0,0
+1430,2024-02-14,Free,Organic,25-34,Tier 2,79,2,1
+1431,2024-02-28,Free,Organic,25-34,Tier 2,91,1,1
+1432,2024-05-02,Free,Search Ads,18-24,Tier 2,680,1,1
+1433,2024-06-12,Free,Referral,18-24,Tier 2,134,1,0
+1434,2024-04-24,Free,Paid Social,18-24,Tier 2,390,2,0
+1435,2024-05-19,Free,Referral,18-24,Tier 1,40,0,1
+1436,2024-03-05,Plus,Paid Social,25-34,Tier 1,389,0,0
+1437,2024-04-19,Free,Paid Social,18-24,Tier 3,231,2,0
+1438,2024-03-05,Free,Search Ads,25-34,Tier 1,198,0,0
+1439,2024-01-16,Free,Organic,35-44,Tier 2,296,2,0
+1440,2024-05-29,Free,Organic,18-24,Tier 1,29,1,1
+1441,2024-06-17,Free,Organic,25-34,Tier 2,229,2,0
+1442,2024-02-20,Pro,Organic,25-34,Tier 1,289,0,0
+1443,2024-03-26,Free,Search Ads,25-34,Tier 2,167,0,1
+1444,2024-01-12,Pro,Referral,45+,Tier 1,282,0,0
+1445,2024-01-31,Free,Paid Social,35-44,Tier 3,271,1,1
+1446,2024-02-28,Free,Organic,18-24,Tier 1,172,5,1
+1447,2024-04-11,Free,Paid Social,25-34,Tier 1,177,2,1
+1448,2024-01-28,Plus,Paid Social,25-34,Tier 1,264,0,1
+1449,2024-05-24,Pro,Organic,18-24,Tier 1,1172,2,0
+1450,2024-02-21,Plus,Organic,18-24,Tier 3,61,0,1
+1451,2024-06-03,Free,Organic,25-34,Tier 1,208,3,1
+1452,2024-02-27,Plus,Referral,35-44,Tier 1,238,0,0
+1453,2024-04-06,Free,Paid Social,18-24,Tier 1,138,0,1
+1454,2024-02-06,Plus,Referral,25-34,Tier 1,98,0,0
+1455,2024-06-27,Free,Organic,25-34,Tier 1,77,2,1
+1456,2024-02-23,Pro,Organic,25-34,Tier 1,554,0,0
+1457,2024-01-10,Pro,Organic,18-24,Tier 3,716,0,0
+1458,2024-04-24,Free,Referral,35-44,Tier 3,72,1,1
+1459,2024-03-10,Free,Organic,25-34,Tier 1,272,0,0
+1460,2024-04-13,Free,Organic,35-44,Tier 1,278,0,0
+1461,2024-05-28,Plus,Referral,35-44,Tier 1,429,0,0
+1462,2024-01-12,Free,Referral,25-34,Tier 2,215,1,1
+1463,2024-05-31,Free,Search Ads,25-34,Tier 1,358,1,0
+1464,2024-02-23,Plus,Search Ads,25-34,Tier 1,187,0,0
+1465,2024-02-15,Free,Search Ads,35-44,Tier 1,117,1,1
+1466,2024-03-23,Plus,Referral,35-44,Tier 3,454,1,0
+1467,2024-03-21,Free,Organic,35-44,Tier 1,312,0,1
+1468,2024-01-05,Pro,Paid Social,35-44,Tier 1,364,0,0
+1469,2024-05-31,Pro,Organic,25-34,Tier 2,383,0,0
+1470,2024-06-24,Free,Paid Social,35-44,Tier 1,370,1,1
+1471,2024-03-13,Free,Referral,45+,Tier 2,429,2,1
+1472,2024-02-12,Free,Paid Social,25-34,Tier 2,658,0,0
+1473,2024-02-06,Free,Organic,25-34,Tier 1,107,0,0
+1474,2024-04-26,Plus,Search Ads,35-44,Tier 1,186,0,0
+1475,2024-03-11,Plus,Organic,35-44,Tier 2,1345,0,0
+1476,2024-01-21,Free,Organic,25-34,Tier 2,230,0,1
+1477,2024-06-21,Pro,Paid Social,25-34,Tier 1,534,0,1
+1478,2024-03-10,Free,Paid Social,25-34,Tier 2,153,3,0
+1479,2024-06-16,Pro,Organic,25-34,Tier 1,610,0,0
+1480,2024-01-04,Free,Organic,45+,Tier 1,71,3,0
+1481,2024-04-23,Free,Search Ads,35-44,Tier 1,83,5,1
+1482,2024-01-25,Plus,Paid Social,18-24,Tier 1,886,0,1
+1483,2024-01-21,Pro,Paid Social,25-34,Tier 2,609,0,0
+1484,2024-01-23,Pro,Organic,25-34,Tier 1,256,0,0
+1485,2024-03-13,Plus,Paid Social,35-44,Tier 3,617,0,0
+1486,2024-04-24,Pro,Paid Social,25-34,Tier 1,360,2,0
+1487,2024-05-22,Free,Paid Social,45+,Tier 3,86,2,1
+1488,2024-01-05,Pro,Organic,35-44,Tier 3,431,0,0
+1489,2024-04-21,Free,Paid Social,25-34,Tier 1,215,1,0
+1490,2024-02-29,Free,Organic,25-34,Tier 2,131,1,0
+1491,2024-01-03,Pro,Organic,45+,Tier 2,178,0,0
+1492,2024-02-03,Free,Search Ads,25-34,Tier 1,369,0,0
+1493,2024-06-21,Free,Organic,25-34,Tier 1,240,2,1
+1494,2024-05-02,Free,Paid Social,35-44,Tier 1,232,0,0
+1495,2024-05-15,Plus,Paid Social,18-24,Tier 1,140,1,0
+1496,2024-01-08,Free,Search Ads,25-34,Tier 2,161,3,0
+1497,2024-06-30,Plus,Organic,35-44,Tier 1,426,1,0
+1498,2024-04-23,Plus,Search Ads,35-44,Tier 1,175,1,0
+1499,2024-04-23,Plus,Referral,45+,Tier 2,689,0,0
+1500,2024-04-17,Pro,Organic,35-44,Tier 2,934,0,0
+1501,2024-04-21,Plus,Referral,18-24,Tier 2,557,1,0
+1502,2024-01-21,Free,Referral,35-44,Tier 1,338,0,1
+1503,2024-06-07,Free,Paid Social,25-34,Tier 1,234,0,1
+1504,2024-05-07,Plus,Paid Social,18-24,Tier 1,672,0,0
+1505,2024-01-29,Free,Referral,25-34,Tier 2,295,1,0
+1506,2024-02-08,Free,Search Ads,18-24,Tier 1,263,0,0
+1507,2024-04-19,Free,Organic,45+,Tier 2,308,0,1
+1508,2024-01-17,Free,Paid Social,25-34,Tier 1,190,1,1
+1509,2024-06-05,Free,Paid Social,25-34,Tier 1,640,0,1
+1510,2024-01-13,Plus,Search Ads,18-24,Tier 3,149,0,0
+1511,2024-05-22,Plus,Paid Social,25-34,Tier 3,555,0,0
+1512,2024-06-25,Free,Organic,35-44,Tier 1,79,0,0
+1513,2024-03-08,Free,Organic,35-44,Tier 1,198,2,0
+1514,2024-02-21,Free,Paid Social,35-44,Tier 1,264,2,1
+1515,2024-06-24,Pro,Search Ads,35-44,Tier 1,295,0,0
+1516,2024-06-04,Pro,Search Ads,35-44,Tier 2,410,0,0
+1517,2024-01-29,Pro,Paid Social,35-44,Tier 2,85,0,1
+1518,2024-04-05,Plus,Paid Social,25-34,Tier 3,371,0,0
+1519,2024-03-15,Plus,Paid Social,18-24,Tier 2,261,2,1
+1520,2024-06-04,Free,Referral,25-34,Tier 2,263,1,0
+1521,2024-05-16,Free,Paid Social,18-24,Tier 3,188,2,1
+1522,2024-05-25,Plus,Organic,25-34,Tier 1,128,1,0
+1523,2024-03-17,Free,Paid Social,45+,Tier 3,201,2,1
+1524,2024-02-17,Plus,Referral,25-34,Tier 1,215,1,0
+1525,2024-03-24,Free,Search Ads,25-34,Tier 2,232,1,0
+1526,2024-03-29,Plus,Paid Social,25-34,Tier 2,196,2,0
+1527,2024-06-03,Free,Referral,35-44,Tier 2,147,1,0
+1528,2024-02-10,Plus,Organic,25-34,Tier 1,293,0,1
+1529,2024-05-05,Plus,Search Ads,35-44,Tier 2,635,1,0
+1530,2024-03-06,Free,Organic,35-44,Tier 1,136,0,1
+1531,2024-06-19,Plus,Organic,25-34,Tier 3,220,0,0
+1532,2024-06-25,Free,Organic,25-34,Tier 1,119,2,0
+1533,2024-01-15,Plus,Organic,18-24,Tier 3,296,0,0
+1534,2024-03-12,Pro,Organic,18-24,Tier 2,1130,1,0
+1535,2024-05-21,Pro,Organic,18-24,Tier 2,508,1,1
+1536,2024-01-23,Free,Search Ads,18-24,Tier 1,576,0,0
+1537,2024-02-13,Free,Paid Social,35-44,Tier 2,182,1,1
+1538,2024-04-06,Free,Organic,18-24,Tier 2,202,4,1
+1539,2024-04-03,Free,Paid Social,25-34,Tier 2,228,2,0
+1540,2024-05-09,Pro,Paid Social,25-34,Tier 2,438,0,0
+1541,2024-06-15,Free,Referral,45+,Tier 2,287,1,1
+1542,2024-03-01,Free,Paid Social,25-34,Tier 1,80,2,1
+1543,2024-03-07,Plus,Referral,35-44,Tier 1,302,0,1
+1544,2024-03-25,Free,Organic,35-44,Tier 3,148,2,0
+1545,2024-06-06,Plus,Search Ads,25-34,Tier 2,632,2,0
+1546,2024-05-28,Plus,Search Ads,18-24,Tier 2,470,0,0
+1547,2024-01-20,Free,Organic,18-24,Tier 2,166,3,1
+1548,2024-02-26,Free,Paid Social,25-34,Tier 3,278,2,0
+1549,2024-06-11,Free,Search Ads,25-34,Tier 2,306,1,1
+1550,2024-06-07,Free,Organic,25-34,Tier 1,325,1,0
+1551,2024-05-10,Plus,Organic,35-44,Tier 2,213,1,1
+1552,2024-05-20,Pro,Organic,35-44,Tier 1,420,1,1
+1553,2024-02-20,Free,Organic,18-24,Tier 2,164,1,1
+1554,2024-05-18,Free,Organic,25-34,Tier 3,187,1,1
+1555,2024-04-21,Plus,Referral,25-34,Tier 3,215,1,1
+1556,2024-06-08,Free,Organic,18-24,Tier 1,302,0,0
+1557,2024-01-20,Free,Paid Social,25-34,Tier 2,336,1,0
+1558,2024-04-21,Pro,Search Ads,18-24,Tier 1,421,0,1
+1559,2024-04-22,Pro,Search Ads,18-24,Tier 2,558,0,0
+1560,2024-03-21,Plus,Paid Social,18-24,Tier 1,182,4,0
+1561,2024-03-01,Plus,Paid Social,35-44,Tier 1,748,0,0
+1562,2024-06-06,Plus,Organic,25-34,Tier 1,240,0,1
+1563,2024-06-27,Plus,Paid Social,45+,Tier 1,532,0,0
+1564,2024-04-18,Plus,Search Ads,45+,Tier 1,256,0,0
+1565,2024-05-13,Free,Organic,35-44,Tier 3,467,0,1
+1566,2024-02-26,Free,Organic,35-44,Tier 1,240,2,0
+1567,2024-01-28,Free,Organic,18-24,Tier 3,280,1,0
+1568,2024-02-10,Free,Paid Social,35-44,Tier 2,201,2,1
+1569,2024-02-05,Free,Organic,25-34,Tier 1,312,3,0
+1570,2024-03-06,Free,Search Ads,35-44,Tier 1,366,0,1
+1571,2024-06-10,Plus,Paid Social,18-24,Tier 1,752,0,0
+1572,2024-05-17,Plus,Referral,35-44,Tier 1,142,2,0
+1573,2024-03-24,Plus,Search Ads,18-24,Tier 1,77,0,1
+1574,2024-02-08,Plus,Search Ads,35-44,Tier 1,126,0,0
+1575,2024-06-23,Free,Organic,18-24,Tier 2,280,1,1
+1576,2024-05-01,Pro,Referral,45+,Tier 2,306,0,0
+1577,2024-06-21,Plus,Paid Social,45+,Tier 1,405,0,0
+1578,2024-03-18,Free,Paid Social,25-34,Tier 3,121,3,0
+1579,2024-04-13,Free,Search Ads,45+,Tier 2,178,0,0
+1580,2024-01-30,Plus,Paid Social,18-24,Tier 2,652,0,0
+1581,2024-02-07,Free,Organic,25-34,Tier 2,164,0,1
+1582,2024-04-27,Free,Organic,35-44,Tier 2,121,1,1
+1583,2024-04-22,Plus,Paid Social,35-44,Tier 1,800,2,0
+1584,2024-06-26,Free,Paid Social,25-34,Tier 3,536,0,0
+1585,2024-06-28,Plus,Referral,18-24,Tier 2,89,0,0
+1586,2024-01-06,Free,Search Ads,18-24,Tier 1,278,0,0
+1587,2024-06-08,Free,Paid Social,18-24,Tier 1,369,2,1
+1588,2024-04-25,Free,Paid Social,25-34,Tier 2,91,2,0
+1589,2024-02-13,Plus,Organic,35-44,Tier 1,330,2,1
+1590,2024-01-28,Free,Paid Social,25-34,Tier 3,292,2,1
+1591,2024-06-12,Free,Paid Social,18-24,Tier 2,82,2,0
+1592,2024-01-06,Pro,Paid Social,25-34,Tier 2,256,0,0
+1593,2024-04-06,Pro,Paid Social,18-24,Tier 1,340,0,0
+1594,2024-02-05,Free,Paid Social,25-34,Tier 1,301,2,0
+1595,2024-06-24,Pro,Referral,18-24,Tier 3,158,1,0
+1596,2024-01-27,Free,Search Ads,35-44,Tier 1,197,0,0
+1597,2024-05-03,Plus,Paid Social,18-24,Tier 1,357,0,1
+1598,2024-02-19,Free,Search Ads,45+,Tier 1,198,3,0
+1599,2024-02-23,Free,Paid Social,35-44,Tier 1,745,0,1
+1600,2024-04-23,Free,Paid Social,25-34,Tier 3,157,0,1
+1601,2024-02-21,Free,Paid Social,18-24,Tier 1,228,2,1
+1602,2024-06-11,Free,Referral,25-34,Tier 3,389,0,0
+1603,2024-03-30,Free,Paid Social,45+,Tier 1,322,2,0
+1604,2024-01-14,Plus,Referral,25-34,Tier 1,339,0,0
+1605,2024-04-02,Free,Paid Social,25-34,Tier 3,270,2,0
+1606,2024-02-13,Free,Organic,25-34,Tier 2,257,1,0
+1607,2024-06-15,Free,Paid Social,25-34,Tier 3,347,0,1
+1608,2024-01-04,Free,Paid Social,45+,Tier 2,103,0,1
+1609,2024-01-23,Free,Referral,25-34,Tier 2,289,1,1
+1610,2024-03-31,Plus,Referral,18-24,Tier 3,212,2,1
+1611,2024-02-20,Free,Organic,25-34,Tier 1,429,0,0
+1612,2024-03-06,Free,Paid Social,35-44,Tier 1,127,1,0
+1613,2024-02-09,Free,Referral,45+,Tier 2,162,0,1
+1614,2024-06-14,Pro,Search Ads,35-44,Tier 2,195,0,1
+1615,2024-01-01,Free,Paid Social,35-44,Tier 1,100,2,1
+1616,2024-01-23,Free,Organic,25-34,Tier 2,224,2,1
+1617,2024-06-22,Plus,Organic,18-24,Tier 2,189,0,0
+1618,2024-03-30,Pro,Paid Social,18-24,Tier 2,308,1,1
+1619,2024-06-19,Free,Referral,18-24,Tier 1,316,0,1
+1620,2024-05-31,Plus,Search Ads,25-34,Tier 2,421,0,0
+1621,2024-02-25,Free,Paid Social,35-44,Tier 3,122,2,0
+1622,2024-05-11,Plus,Paid Social,25-34,Tier 1,422,1,1
+1623,2024-01-27,Free,Referral,25-34,Tier 1,127,0,1
+1624,2024-04-21,Free,Organic,25-34,Tier 3,66,4,1
+1625,2024-03-03,Free,Paid Social,45+,Tier 1,126,2,1
+1626,2024-05-04,Free,Organic,25-34,Tier 3,80,1,1
+1627,2024-01-27,Free,Paid Social,25-34,Tier 1,103,0,0
+1628,2024-06-01,Free,Search Ads,45+,Tier 2,302,1,1
+1629,2024-02-18,Pro,Referral,25-34,Tier 1,334,1,0
+1630,2024-03-25,Free,Referral,25-34,Tier 1,262,0,0
+1631,2024-06-01,Plus,Search Ads,25-34,Tier 1,241,0,0
+1632,2024-03-28,Plus,Organic,25-34,Tier 2,426,0,0
+1633,2024-04-06,Free,Paid Social,25-34,Tier 2,96,0,1
+1634,2024-01-22,Free,Organic,25-34,Tier 1,194,1,1
+1635,2024-05-09,Free,Organic,25-34,Tier 2,146,2,0
+1636,2024-06-25,Plus,Referral,45+,Tier 1,528,0,0
+1637,2024-05-13,Pro,Referral,35-44,Tier 1,880,0,1
+1638,2024-06-15,Free,Organic,18-24,Tier 1,132,1,1
+1639,2024-06-28,Free,Search Ads,35-44,Tier 2,151,2,0
+1640,2024-05-01,Pro,Organic,18-24,Tier 1,313,0,0
+1641,2024-06-06,Free,Organic,18-24,Tier 1,120,0,0
+1642,2024-04-04,Free,Paid Social,18-24,Tier 1,160,2,1
+1643,2024-03-05,Free,Paid Social,25-34,Tier 3,241,0,1
+1644,2024-04-14,Plus,Referral,25-34,Tier 2,969,1,0
+1645,2024-06-04,Pro,Referral,45+,Tier 2,326,0,0
+1646,2024-02-01,Plus,Referral,25-34,Tier 3,146,0,1
+1647,2024-04-23,Pro,Paid Social,25-34,Tier 1,172,1,0
+1648,2024-05-05,Free,Organic,25-34,Tier 2,164,3,1
+1649,2024-05-09,Free,Organic,25-34,Tier 1,246,1,0
+1650,2024-05-12,Plus,Search Ads,45+,Tier 1,309,0,0
+1651,2024-04-28,Pro,Organic,18-24,Tier 2,678,0,0
+1652,2024-04-21,Pro,Paid Social,35-44,Tier 1,405,0,0
+1653,2024-06-18,Free,Search Ads,18-24,Tier 1,307,1,1
+1654,2024-01-02,Pro,Paid Social,25-34,Tier 1,463,1,0
+1655,2024-03-23,Free,Search Ads,25-34,Tier 1,435,0,0
+1656,2024-01-14,Free,Search Ads,45+,Tier 2,236,4,1
+1657,2024-06-09,Free,Search Ads,18-24,Tier 3,149,1,1
+1658,2024-01-27,Pro,Paid Social,25-34,Tier 1,896,0,0
+1659,2024-05-20,Pro,Search Ads,18-24,Tier 1,226,0,0
+1660,2024-05-09,Plus,Referral,18-24,Tier 2,349,1,0
+1661,2024-02-28,Plus,Search Ads,18-24,Tier 2,748,0,0
+1662,2024-03-18,Plus,Organic,25-34,Tier 2,622,0,0
+1663,2024-02-07,Plus,Organic,35-44,Tier 2,278,2,0
+1664,2024-05-27,Free,Paid Social,45+,Tier 1,435,1,0
+1665,2024-05-08,Free,Paid Social,25-34,Tier 2,250,2,0
+1666,2024-06-24,Free,Paid Social,45+,Tier 2,335,0,0
+1667,2024-04-19,Free,Search Ads,18-24,Tier 1,167,3,0
+1668,2024-04-04,Free,Search Ads,18-24,Tier 1,151,3,0
+1669,2024-06-17,Pro,Organic,25-34,Tier 2,216,1,1
+1670,2024-02-27,Free,Organic,25-34,Tier 1,53,2,1
+1671,2024-06-09,Plus,Referral,18-24,Tier 1,505,0,1
+1672,2024-04-15,Pro,Paid Social,35-44,Tier 1,606,0,0
+1673,2024-05-23,Plus,Organic,25-34,Tier 1,378,1,0
+1674,2024-02-29,Free,Organic,25-34,Tier 1,203,2,1
+1675,2024-03-30,Plus,Organic,18-24,Tier 2,90,1,0
+1676,2024-03-12,Plus,Organic,18-24,Tier 3,386,0,1
+1677,2024-05-20,Free,Organic,18-24,Tier 1,490,0,1
+1678,2024-01-13,Plus,Search Ads,18-24,Tier 2,348,0,1
+1679,2024-06-21,Plus,Search Ads,18-24,Tier 2,290,0,0
+1680,2024-03-01,Plus,Organic,18-24,Tier 2,320,0,0
+1681,2024-03-13,Plus,Referral,18-24,Tier 1,529,3,0
+1682,2024-06-26,Free,Referral,35-44,Tier 1,168,0,1
+1683,2024-01-19,Plus,Paid Social,25-34,Tier 2,423,0,0
+1684,2024-05-16,Free,Paid Social,25-34,Tier 2,379,0,1
+1685,2024-01-18,Plus,Organic,25-34,Tier 3,366,0,0
+1686,2024-06-19,Free,Referral,35-44,Tier 1,369,0,0
+1687,2024-02-21,Free,Organic,25-34,Tier 2,179,0,0
+1688,2024-02-27,Free,Paid Social,25-34,Tier 1,260,2,0
+1689,2024-05-18,Free,Paid Social,18-24,Tier 3,145,2,1
+1690,2024-02-10,Pro,Search Ads,35-44,Tier 2,412,1,0
+1691,2024-01-17,Free,Search Ads,18-24,Tier 1,397,0,0
+1692,2024-01-13,Pro,Paid Social,25-34,Tier 1,575,0,0
+1693,2024-06-15,Plus,Organic,18-24,Tier 2,427,1,0
+1694,2024-04-11,Plus,Paid Social,25-34,Tier 2,406,0,0
+1695,2024-06-22,Free,Paid Social,18-24,Tier 2,361,1,0
+1696,2024-05-27,Free,Paid Social,35-44,Tier 3,231,0,1
+1697,2024-03-07,Free,Paid Social,35-44,Tier 1,307,3,1
+1698,2024-06-26,Pro,Organic,35-44,Tier 1,398,0,0
+1699,2024-05-25,Free,Paid Social,18-24,Tier 2,349,4,1
+1700,2024-02-07,Free,Paid Social,25-34,Tier 2,196,0,0
+1701,2024-01-29,Plus,Paid Social,18-24,Tier 1,316,0,0
+1702,2024-01-13,Free,Referral,18-24,Tier 2,185,2,0
+1703,2024-01-11,Free,Paid Social,45+,Tier 1,184,1,0
+1704,2024-03-22,Free,Search Ads,25-34,Tier 1,209,1,0
+1705,2024-03-17,Plus,Organic,25-34,Tier 2,145,0,1
+1706,2024-03-13,Free,Paid Social,18-24,Tier 1,102,3,1
+1707,2024-01-12,Free,Paid Social,18-24,Tier 2,65,2,1
+1708,2024-04-21,Pro,Organic,45+,Tier 1,101,1,0
+1709,2024-01-10,Pro,Organic,18-24,Tier 3,351,1,1
+1710,2024-04-15,Plus,Search Ads,25-34,Tier 2,69,0,1
+1711,2024-01-22,Plus,Search Ads,35-44,Tier 1,295,0,0
+1712,2024-04-15,Free,Organic,35-44,Tier 2,387,0,1
+1713,2024-02-24,Free,Organic,18-24,Tier 1,128,2,1
+1714,2024-06-24,Plus,Organic,18-24,Tier 1,253,1,0
+1715,2024-01-27,Free,Search Ads,18-24,Tier 2,272,1,1
+1716,2024-05-27,Plus,Referral,25-34,Tier 2,620,1,0
+1717,2024-04-16,Plus,Search Ads,25-34,Tier 1,394,1,0
+1718,2024-03-31,Pro,Search Ads,25-34,Tier 2,445,0,1
+1719,2024-05-31,Free,Organic,25-34,Tier 1,226,0,0
+1720,2024-02-05,Free,Organic,25-34,Tier 2,233,0,0
+1721,2024-06-05,Free,Organic,25-34,Tier 2,479,0,1
+1722,2024-06-01,Pro,Paid Social,35-44,Tier 1,441,0,0
+1723,2024-06-08,Plus,Search Ads,18-24,Tier 3,343,1,0
+1724,2024-01-10,Plus,Referral,25-34,Tier 1,354,0,0
+1725,2024-04-09,Plus,Organic,35-44,Tier 1,1278,1,0
+1726,2024-03-07,Free,Paid Social,45+,Tier 1,394,0,1
+1727,2024-02-15,Plus,Referral,25-34,Tier 2,293,1,0
+1728,2024-02-29,Plus,Organic,25-34,Tier 1,91,0,1
+1729,2024-04-13,Pro,Organic,35-44,Tier 1,741,0,0
+1730,2024-01-07,Free,Referral,35-44,Tier 2,265,0,1
+1731,2024-04-25,Plus,Paid Social,25-34,Tier 3,1167,0,0
+1732,2024-03-03,Free,Organic,35-44,Tier 1,667,0,0
+1733,2024-05-11,Free,Search Ads,35-44,Tier 2,199,1,0
+1734,2024-02-07,Plus,Search Ads,25-34,Tier 2,229,0,1
+1735,2024-05-09,Free,Search Ads,18-24,Tier 2,195,2,0
+1736,2024-04-25,Free,Paid Social,18-24,Tier 2,176,2,0
+1737,2024-02-05,Free,Referral,18-24,Tier 2,216,0,0
+1738,2024-02-23,Pro,Referral,25-34,Tier 3,760,0,0
+1739,2024-02-16,Plus,Paid Social,18-24,Tier 3,295,0,1
+1740,2024-06-17,Free,Organic,35-44,Tier 2,194,1,0
+1741,2024-04-28,Free,Search Ads,25-34,Tier 1,123,1,0
+1742,2024-05-13,Free,Paid Social,35-44,Tier 3,263,1,0
+1743,2024-01-17,Free,Organic,25-34,Tier 1,69,1,1
+1744,2024-01-24,Free,Organic,25-34,Tier 1,80,2,0
+1745,2024-06-30,Free,Paid Social,18-24,Tier 1,198,1,1
+1746,2024-05-21,Pro,Paid Social,25-34,Tier 3,396,0,0
+1747,2024-05-24,Plus,Organic,25-34,Tier 3,506,0,0
+1748,2024-06-18,Free,Paid Social,35-44,Tier 1,256,3,1
+1749,2024-06-02,Free,Organic,25-34,Tier 1,369,1,1
+1750,2024-01-09,Pro,Search Ads,18-24,Tier 1,821,0,1
+1751,2024-02-25,Free,Paid Social,25-34,Tier 3,317,1,0
+1752,2024-03-14,Plus,Paid Social,25-34,Tier 1,706,0,0
+1753,2024-01-28,Plus,Referral,25-34,Tier 1,1074,1,0
+1754,2024-06-11,Pro,Search Ads,25-34,Tier 2,1049,1,0
+1755,2024-06-18,Pro,Organic,25-34,Tier 1,188,2,0
+1756,2024-01-30,Plus,Referral,25-34,Tier 1,611,1,0
+1757,2024-05-18,Plus,Paid Social,45+,Tier 2,268,2,0
+1758,2024-05-28,Free,Paid Social,18-24,Tier 1,281,4,1
+1759,2024-01-06,Free,Paid Social,25-34,Tier 1,104,2,1
+1760,2024-01-23,Plus,Organic,25-34,Tier 1,154,0,0
+1761,2024-06-21,Free,Referral,45+,Tier 1,391,0,0
+1762,2024-02-15,Free,Organic,18-24,Tier 2,145,2,1
+1763,2024-05-25,Plus,Search Ads,18-24,Tier 3,496,2,0
+1764,2024-04-30,Plus,Organic,35-44,Tier 1,461,0,0
+1765,2024-04-08,Plus,Paid Social,18-24,Tier 2,361,0,1
+1766,2024-01-05,Plus,Search Ads,25-34,Tier 3,541,0,0
+1767,2024-04-14,Plus,Organic,25-34,Tier 2,808,2,0
+1768,2024-05-22,Pro,Paid Social,18-24,Tier 3,467,0,0
+1769,2024-02-20,Free,Organic,35-44,Tier 3,151,0,1
+1770,2024-05-02,Free,Organic,25-34,Tier 1,207,2,0
+1771,2024-03-14,Free,Search Ads,25-34,Tier 1,243,0,1
+1772,2024-06-21,Free,Organic,18-24,Tier 1,316,0,0
+1773,2024-04-01,Free,Organic,25-34,Tier 2,251,0,1
+1774,2024-01-02,Free,Search Ads,18-24,Tier 1,248,3,1
+1775,2024-01-29,Free,Paid Social,45+,Tier 2,153,3,0
+1776,2024-02-05,Free,Organic,25-34,Tier 1,239,2,1
+1777,2024-03-05,Plus,Organic,45+,Tier 1,191,1,1
+1778,2024-03-17,Free,Organic,25-34,Tier 1,343,0,0
+1779,2024-04-01,Plus,Organic,25-34,Tier 3,427,1,0
+1780,2024-05-10,Plus,Organic,18-24,Tier 2,720,2,0
+1781,2024-05-12,Free,Paid Social,18-24,Tier 3,247,3,1
+1782,2024-03-29,Plus,Paid Social,25-34,Tier 1,339,1,1
+1783,2024-04-09,Pro,Referral,18-24,Tier 1,722,0,0
+1784,2024-01-20,Plus,Search Ads,45+,Tier 2,554,0,1
+1785,2024-05-25,Plus,Paid Social,45+,Tier 2,357,0,0
+1786,2024-01-10,Free,Organic,18-24,Tier 1,120,1,0
+1787,2024-06-25,Pro,Paid Social,35-44,Tier 1,154,0,1
+1788,2024-03-04,Free,Paid Social,35-44,Tier 2,145,1,0
+1789,2024-03-23,Plus,Organic,18-24,Tier 3,95,1,1
+1790,2024-01-29,Pro,Paid Social,35-44,Tier 2,205,0,0
+1791,2024-02-27,Plus,Search Ads,35-44,Tier 1,792,2,0
+1792,2024-02-02,Free,Organic,25-34,Tier 2,270,3,1
+1793,2024-03-02,Free,Organic,25-34,Tier 1,293,0,1
+1794,2024-02-23,Pro,Organic,18-24,Tier 2,253,0,0
+1795,2024-05-11,Free,Organic,25-34,Tier 2,179,4,0
+1796,2024-04-16,Free,Paid Social,25-34,Tier 1,276,3,0
+1797,2024-05-16,Free,Organic,18-24,Tier 3,156,2,0
+1798,2024-05-22,Plus,Referral,45+,Tier 1,251,2,0
+1799,2024-06-06,Free,Search Ads,45+,Tier 1,129,1,1
+1800,2024-02-07,Free,Search Ads,45+,Tier 1,368,1,1
+1801,2024-03-05,Plus,Paid Social,25-34,Tier 3,570,0,0
+1802,2024-03-19,Plus,Organic,18-24,Tier 1,953,0,0
+1803,2024-03-19,Free,Search Ads,35-44,Tier 2,89,1,1
+1804,2024-05-11,Free,Search Ads,25-34,Tier 1,148,0,0
+1805,2024-01-08,Free,Organic,35-44,Tier 1,320,1,0
+1806,2024-06-05,Free,Paid Social,35-44,Tier 1,664,1,1
+1807,2024-04-13,Free,Organic,18-24,Tier 2,385,0,0
+1808,2024-02-08,Free,Referral,25-34,Tier 1,74,2,1
+1809,2024-03-02,Free,Referral,25-34,Tier 2,558,1,0
+1810,2024-06-01,Free,Organic,45+,Tier 2,405,0,0
+1811,2024-04-17,Free,Organic,25-34,Tier 2,778,0,0
+1812,2024-03-20,Plus,Paid Social,18-24,Tier 1,384,1,0
+1813,2024-06-12,Plus,Organic,25-34,Tier 3,571,0,0
+1814,2024-04-27,Free,Paid Social,18-24,Tier 1,493,3,0
+1815,2024-01-29,Pro,Search Ads,18-24,Tier 1,324,0,0
+1816,2024-03-25,Pro,Organic,45+,Tier 2,592,2,0
+1817,2024-06-27,Free,Organic,25-34,Tier 1,626,1,0
+1818,2024-05-15,Plus,Paid Social,18-24,Tier 1,130,0,1
+1819,2024-04-28,Pro,Paid Social,25-34,Tier 1,591,0,0
+1820,2024-05-11,Plus,Organic,18-24,Tier 1,766,1,0
+1821,2024-03-21,Free,Referral,35-44,Tier 1,179,1,1
+1822,2024-04-04,Plus,Organic,25-34,Tier 2,264,3,1
+1823,2024-01-15,Free,Organic,18-24,Tier 1,88,2,1
+1824,2024-06-22,Free,Search Ads,18-24,Tier 3,138,4,0
+1825,2024-01-30,Plus,Search Ads,35-44,Tier 3,118,0,0
+1826,2024-06-13,Free,Paid Social,45+,Tier 1,98,0,0
+1827,2024-06-14,Free,Organic,45+,Tier 3,162,3,1
+1828,2024-03-02,Free,Search Ads,18-24,Tier 2,91,0,1
+1829,2024-06-26,Pro,Organic,25-34,Tier 1,369,1,0
+1830,2024-01-22,Free,Paid Social,18-24,Tier 2,210,0,0
+1831,2024-01-18,Plus,Search Ads,45+,Tier 2,126,0,1
+1832,2024-01-27,Pro,Referral,25-34,Tier 2,388,1,0
+1833,2024-06-11,Free,Paid Social,45+,Tier 1,288,1,0
+1834,2024-02-17,Free,Paid Social,25-34,Tier 1,413,1,1
+1835,2024-06-29,Plus,Organic,18-24,Tier 2,817,0,1
+1836,2024-04-29,Plus,Referral,25-34,Tier 2,694,2,0
+1837,2024-02-20,Plus,Search Ads,45+,Tier 2,481,0,0
+1838,2024-02-04,Plus,Search Ads,35-44,Tier 2,435,1,1
+1839,2024-05-15,Free,Paid Social,25-34,Tier 1,318,1,0
+1840,2024-04-12,Pro,Search Ads,25-34,Tier 1,303,0,0
+1841,2024-01-26,Plus,Organic,18-24,Tier 1,373,1,1
+1842,2024-05-16,Plus,Organic,18-24,Tier 1,236,0,0
+1843,2024-06-09,Plus,Referral,18-24,Tier 1,284,0,0
+1844,2024-02-07,Free,Search Ads,25-34,Tier 2,177,2,1
+1845,2024-04-06,Plus,Search Ads,25-34,Tier 1,106,0,0
+1846,2024-02-25,Free,Paid Social,18-24,Tier 1,360,1,0
+1847,2024-02-12,Free,Search Ads,45+,Tier 1,208,0,1
+1848,2024-01-09,Free,Paid Social,25-34,Tier 1,331,3,1
+1849,2024-06-27,Pro,Referral,25-34,Tier 1,260,0,0
+1850,2024-01-21,Pro,Paid Social,25-34,Tier 1,311,0,0
+1851,2024-03-05,Pro,Organic,35-44,Tier 2,363,0,0
+1852,2024-03-09,Plus,Organic,45+,Tier 3,367,1,1
+1853,2024-05-25,Plus,Paid Social,35-44,Tier 3,256,2,1
+1854,2024-02-19,Free,Search Ads,25-34,Tier 1,325,1,1
+1855,2024-06-15,Free,Paid Social,45+,Tier 1,62,1,0
+1856,2024-02-08,Plus,Paid Social,25-34,Tier 1,546,0,0
+1857,2024-05-23,Pro,Paid Social,18-24,Tier 1,96,1,1
+1858,2024-02-29,Plus,Paid Social,18-24,Tier 2,629,3,1
+1859,2024-01-25,Pro,Search Ads,45+,Tier 2,85,2,1
+1860,2024-01-20,Free,Organic,45+,Tier 1,165,2,0
+1861,2024-04-24,Free,Paid Social,45+,Tier 3,241,1,1
+1862,2024-05-12,Pro,Organic,35-44,Tier 2,312,0,1
+1863,2024-04-24,Plus,Paid Social,25-34,Tier 3,76,2,0
+1864,2024-04-18,Free,Paid Social,35-44,Tier 1,85,0,1
+1865,2024-04-06,Free,Organic,25-34,Tier 1,284,0,0
+1866,2024-02-17,Free,Organic,25-34,Tier 1,182,1,0
+1867,2024-05-21,Free,Referral,35-44,Tier 1,310,0,0
+1868,2024-01-25,Pro,Organic,18-24,Tier 1,416,0,0
+1869,2024-01-29,Free,Search Ads,25-34,Tier 3,164,2,1
+1870,2024-01-08,Free,Organic,25-34,Tier 2,121,2,1
+1871,2024-04-26,Plus,Search Ads,25-34,Tier 3,815,1,0
+1872,2024-05-03,Pro,Paid Social,45+,Tier 2,412,1,0
+1873,2024-06-01,Free,Referral,35-44,Tier 1,197,0,0
+1874,2024-02-08,Free,Organic,25-34,Tier 2,514,1,1
+1875,2024-04-13,Free,Organic,25-34,Tier 2,370,0,1
+1876,2024-03-19,Free,Paid Social,25-34,Tier 2,552,0,1
+1877,2024-06-26,Free,Search Ads,18-24,Tier 2,352,0,0
+1878,2024-04-17,Free,Search Ads,25-34,Tier 1,322,0,1
+1879,2024-04-29,Free,Referral,18-24,Tier 1,260,0,1
+1880,2024-03-05,Pro,Search Ads,25-34,Tier 1,495,0,0
+1881,2024-05-13,Plus,Search Ads,25-34,Tier 1,133,0,0
+1882,2024-01-07,Pro,Referral,25-34,Tier 2,171,0,0
+1883,2024-06-07,Plus,Paid Social,18-24,Tier 1,144,1,1
+1884,2024-04-05,Pro,Organic,25-34,Tier 1,431,0,0
+1885,2024-04-15,Free,Paid Social,25-34,Tier 3,252,1,0
+1886,2024-06-19,Plus,Search Ads,18-24,Tier 1,486,0,1
+1887,2024-01-30,Pro,Organic,35-44,Tier 1,541,0,0
+1888,2024-01-24,Free,Search Ads,25-34,Tier 1,330,0,1
+1889,2024-04-26,Plus,Search Ads,25-34,Tier 3,458,1,0
+1890,2024-03-09,Pro,Organic,18-24,Tier 1,484,0,0
+1891,2024-04-15,Plus,Organic,35-44,Tier 1,280,0,0
+1892,2024-02-27,Free,Paid Social,25-34,Tier 2,84,1,0
+1893,2024-03-15,Plus,Organic,25-34,Tier 2,291,1,1
+1894,2024-02-13,Free,Referral,45+,Tier 3,475,0,0
+1895,2024-04-26,Pro,Paid Social,35-44,Tier 2,164,0,1
+1896,2024-04-24,Pro,Organic,35-44,Tier 1,270,0,1
+1897,2024-05-02,Free,Organic,35-44,Tier 1,338,2,1
+1898,2024-03-08,Plus,Search Ads,35-44,Tier 1,140,0,0
+1899,2024-03-21,Pro,Search Ads,35-44,Tier 2,673,2,0
+1900,2024-02-27,Free,Organic,45+,Tier 1,37,0,0
+1901,2024-04-20,Plus,Organic,25-34,Tier 2,314,0,0
+1902,2024-02-01,Free,Referral,25-34,Tier 3,285,0,0
+1903,2024-01-14,Free,Search Ads,45+,Tier 1,429,1,0
+1904,2024-03-07,Pro,Search Ads,45+,Tier 1,313,1,0
+1905,2024-04-28,Free,Search Ads,35-44,Tier 2,347,0,1
+1906,2024-06-29,Free,Paid Social,25-34,Tier 3,247,4,1
+1907,2024-02-11,Free,Organic,25-34,Tier 1,319,0,1
+1908,2024-06-06,Free,Organic,25-34,Tier 3,244,3,0
+1909,2024-02-10,Pro,Organic,18-24,Tier 2,445,0,0
+1910,2024-01-18,Plus,Paid Social,18-24,Tier 1,732,2,1
+1911,2024-02-01,Plus,Organic,18-24,Tier 1,338,1,0
+1912,2024-04-25,Plus,Search Ads,18-24,Tier 2,487,1,1
+1913,2024-03-10,Pro,Paid Social,25-34,Tier 2,118,1,1
+1914,2024-03-28,Free,Search Ads,45+,Tier 2,295,1,1
+1915,2024-02-20,Free,Search Ads,25-34,Tier 1,82,3,0
+1916,2024-05-03,Plus,Paid Social,25-34,Tier 2,164,1,0
+1917,2024-04-08,Plus,Organic,25-34,Tier 3,586,0,0
+1918,2024-06-20,Free,Organic,18-24,Tier 1,303,0,1
+1919,2024-03-31,Free,Search Ads,25-34,Tier 1,111,1,1
+1920,2024-01-17,Free,Organic,25-34,Tier 2,132,2,1
+1921,2024-05-26,Free,Paid Social,25-34,Tier 1,107,2,0
+1922,2024-04-10,Free,Paid Social,25-34,Tier 1,484,1,0
+1923,2024-02-16,Pro,Paid Social,18-24,Tier 1,646,0,0
+1924,2024-01-13,Free,Search Ads,25-34,Tier 1,108,0,0
+1925,2024-02-24,Free,Organic,35-44,Tier 2,250,0,0
+1926,2024-03-08,Free,Paid Social,35-44,Tier 1,176,1,1
+1927,2024-02-01,Pro,Organic,18-24,Tier 2,199,0,0
+1928,2024-03-23,Free,Organic,18-24,Tier 2,163,0,0
+1929,2024-04-16,Plus,Paid Social,18-24,Tier 1,376,1,1
+1930,2024-01-16,Free,Paid Social,18-24,Tier 3,82,0,1
+1931,2024-01-01,Free,Organic,25-34,Tier 1,144,2,0
+1932,2024-02-14,Free,Paid Social,18-24,Tier 3,424,2,1
+1933,2024-06-06,Free,Search Ads,25-34,Tier 1,377,0,0
+1934,2024-04-14,Pro,Organic,25-34,Tier 2,441,1,0
+1935,2024-03-29,Free,Organic,25-34,Tier 2,216,0,0
+1936,2024-02-11,Free,Referral,45+,Tier 1,166,0,0
+1937,2024-04-16,Free,Search Ads,35-44,Tier 1,325,0,1
+1938,2024-05-11,Free,Paid Social,25-34,Tier 1,92,4,0
+1939,2024-02-15,Free,Paid Social,35-44,Tier 2,220,0,1
+1940,2024-05-01,Pro,Organic,18-24,Tier 1,69,0,0
+1941,2024-01-23,Free,Organic,25-34,Tier 2,151,1,1
+1942,2024-03-31,Plus,Search Ads,18-24,Tier 1,427,1,0
+1943,2024-05-06,Plus,Organic,25-34,Tier 2,937,1,0
+1944,2024-04-11,Free,Referral,25-34,Tier 1,265,1,1
+1945,2024-06-26,Free,Paid Social,35-44,Tier 1,313,1,1
+1946,2024-02-28,Free,Referral,45+,Tier 2,454,1,0
+1947,2024-01-09,Free,Organic,45+,Tier 2,187,0,1
+1948,2024-04-10,Free,Paid Social,35-44,Tier 3,102,1,1
+1949,2024-06-25,Plus,Paid Social,18-24,Tier 3,249,1,1
+1950,2024-02-28,Free,Search Ads,35-44,Tier 1,284,1,1
+1951,2024-05-26,Free,Search Ads,25-34,Tier 1,164,3,1
+1952,2024-06-14,Free,Referral,25-34,Tier 1,340,0,1
+1953,2024-02-03,Free,Paid Social,25-34,Tier 3,255,0,0
+1954,2024-01-16,Free,Organic,35-44,Tier 3,113,2,1
+1955,2024-02-27,Free,Paid Social,25-34,Tier 3,179,0,0
+1956,2024-02-07,Free,Referral,35-44,Tier 2,414,0,0
+1957,2024-06-28,Plus,Search Ads,45+,Tier 1,385,0,0
+1958,2024-02-15,Free,Organic,35-44,Tier 2,432,0,0
+1959,2024-06-12,Free,Organic,25-34,Tier 3,100,2,0
+1960,2024-05-23,Free,Referral,35-44,Tier 1,1064,2,0
+1961,2024-06-16,Pro,Organic,25-34,Tier 1,378,0,0
+1962,2024-03-23,Plus,Referral,18-24,Tier 3,644,0,0
+1963,2024-05-01,Free,Organic,18-24,Tier 2,516,2,0
+1964,2024-04-11,Plus,Search Ads,18-24,Tier 3,735,1,0
+1965,2024-03-30,Plus,Search Ads,18-24,Tier 2,345,1,0
+1966,2024-02-23,Plus,Paid Social,35-44,Tier 3,588,2,1
+1967,2024-02-08,Free,Organic,18-24,Tier 2,468,0,1
+1968,2024-02-18,Free,Paid Social,35-44,Tier 2,356,2,0
+1969,2024-02-22,Plus,Organic,18-24,Tier 2,193,0,0
+1970,2024-04-28,Free,Organic,45+,Tier 3,329,0,0
+1971,2024-01-14,Plus,Referral,25-34,Tier 1,419,0,0
+1972,2024-05-04,Pro,Organic,18-24,Tier 2,295,0,1
+1973,2024-05-06,Plus,Organic,18-24,Tier 1,786,0,0
+1974,2024-04-04,Free,Paid Social,18-24,Tier 2,84,0,1
+1975,2024-06-09,Plus,Search Ads,18-24,Tier 1,619,0,0
+1976,2024-05-08,Free,Referral,35-44,Tier 1,210,0,0
+1977,2024-04-22,Pro,Paid Social,18-24,Tier 1,710,0,0
+1978,2024-05-20,Free,Organic,25-34,Tier 3,172,0,0
+1979,2024-04-08,Plus,Organic,35-44,Tier 1,601,0,1
+1980,2024-01-19,Free,Search Ads,25-34,Tier 1,137,1,1
+1981,2024-05-04,Plus,Organic,35-44,Tier 2,413,1,1
+1982,2024-02-12,Free,Paid Social,18-24,Tier 3,225,1,0
+1983,2024-01-12,Free,Search Ads,35-44,Tier 2,331,1,0
+1984,2024-04-23,Free,Paid Social,25-34,Tier 2,233,3,0
+1985,2024-02-22,Pro,Search Ads,18-24,Tier 2,391,0,0
+1986,2024-06-08,Free,Referral,35-44,Tier 2,147,1,0
+1987,2024-03-12,Free,Referral,25-34,Tier 1,431,0,1
+1988,2024-05-27,Free,Paid Social,18-24,Tier 1,433,1,0
+1989,2024-05-31,Plus,Organic,35-44,Tier 2,905,0,0
+1990,2024-04-16,Free,Organic,45+,Tier 1,234,4,1
+1991,2024-02-19,Pro,Organic,25-34,Tier 1,217,1,0
+1992,2024-03-21,Free,Referral,35-44,Tier 2,166,1,0
+1993,2024-01-18,Free,Paid Social,35-44,Tier 1,395,1,0
+1994,2024-01-06,Pro,Paid Social,45+,Tier 2,634,0,0
+1995,2024-01-08,Free,Organic,18-24,Tier 2,55,4,1
+1996,2024-06-16,Free,Organic,25-34,Tier 3,58,1,0
+1997,2024-01-24,Plus,Referral,25-34,Tier 1,155,1,1
+1998,2024-05-15,Free,Organic,25-34,Tier 3,168,2,0
+1999,2024-06-21,Free,Organic,25-34,Tier 2,172,2,1
+2000,2024-02-21,Free,Paid Social,25-34,Tier 3,235,0,1

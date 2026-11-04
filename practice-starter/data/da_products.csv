@@ -1,0 +1,61 @@
+product_id,product_name,category,brand,cost_price,list_price
+1,Homely Air Fryer,Kitchen,Homely,3460,4999
+2,Nova Air Fryer,Kitchen,Nova,1735,3099
+3,Zestio Air Fryer,Kitchen,Zestio,469,699
+4,Homely Mixer Grinder,Kitchen,Homely,1964,2799
+5,Voltix Mixer Grinder,Kitchen,Voltix,728,1099
+6,Kraft&Co Mixer Grinder,Kitchen,Kraft&Co,3135,4999
+7,Nova Electric Kettle,Kitchen,Nova,1458,2199
+8,Zestio Electric Kettle,Kitchen,Zestio,2252,3999
+9,Kraft&Co Electric Kettle,Kitchen,Kraft&Co,2310,4199
+10,Nova Toaster,Kitchen,Nova,2337,3999
+11,Homely Toaster,Kitchen,Homely,3284,5099
+12,Zestio Toaster,Kitchen,Zestio,3484,5399
+13,Homely Induction Cooktop,Kitchen,Homely,1133,1699
+14,Voltix Induction Cooktop,Kitchen,Voltix,2126,3099
+15,Zestio Induction Cooktop,Kitchen,Zestio,948,1599
+16,Nova Hand Blender,Kitchen,Nova,1638,2799
+17,Voltix Hand Blender,Kitchen,Voltix,721,999
+18,Zestio Hand Blender,Kitchen,Zestio,798,1299
+19,Voltix Vacuum Cleaner,Home,Voltix,1507,2499
+20,Homely Vacuum Cleaner,Home,Homely,3309,5599
+21,Kraft&Co Vacuum Cleaner,Home,Kraft&Co,2764,3799
+22,Voltix Steam Iron,Home,Voltix,630,1099
+23,Homely Steam Iron,Home,Homely,1723,2999
+24,Nova Steam Iron,Home,Nova,2809,3899
+25,Zestio Room Heater,Home,Zestio,2547,3399
+26,Homely Room Heater,Home,Homely,1827,2899
+27,Nova Room Heater,Home,Nova,491,799
+28,Kraft&Co Table Fan,Home,Kraft&Co,2861,4899
+29,Nova Table Fan,Home,Nova,3183,4899
+30,Homely Table Fan,Home,Homely,3762,5799
+31,Nova Water Purifier,Home,Nova,1800,2699
+32,Voltix Water Purifier,Home,Voltix,1903,3099
+33,Homely Water Purifier,Home,Homely,706,1199
+34,Nova Hair Dryer,Personal Care,Nova,2300,3699
+35,Zestio Hair Dryer,Personal Care,Zestio,2672,4199
+36,Homely Hair Dryer,Personal Care,Homely,1894,2799
+37,Kraft&Co Trimmer,Personal Care,Kraft&Co,1662,2699
+38,Homely Trimmer,Personal Care,Homely,1327,1999
+39,Voltix Trimmer,Personal Care,Voltix,1926,2999
+40,Kraft&Co Straightener,Personal Care,Kraft&Co,1423,2299
+41,Nova Straightener,Personal Care,Nova,511,899
+42,Zestio Straightener,Personal Care,Zestio,1516,2599
+43,Kraft&Co Electric Toothbrush,Personal Care,Kraft&Co,1126,1699
+44,Voltix Electric Toothbrush,Personal Care,Voltix,2766,4599
+45,Zestio Electric Toothbrush,Personal Care,Zestio,3290,4599
+46,Nova Earbuds,Electronics,Nova,2354,4199
+47,Zestio Earbuds,Electronics,Zestio,2576,4099
+48,Homely Earbuds,Electronics,Homely,4188,5699
+49,Voltix Smartwatch,Electronics,Voltix,548,799
+50,Homely Smartwatch,Electronics,Homely,3054,5499
+51,Zestio Smartwatch,Electronics,Zestio,2515,3599
+52,Kraft&Co Power Bank,Electronics,Kraft&Co,1708,3099
+53,Nova Power Bank,Electronics,Nova,2217,3599
+54,Homely Power Bank,Electronics,Homely,3483,4799
+55,Voltix Bluetooth Speaker,Electronics,Voltix,1164,1999
+56,Zestio Bluetooth Speaker,Electronics,Zestio,1882,2899
+57,Kraft&Co Bluetooth Speaker,Electronics,Kraft&Co,3089,4699
+58,Nova Wireless Mouse,Electronics,Nova,3055,5199
+59,Homely Wireless Mouse,Electronics,Homely,4063,5599
+60,Voltix Wireless Mouse,Electronics,Voltix,2374,3799

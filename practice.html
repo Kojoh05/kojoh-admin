@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+// Served at kojohhi.com/admin: make relative links and assets resolve under /admin/.
+if (/^\/admin(\/|$)/.test(location.pathname)) document.write('<base href="/admin/">');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>KOJOH Admin | Practice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+<style>
+.kp-tabs{display:flex; gap:0.4rem; flex-wrap:wrap; margin:0 0 1rem;}
+.kp-tab{font:inherit; font-size:0.8125rem; font-weight:600; border:1px solid var(--line); background:var(--card); color:var(--text); border-radius:999px; padding:0.45rem 0.9rem; cursor:pointer;}
+.kp-tab.on{background:var(--ink); color:var(--bg); border-color:var(--ink);}
+.kp-tab small{font-weight:500; opacity:0.7; margin-left:0.3rem;}
+.kp-stats{display:grid; grid-template-columns:repeat(auto-fit, minmax(9rem, 1fr)); gap:0.75rem;}
+.kp-stat{border:1px solid var(--line); border-radius:var(--radius-sm); padding:0.75rem 0.9rem; background:var(--bg);}
+.kp-stat b{display:block; font-size:1.3rem; font-family:'Space Grotesk', sans-serif;}
+.kp-stat span{font-size:0.75rem; color:var(--muted);}
+.kp-list{display:flex; flex-direction:column; gap:0.35rem;}
+.kp-row{display:grid; grid-template-columns:2.2rem minmax(0, 1fr) auto auto; gap:0.6rem; align-items:center; border:1px solid var(--line); border-radius:10px; padding:0.5rem 0.7rem; background:var(--bg);}
+.kp-row .n{font-size:0.75rem; font-weight:700; text-align:center; border-radius:50%; width:1.8rem; height:1.8rem; display:grid; place-items:center; border:1px solid var(--line);}
+.kp-row .n.free{background:var(--ink); color:var(--bg); border-color:var(--ink);}
+.kp-row .t{min-width:0;}
+.kp-row .t strong{display:block; font-size:0.85rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.kp-row .t span{font-size:0.72rem; color:var(--muted);}
+.kp-row .ok{font-size:0.7rem; color:var(--muted); white-space:nowrap;}
+.kp-row .ok.bad{color:var(--danger); font-weight:700;}
+.kp-mono, .kp-code{font-family:'IBM Plex Mono', monospace !important; font-size:0.8rem !important;}
+.kp-code{min-height:12rem; white-space:pre; tab-size:4;}
+.kp-res{overflow:auto; max-height:18rem; border:1px solid var(--line); border-radius:8px; margin-top:0.6rem;}
+.kp-res table{border-collapse:collapse; font-family:'IBM Plex Mono', monospace; font-size:0.72rem; width:100%;}
+.kp-res th, .kp-res td{padding:0.3rem 0.5rem; border-bottom:1px solid var(--line); text-align:left; white-space:nowrap;}
+.kp-log{font-family:'IBM Plex Mono', monospace; font-size:0.75rem; background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:0.6rem 0.75rem; white-space:pre-wrap; max-height:14rem; overflow:auto; margin-top:0.6rem;}
+.kp-tbl{display:grid; grid-template-columns:minmax(0, 1fr) auto; gap:0.4rem 0.75rem; align-items:center; border-top:1px solid var(--line); padding:0.6rem 0;}
+.kp-tbl:first-child{border-top:none;}
+.kp-tbl code{font-weight:600;}
+.kp-tbl p{margin:0.15rem 0 0; font-size:0.75rem; color:var(--muted);}
+.kp-sub{font-size:0.8rem; font-weight:700; margin:1rem 0 0.4rem; display:flex; justify-content:space-between; align-items:center; gap:0.5rem;}
+.kp-check{display:flex; align-items:center; gap:0.45rem; font-size:0.8125rem; font-weight:600;}
+</style>
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="supabase-config.js"></script>
+<script src="admin-core.js"></script>
+<script src="https://www.kojohhi.com/practice-engine.js"></script>
+<script>
+KA.boot('practice', function (ctx) {
+  var main = ctx.main, supa = KA.supa, esc = KA.esc, KP = window.KojohPractice;
+  var PUB = window.SUPABASE_URL + '/storage/v1/object/public/practice/';
+  var DEFAULT_ROLES = [
+    { id: 'data-analyst', title: 'Data Analyst' }, { id: 'business-analyst', title: 'Business Analyst' },
+    { id: 'data-scientist', title: 'Data Scientist' }, { id: 'data-engineer', title: 'Data Engineer' }
+  ];
+  var LEVELS = ['Foundations', 'Applied', 'Business case', 'Interview'];
+  var POINTS = { 'Foundations': 10, 'Applied': 20, 'Business case': 30, 'Interview': 40 };
+  var S = { manifest: null, srcs: {}, missing: {}, role: null, editing: null, dirty: {} };
+
+  if (!KP) { main.innerHTML = '<div class="ka-empty">Could not load the practice engine from www.kojohhi.com. Deploy the site first, then reload.</div>'; return; }
+
+  main.innerHTML =
+      '<div class="ka-head"><div><h1>Practice</h1>'
+    +   '<p>Edit tasks and tables, then Publish. Publishing runs every solution in this browser, stores a fingerprint of the answer, and uploads the packs to Storage. Learners download a pack once and run everything on their own device, so Practice costs almost no database queries.</p></div>'
+    +   '<div class="ka-btnrow"><button class="ka-btn" id="kpStarter" type="button">Load starter content</button>'
+    +   '<button class="ka-btn ka-btn-primary" id="kpPublishAll" type="button">Publish all roles</button></div></div>'
+    + '<div class="ka-card"><div class="ka-card-head"><div><h2>Overview</h2><p class="ka-card-sub" id="kpPubInfo">Loading</p></div></div>'
+    +   '<div class="kp-stats" id="kpStats"></div>'
+    +   '<div class="ka-row" style="margin-top:1rem">'
+    +     '<div class="ka-field"><label class="ka-label">Free tasks per tool</label><input class="ka-input" id="kpFreeN" type="number" min="0" max="50" value="5">'
+    +       '<p class="ka-hint">The first N SQL and first N Python tasks of each role are free. Takes effect on the next publish.</p></div>'
+    +     '<div class="ka-field"><label class="ka-label">Give someone a pass</label><input class="ka-input" id="kpGiftEmail" type="email" placeholder="their account email">'
+    +       '<div class="ka-btnrow" style="margin-top:0.4rem"><select class="ka-select" id="kpGiftDays" style="width:auto"><option value="30">30 days</option><option value="90">90 days</option><option value="365">1 year</option></select>'
+    +       '<button class="ka-btn" id="kpGift" type="button">Give pass</button></div></div>'
+    +   '</div><div class="kp-log" id="kpLog" hidden></div></div>'
+    + '<div class="kp-tabs" id="kpTabs"></div>'
+    + '<div id="kpRole"></div>';
+
+  function log(msg, reset) {
+    var el = document.getElementById('kpLog');
+    el.hidden = false;
+    el.textContent = (reset ? '' : el.textContent + (el.textContent ? '\n' : '')) + msg;
+    el.scrollTop = el.scrollHeight;
+  }
+  function freeN() { var n = parseInt(document.getElementById('kpFreeN').value, 10); return isNaN(n) ? 5 : n; }
+
+  // ---------------------------------------------------------------- storage helpers
+  async function put(bucket, path, body, type, cache) {
+    var blob = body instanceof Blob ? body : new Blob([typeof body === 'string' ? body : JSON.stringify(body)], { type: type || 'application/json' });
+    var r = await supa.storage.from(bucket).upload(path, blob, { upsert: true, contentType: type || 'application/json', cacheControl: cache || '60' });
+    if (r.error) throw new Error(path + ': ' + r.error.message);
+  }
+  async function getManifest() {
+    var r = await fetch(PUB + 'manifest.json?t=' + Date.now());
+    return r.ok ? r.json() : null;
+  }
+  async function getSrc(id) {
+    var d = await supa.storage.from('practice-pro').download('src/' + id + '.json');
+    if (d.error || !d.data) return null;
+    return JSON.parse(await d.data.text());
+  }
+  async function saveSrc(src) {
+    await put('practice-pro', 'src/' + src.id + '.json', src);
+    S.srcs[src.id] = src; S.dirty[src.id] = false;
+  }
+  function roleIds() {
+    var ids = DEFAULT_ROLES.map(function (r) { return r.id; });
+    ((S.manifest && S.manifest.roles) || []).forEach(function (r) { if (ids.indexOf(r.id) < 0) ids.push(r.id); });
+    Object.keys(S.srcs).forEach(function (id) { if (ids.indexOf(id) < 0) ids.push(id); });
+    return ids;
+  }
+  function roleTitle(id) {
+    if (S.srcs[id]) return S.srcs[id].title;
+    var m = ((S.manifest && S.manifest.roles) || []).filter(function (r) { return r.id === id; })[0];
+    if (m) return m.title;
+    var d = DEFAULT_ROLES.filter(function (r) { return r.id === id; })[0];
+    return d ? d.title : id;
+  }
+
+  // ---------------------------------------------------------------- overview
+  async function loadOverview() {
+    S.manifest = await getManifest();
+    if (S.manifest && S.manifest.free_per_tool !== undefined) document.getElementById('kpFreeN').value = S.manifest.free_per_tool;
+    document.getElementById('kpPubInfo').textContent = S.manifest
+      ? 'Last published ' + new Date(S.manifest.v).toLocaleString('en-IN') + '. Live at www.kojohhi.com/practice.'
+      : 'Nothing published yet. Click Load starter content to get 80 ready tasks across 4 roles.';
+    var now = new Date().toISOString();
+    var q = await Promise.all([
+      supa.from('practice_passes').select('user_id', { count: 'exact', head: true }).gt('expires_at', now),
+      supa.from('payments').select('amount_paise').eq('kind', 'pass').eq('status', 'paid'),
+      supa.from('practice_progress').select('user_id', { count: 'exact', head: true })
+    ]);
+    var paid = (q[1].data || []);
+    var rev = paid.reduce(function (a, p) { return a + p.amount_paise / 100; }, 0);
+    var tasks = ((S.manifest && S.manifest.roles) || []).reduce(function (a, r) { return a + r.tasks; }, 0);
+    document.getElementById('kpStats').innerHTML = [
+      [KA.nf(q[0].count || 0), 'active passes'], [KA.nf(paid.length), 'passes sold'], [KA.inr(rev), 'pass revenue'],
+      [KA.nf(q[2].count || 0), 'learners with progress'], [KA.nf(tasks), 'tasks live']
+    ].map(function (s) { return '<div class="kp-stat"><b>' + s[0] + '</b><span>' + s[1] + '</span></div>'; }).join('')
+      + (q[1].error ? '<p class="ka-hint">Run supabase/schema-practice.sql to enable pass stats.</p>' : '');
+  }
+
+  // ---------------------------------------------------------------- tabs + role view
+  function renderTabs() {
+    document.getElementById('kpTabs').innerHTML = roleIds().map(function (id) {
+      var s = S.srcs[id];
+      return '<button class="kp-tab' + (id === S.role ? ' on' : '') + '" type="button" data-role="' + esc(id) + '">' + esc(roleTitle(id))
+        + (s ? '<small>' + s.tasks.length + '</small>' : '') + (S.dirty[id] ? ' *' : '') + '</button>';
+    }).join('') + '<button class="kp-tab" type="button" id="kpAddRole">+ New role</button>';
+  }
+  async function openRole(id) {
+    S.role = id; S.editing = null;
+    renderTabs();
+    var host = document.getElementById('kpRole');
+    if (!S.srcs[id] && !S.missing[id]) {
+      host.innerHTML = '<div class="ka-card"><div class="ka-empty">Loading</div></div>';
+      var src = await getSrc(id);
+      if (src) S.srcs[id] = src; else S.missing[id] = true;
+      renderTabs();
+    }
+    renderRole();
+  }
+  function renderRole() {
+    var host = document.getElementById('kpRole'), id = S.role, src = S.srcs[id];
+    if (!src) {
+      host.innerHTML = '<div class="ka-card"><div class="ka-empty">No content for ' + esc(roleTitle(id)) + ' yet. Use Load starter content, or create it here.'
+        + '<div class="ka-btnrow" style="justify-content:center;margin-top:1rem"><button class="ka-btn" id="kpCreate" type="button">Start empty</button></div></div></div>';
+      document.getElementById('kpCreate').onclick = function () {
+        var d = DEFAULT_ROLES.filter(function (r) { return r.id === id; })[0];
+        S.srcs[id] = { id: id, short: shortFor(id), title: d ? d.title : id, company: '', story: '', tables: [], tasks: [] };
+        S.dirty[id] = true; delete S.missing[id]; renderTabs(); renderRole();
+      };
+      return;
+    }
+    var count = {}, fn = freeN();
+    var h = '<div class="ka-grid2">'
+      + '<div class="ka-card"><div class="ka-card-head"><div><h2>Role</h2><p class="ka-card-sub">Shown at the top of the role page.</p></div></div>'
+      +   '<div class="ka-row"><div class="ka-field"><label class="ka-label">Role title</label><input class="ka-input" id="kpTitle" value="' + esc(src.title) + '"></div>'
+      +   '<div class="ka-field"><label class="ka-label">Case company (fictional)</label><input class="ka-input" id="kpCompany" value="' + esc(src.company) + '"></div></div>'
+      +   '<div class="ka-field"><label class="ka-label">Story</label><textarea class="ka-textarea" id="kpStory">' + esc(src.story) + '</textarea></div>'
+      +   '<div class="ka-btnrow"><button class="ka-btn" id="kpSave" type="button">Save draft</button>'
+      +   '<button class="ka-btn ka-btn-primary" id="kpPublish" type="button">Publish ' + esc(src.title) + '</button>'
+      +   '<button class="ka-btn" id="kpExport" type="button">Download JSON</button></div>'
+      +   '<p class="ka-hint">Save draft keeps your edits privately. Learners only see changes after Publish. Role id: <code>' + esc(src.id) + '</code>, task prefix <code>' + esc(src.short) + '</code>.</p></div>'
+      + '<div class="ka-card"><div class="ka-card-head"><div><h2>Tables</h2><p class="ka-card-sub">CSV files with a header row. The name is what learners type in SQL and the DataFrame name in Python.</p></div></div>'
+      +   (src.tables.length ? src.tables.map(function (t, i) {
+            return '<div class="kp-tbl"><div><code>' + esc(t.name) + '</code> <span class="ka-hint">' + esc(t.file) + '</span>'
+              + '<p><input class="ka-input" data-about="' + i + '" value="' + esc(t.about || '') + '" placeholder="What is in this table"></p></div>'
+              + '<div class="ka-btnrow"><label class="ka-btn ka-btn-sm">Replace CSV<input type="file" accept=".csv,text/csv" data-replace="' + i + '" hidden></label>'
+              + '<button class="ka-btn ka-btn-sm ka-btn-danger" data-deltable="' + i + '" type="button">Remove</button></div></div>';
+          }).join('') : '<div class="ka-empty">No tables yet.</div>')
+      +   '<div class="ka-row" style="margin-top:0.75rem"><div class="ka-field"><label class="ka-label">New table name</label><input class="ka-input kp-mono" id="kpNewTable" placeholder="orders"></div>'
+      +   '<div class="ka-field"><label class="ka-label">CSV file</label><input class="ka-input" id="kpNewFile" type="file" accept=".csv,text/csv"></div></div>'
+      +   '<button class="ka-btn" id="kpAddTable" type="button">Upload table</button></div>'
+      + '</div>';
+    ['sql', 'python'].forEach(function (tool) {
+      var list = src.tasks.filter(function (t) { return t.tool === tool; });
+      h += '<div class="ka-card"><div class="ka-card-head"><div><h2>' + (tool === 'sql' ? 'SQL' : 'Python') + ' tasks (' + list.length + ')</h2>'
+        + '<p class="ka-card-sub">Order matters: the first ' + fn + ' are free. Dark number = free.</p></div>'
+        + '<div class="ka-btnrow"><button class="ka-btn ka-btn-sm" data-add="' + tool + '" type="button">Add ' + (tool === 'sql' ? 'SQL' : 'Python') + ' task</button></div></div>'
+        + '<div class="kp-list">' + list.map(function (t) {
+          count[tool] = (count[tool] || 0) + 1;
+          var n = count[tool], i = src.tasks.indexOf(t);
+          return '<div class="kp-row"><span class="n' + (n <= fn ? ' free' : '') + '">' + n + '</span>'
+            + '<div class="t"><strong>' + esc(t.title || '(untitled)') + '</strong><span>' + esc(t.id) + ' &middot; ' + esc(t.level) + ' &middot; ' + (t.points || 0) + ' pts' + (t.ordered ? ' &middot; ordered' : '') + '</span></div>'
+            + '<span class="ok' + (t.hash ? '' : ' bad') + '">' + (t.hash ? 'checked' : 'not published') + '</span>'
+            + '<div class="ka-btnrow"><button class="ka-btn ka-btn-sm" data-up="' + i + '" type="button" aria-label="Move up">&uarr;</button>'
+            + '<button class="ka-btn ka-btn-sm" data-down="' + i + '" type="button" aria-label="Move down">&darr;</button>'
+            + '<button class="ka-btn ka-btn-sm" data-edit="' + i + '" type="button">Edit</button></div></div>';
+        }).join('') + (list.length ? '' : '<div class="ka-empty">No tasks yet.</div>') + '</div></div>';
+    });
+    h += '<div class="ka-card"><div class="ka-card-head"><div><h2>Bulk add tasks</h2><p class="ka-card-sub">Paste a JSON list. Each item needs tool (sql or python), level, title, question, solution; hint, ordered and points are optional.</p></div></div>'
+      + '<textarea class="ka-textarea kp-code" id="kpBulk" placeholder=\'[{"tool":"sql","level":"Foundations","title":"Orders per city","question":"...","solution":"SELECT ...","hint":"..."}]\'></textarea>'
+      + '<div class="ka-btnrow" style="margin-top:0.5rem"><button class="ka-btn" id="kpBulkGo" type="button">Add these tasks</button></div></div>';
+    h += '<div id="kpEditor"></div>';
+    host.innerHTML = h;
+    wireRole(src);
+  }
+  function shortFor(id) {
+    var s = id.split('-').map(function (w) { return w[0]; }).join('').slice(0, 3) || 'x';
+    var used = Object.keys(S.srcs).map(function (k) { return S.srcs[k].short; });
+    var base = s, i = 2;
+    while (used.indexOf(s) >= 0) s = base + (i++);
+    return s;
+  }
+  function nextId(src, tool) {
+    var pre = src.short + '-' + (tool === 'python' ? 'py' : 'sql') + '-', max = 0;
+    src.tasks.forEach(function (t) { if (t.id.indexOf(pre) === 0) max = Math.max(max, parseInt(t.id.slice(pre.length), 10) || 0); });
+    return pre + ('0' + (max + 1)).slice(-2);
+  }
+  function touch(src) { S.dirty[src.id] = true; renderTabs(); }
+  function readRoleFields(src) {
+    var t = document.getElementById('kpTitle');
+    if (!t) return;
+    src.title = t.value.trim() || src.title;
+    src.company = document.getElementById('kpCompany').value.trim();
+    src.story = document.getElementById('kpStory').value.trim();
+    Array.prototype.forEach.call(document.querySelectorAll('[data-about]'), function (el) { src.tables[+el.getAttribute('data-about')].about = el.value.trim(); });
+  }
+
+  function wireRole(src) {
+    var host = document.getElementById('kpRole');
+    host.oninput = function (e) { if (e.target.closest('#kpEditor') || e.target.id === 'kpBulk') return; touch(src); };
+    document.getElementById('kpSave').onclick = guard(async function () { readRoleFields(src); await saveSrc(src); renderTabs(); KA.toast('Draft saved'); });
+    document.getElementById('kpPublish').onclick = guard(async function () { readRoleFields(src); await publish([src.id]); });
+    document.getElementById('kpExport').onclick = function () {
+      readRoleFields(src);
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([JSON.stringify(src, null, 1)], { type: 'application/json' }));
+      a.download = src.id + '.json'; a.click();
+    };
+    document.getElementById('kpAddTable').onclick = guard(async function () {
+      var name = document.getElementById('kpNewTable').value.trim(), f = document.getElementById('kpNewFile').files[0];
+      if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(name)) throw new Error('Table name: letters, digits and _ only, starting with a letter.');
+      if (!f) throw new Error('Choose a CSV file.');
+      if (src.tables.some(function (t) { return t.name === name; })) throw new Error('A table with that name exists. Use Replace CSV.');
+      var v = Date.now(), file = src.short + '_' + name + '_' + v + '.csv';
+      await put('practice', 'data/' + file, f, 'text/csv', '31536000');
+      readRoleFields(src);
+      src.tables.push({ name: name, file: file, about: '', v: v });
+      await saveSrc(src); renderRole(); KA.toast('Table uploaded');
+    });
+    Array.prototype.forEach.call(host.querySelectorAll('[data-replace]'), function (inp) {
+      inp.onchange = guard(async function () {
+        var t = src.tables[+inp.getAttribute('data-replace')], f = inp.files[0];
+        if (!f) return;
+        var v = Date.now(), file = src.short + '_' + t.name + '_' + v + '.csv';
+        await put('practice', 'data/' + file, f, 'text/csv', '31536000');
+        readRoleFields(src);
+        t.file = file; t.v = v;
+        src.tasks.forEach(function (x) { delete x.hash; });
+        await saveSrc(src); renderRole(); KA.toast('CSV replaced. Publish again so answers are re-checked.');
+      });
+    });
+    Array.prototype.forEach.call(host.querySelectorAll('[data-deltable]'), function (b) {
+      b.onclick = function () {
+        var t = src.tables[+b.getAttribute('data-deltable')];
+        if (!KA.confirm('Remove table ' + t.name + '? Tasks that use it will fail until you fix them.')) return;
+        readRoleFields(src); src.tables.splice(src.tables.indexOf(t), 1); touch(src); renderRole();
+      };
+    });
+    Array.prototype.forEach.call(host.querySelectorAll('[data-up],[data-down]'), function (b) {
+      b.onclick = function () {
+        readRoleFields(src);
+        var i = +(b.getAttribute('data-up') || b.getAttribute('data-down')), dir = b.hasAttribute('data-up') ? -1 : 1, t = src.tasks[i];
+        var j = i + dir;
+        while (j >= 0 && j < src.tasks.length && src.tasks[j].tool !== t.tool) j += dir;
+        if (j < 0 || j >= src.tasks.length) return;
+        src.tasks[i] = src.tasks[j]; src.tasks[j] = t; touch(src); renderRole();
+      };
+    });
+    Array.prototype.forEach.call(host.querySelectorAll('[data-edit]'), function (b) { b.onclick = function () { readRoleFields(src); editTask(src, src.tasks[+b.getAttribute('data-edit')]); }; });
+    Array.prototype.forEach.call(host.querySelectorAll('[data-add]'), function (b) {
+      b.onclick = function () {
+        readRoleFields(src);
+        var tool = b.getAttribute('data-add');
+        editTask(src, { id: nextId(src, tool), tool: tool, level: 'Foundations', points: 10, title: '', question: '', hint: '', solution: '', ordered: false, _new: true });
+      };
+    });
+    document.getElementById('kpBulkGo').onclick = function () {
+      try {
+        var arr = JSON.parse(document.getElementById('kpBulk').value || '[]');
+        if (!Array.isArray(arr)) arr = [arr];
+        readRoleFields(src);
+        arr.forEach(function (x) {
+          if (['sql', 'python'].indexOf(x.tool) < 0 || !x.title || !x.solution) throw new Error('Each task needs tool (sql/python), title and solution.');
+          var lv = LEVELS.indexOf(x.level) >= 0 ? x.level : 'Foundations';
+          src.tasks.push({ id: nextId(src, x.tool), tool: x.tool, level: lv, points: x.points || POINTS[lv], title: x.title, question: x.question || '',
+            hint: x.hint || '', solution: String(x.solution).trim(), ordered: !!x.ordered, explain: x.explain || '' });
+        });
+        touch(src); renderRole(); KA.toast(arr.length + ' tasks added. Save draft or Publish.');
+      } catch (e) { KA.toast(e.message, true); }
+    };
+  }
+
+  // ---------------------------------------------------------------- task editor
+  function editTask(src, t) {
+    S.editing = t;
+    var box = document.getElementById('kpEditor');
+    box.innerHTML = '<div class="ka-card"><div class="ka-card-head"><div><h2>' + (t._new ? 'New ' : 'Edit ') + (t.tool === 'sql' ? 'SQL' : 'Python') + ' task</h2>'
+      + '<p class="ka-card-sub">' + esc(t.id) + (t.tool === 'python' ? '. The solution must store its answer in a variable called result.' : '. Tables: ' + src.tables.map(function (x) { return x.name; }).join(', ')) + '</p></div></div>'
+      + '<div class="ka-row"><div class="ka-field"><label class="ka-label">Title</label><input class="ka-input" id="kpT" value="' + esc(t.title) + '"></div>'
+      + '<div class="ka-field"><label class="ka-label">Level</label><select class="ka-select" id="kpL">' + LEVELS.map(function (l) { return '<option' + (l === t.level ? ' selected' : '') + '>' + l + '</option>'; }).join('') + '</select></div>'
+      + '<div class="ka-field"><label class="ka-label">Points</label><input class="ka-input" id="kpP" type="number" min="0" value="' + (t.points || 0) + '"></div></div>'
+      + '<div class="ka-field"><label class="ka-label">Question</label><textarea class="ka-textarea" id="kpQ">' + esc(t.question) + '</textarea>'
+      + '<p class="ka-hint">Say exactly which columns to return and how to round (answers are compared at 2 decimals). Row order is ignored unless you tick Ordered.</p></div>'
+      + '<div class="ka-field"><label class="ka-label">Solution</label><textarea class="ka-textarea kp-code" id="kpS" spellcheck="false">' + esc(t.solution) + '</textarea></div>'
+      + '<div class="ka-row"><div class="ka-field"><label class="ka-label">Hint</label><input class="ka-input" id="kpH" value="' + esc(t.hint || '') + '"></div>'
+      + '<div class="ka-field"><label class="ka-label">Explanation (pass holders, optional)</label><input class="ka-input" id="kpE" value="' + esc(t.explain || '') + '"></div></div>'
+      + '<label class="kp-check"><input type="checkbox" id="kpO"' + (t.ordered ? ' checked' : '') + '> Ordered: the row order must match too</label>'
+      + '<div class="ka-btnrow" style="margin-top:1rem"><button class="ka-btn" id="kpTest" type="button">Test solution</button>'
+      + '<button class="ka-btn ka-btn-primary" id="kpKeep" type="button">Keep changes</button>'
+      + '<button class="ka-btn" id="kpCancel" type="button">Close</button>'
+      + (t._new ? '' : '<button class="ka-btn ka-btn-danger" id="kpDel" type="button">Delete task</button>') + '</div>'
+      + '<div id="kpTestOut"></div></div>';
+    box.scrollIntoView({ behavior: 'smooth' });
+    var codeEl = document.getElementById('kpS');
+    codeEl.addEventListener('keydown', function (e) {
+      if (e.key !== 'Tab') return;
+      e.preventDefault(); var s = codeEl.selectionStart;
+      codeEl.value = codeEl.value.slice(0, s) + '    ' + codeEl.value.slice(codeEl.selectionEnd); codeEl.selectionStart = codeEl.selectionEnd = s + 4;
+    });
+    document.getElementById('kpL').onchange = function () { document.getElementById('kpP').value = POINTS[this.value]; };
+    document.getElementById('kpCancel').onclick = function () { box.innerHTML = ''; S.editing = null; };
+    document.getElementById('kpTest').onclick = guard(async function () {
+      var out = document.getElementById('kpTestOut');
+      out.innerHTML = '<p class="ka-hint">Running (the first run loads the engine)</p>';
+      var files = src.tables.map(function (x) { return { name: x.name, url: PUB + 'data/' + x.file + '?v=' + (x.v || '') }; });
+      try {
+        await KP.load(t.tool, files);
+        var res = await KP.run(t.tool, codeEl.value);
+        var fp = await KP.fingerprint(res, document.getElementById('kpO').checked);
+        out.innerHTML = '<p class="ka-hint">' + fp.rows + ' rows &middot; ' + fp.cols + ' columns &middot; ' + res.ms + ' ms. This is the answer learners must match.</p>'
+          + '<div class="kp-res"><table><thead><tr>' + res.columns.map(function (c) { return '<th>' + esc(c) + '</th>'; }).join('') + '</tr></thead><tbody>'
+          + res.rows.slice(0, 30).map(function (r) { return '<tr>' + r.map(function (v) { return '<td>' + esc(v === null ? 'null' : v) + '</td>'; }).join('') + '</tr>'; }).join('')
+          + '</tbody></table></div>' + (res.out ? '<div class="kp-log">' + esc(res.out) + '</div>' : '');
+      } catch (e) { out.innerHTML = '<div class="kp-log">' + esc(e.message) + '</div>'; }
+    });
+    document.getElementById('kpKeep').onclick = function () {
+      var title = document.getElementById('kpT').value.trim(), sol = codeEl.value.trim();
+      if (!title || !sol) { KA.toast('Title and solution are required.', true); return; }
+      var changed = sol !== t.solution || document.getElementById('kpO').checked !== !!t.ordered;
+      t.title = title; t.level = document.getElementById('kpL').value; t.points = parseInt(document.getElementById('kpP').value, 10) || 0;
+      t.question = document.getElementById('kpQ').value.trim(); t.solution = sol; t.hint = document.getElementById('kpH').value.trim();
+      t.explain = document.getElementById('kpE').value.trim(); t.ordered = document.getElementById('kpO').checked;
+      if (changed) delete t.hash;
+      if (!t.starter || t._new) t.starter = t.tool === 'sql'
+        ? '-- ' + t.title + '\nSELECT *\nFROM ' + ((src.tables[0] || {}).name || 'table_name') + '\nLIMIT 10;'
+        : '# ' + t.title + '\n# DataFrames ready: ' + src.tables.map(function (x) { return x.name; }).join(', ') + '\n# Put your final answer in a variable called result\nresult = ' + ((src.tables[0] || {}).name || 'df') + '.head()';
+      if (t._new) { delete t._new; src.tasks.push(t); }
+      touch(src); renderRole(); KA.toast('Task kept. Save draft or Publish.');
+    };
+    var del = document.getElementById('kpDel');
+    if (del) del.onclick = function () {
+      if (!KA.confirm('Delete "' + t.title + '"? Learners who solved it keep their points.')) return;
+      src.tasks.splice(src.tasks.indexOf(t), 1); touch(src); renderRole();
+    };
+  }
+
+  // ---------------------------------------------------------------- publish
+  async function publish(ids) {
+    var fn = freeN(), manifest = (await getManifest()) || { roles: [] };
+    log('Publishing ' + ids.length + ' role(s)', true);
+    for (var i = 0; i < ids.length; i++) {
+      var src = S.srcs[ids[i]] || await getSrc(ids[i]);
+      if (!src) { log('Skipped ' + ids[i] + ': no content'); continue; }
+      if (!src.tables.length || !src.tasks.length) { log('Skipped ' + src.title + ': needs at least one table and one task'); continue; }
+      var r = await KP.buildPacks(src, { dataBase: PUB + 'data/', freeN: fn, onProgress: function (m) { log('  ' + m); } });
+      var hard = r.errors.filter(function (e) { return !e.warn; });
+      r.errors.filter(function (e) { return e.warn; }).forEach(function (e) { log('  warning ' + e.id + ': ' + e.error); });
+      if (hard.length) {
+        hard.forEach(function (e) { log('  ERROR ' + e.id + ': ' + e.error); });
+        log('Not published ' + src.title + '. Fix the tasks above, then publish again.');
+        continue;
+      }
+      await put('practice', 'free/' + src.id + '.json', r.free, 'application/json', '60');
+      await put('practice-pro', 'pro/' + src.id + '.json', r.pro, 'application/json', '60');
+      await saveSrc(r.src);
+      var at = manifest.roles.map(function (x) { return x.id; }).indexOf(src.id);
+      if (at >= 0) manifest.roles[at] = r.summary; else manifest.roles.push(r.summary);
+      manifest.roles.sort(function (a, b) {
+        var o = DEFAULT_ROLES.map(function (d) { return d.id; }), ia = o.indexOf(a.id), ib = o.indexOf(b.id);
+        return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib);
+      });
+      manifest.v = Date.now(); manifest.free_per_tool = fn;
+      await put('practice', 'manifest.json', manifest, 'application/json', '30');
+      log('Published ' + src.title + ': ' + r.summary.tasks + ' tasks, ' + r.summary.free + ' free');
+    }
+    await loadOverview(); renderTabs(); if (S.role) renderRole();
+    log('Done');
+  }
+
+  async function loadStarter() {
+    if (!KA.confirm('Load the starter content? This uploads 15 CSV files and 80 tasks for 4 roles, replacing any draft with the same role, and then publishes everything.')) return;
+    log('Loading starter content', true);
+    for (var i = 0; i < DEFAULT_ROLES.length; i++) {
+      var id = DEFAULT_ROLES[i].id;
+      var src = await (await fetch('practice-starter/src/' + id + '.json')).json();
+      for (var j = 0; j < src.tables.length; j++) {
+        var t = src.tables[j];
+        log('  uploading ' + t.file);
+        var csv = await (await fetch('practice-starter/data/' + t.file)).text();
+        await put('practice', 'data/' + t.file, csv, 'text/csv', '31536000');
+        t.v = Date.now(); delete t.columns; delete t.rows;
+      }
+      src.tasks.forEach(function (x) { delete x.n; delete x.tables; });
+      await saveSrc(src); delete S.missing[id];
+      log('Saved ' + src.title + ' draft');
+    }
+    await publish(DEFAULT_ROLES.map(function (r) { return r.id; }));
+  }
+
+  function guard(fn) {
+    return async function () {
+      var btn = this && this.tagName ? this : null;
+      if (btn) btn.disabled = true;
+      try { await fn.apply(this, arguments); }
+      catch (e) { KA.toast(e.message || String(e), true); log('Error: ' + (e.message || e)); }
+      if (btn) btn.disabled = false;
+    };
+  }
+
+  // ---------------------------------------------------------------- wiring
+  document.getElementById('kpTabs').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-role]');
+    if (b) { openRole(b.getAttribute('data-role')); return; }
+    if (e.target.closest('#kpAddRole')) {
+      var title = window.prompt('Role title, for example Product Analyst');
+      if (!title) return;
+      var id = KA.slugify(title);
+      if (S.srcs[id] || roleIds().indexOf(id) >= 0) { openRole(id); return; }
+      S.srcs[id] = { id: id, short: shortFor(id), title: title.trim(), company: '', story: '', tables: [], tasks: [] };
+      S.dirty[id] = true; openRole(id);
+    }
+  });
+  document.getElementById('kpStarter').onclick = guard(loadStarter);
+  document.getElementById('kpPublishAll').onclick = guard(async function () {
+    if (S.role && S.srcs[S.role]) readRoleFields(S.srcs[S.role]);
+    var ids = roleIds().filter(function (id) { return S.srcs[id] || !S.missing[id]; });
+    await publish(ids);
+  });
+  document.getElementById('kpGift').onclick = guard(async function () {
+    var email = document.getElementById('kpGiftEmail').value.trim().toLowerCase(), days = +document.getElementById('kpGiftDays').value;
+    if (!email) throw new Error('Enter the account email.');
+    var p = await supa.from('profiles').select('id, email').ilike('email', email).maybeSingle();
+    if (p.error || !p.data) throw new Error('No account found with that email.');
+    var cur = await supa.from('practice_passes').select('expires_at').eq('user_id', p.data.id).maybeSingle();
+    var from = Math.max(Date.now(), cur.data ? new Date(cur.data.expires_at).getTime() : 0);
+    var exp = new Date(from + days * 86400000).toISOString();
+    var up = await supa.from('practice_passes').upsert({ user_id: p.data.id, expires_at: exp });
+    if (up.error) throw new Error(up.error.message);
+    KA.toast('Pass active for ' + email + ' until ' + KA.date(exp));
+    loadOverview();
+  });
+  window.addEventListener('beforeunload', function (e) {
+    if (Object.keys(S.dirty).some(function (k) { return S.dirty[k]; })) { e.preventDefault(); e.returnValue = ''; }
+  });
+
+  loadOverview().catch(function (e) { document.getElementById('kpPubInfo').textContent = e.message; });
+  openRole(DEFAULT_ROLES[0].id);
+});
+</script>
+</body>
+</html>

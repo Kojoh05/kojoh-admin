@@ -1,0 +1,488 @@
+{
+ "id": "data-analyst",
+ "short": "da",
+ "title": "Data Analyst",
+ "company": "Bazaarline",
+ "story": "Bazaarline is an online store selling kitchen, home, personal-care and electronics products across India. You are the analyst the category and growth teams come to with questions.",
+ "tables": [
+  {
+   "name": "customers",
+   "file": "da_customers.csv",
+   "about": "One row per customer: city, state, segment, signup date.",
+   "columns": [
+    [
+     "customer_id",
+     "BIGINT"
+    ],
+    [
+     "customer_name",
+     "VARCHAR"
+    ],
+    [
+     "city",
+     "VARCHAR"
+    ],
+    [
+     "state",
+     "VARCHAR"
+    ],
+    [
+     "segment",
+     "VARCHAR"
+    ],
+    [
+     "signup_date",
+     "DATE"
+    ]
+   ],
+   "rows": 400
+  },
+  {
+   "name": "products",
+   "file": "da_products.csv",
+   "about": "Catalogue: category, brand, cost price and list price (INR).",
+   "columns": [
+    [
+     "product_id",
+     "BIGINT"
+    ],
+    [
+     "product_name",
+     "VARCHAR"
+    ],
+    [
+     "category",
+     "VARCHAR"
+    ],
+    [
+     "brand",
+     "VARCHAR"
+    ],
+    [
+     "cost_price",
+     "BIGINT"
+    ],
+    [
+     "list_price",
+     "BIGINT"
+    ]
+   ],
+   "rows": 60
+  },
+  {
+   "name": "orders",
+   "file": "da_orders.csv",
+   "about": "One row per order in 2024: date, channel, status, payment method.",
+   "columns": [
+    [
+     "order_id",
+     "BIGINT"
+    ],
+    [
+     "customer_id",
+     "BIGINT"
+    ],
+    [
+     "order_date",
+     "DATE"
+    ],
+    [
+     "channel",
+     "VARCHAR"
+    ],
+    [
+     "status",
+     "VARCHAR"
+    ],
+    [
+     "payment_method",
+     "VARCHAR"
+    ]
+   ],
+   "rows": 2500
+  },
+  {
+   "name": "order_items",
+   "file": "da_order_items.csv",
+   "about": "Lines of each order. Line revenue = quantity * unit_price * (1 - discount).",
+   "columns": [
+    [
+     "order_id",
+     "BIGINT"
+    ],
+    [
+     "product_id",
+     "BIGINT"
+    ],
+    [
+     "quantity",
+     "BIGINT"
+    ],
+    [
+     "unit_price",
+     "BIGINT"
+    ],
+    [
+     "discount",
+     "DOUBLE"
+    ]
+   ],
+   "rows": 4151
+  }
+ ],
+ "tasks": [
+  {
+   "tool": "sql",
+   "level": "Foundations",
+   "title": "Orders by status",
+   "question": "How many orders are there in each status? Return status and orders.",
+   "solution": "SELECT status, COUNT(*) AS orders FROM orders GROUP BY status",
+   "hint": "GROUP BY the status column and COUNT(*).",
+   "ordered": false,
+   "explain": "",
+   "id": "da-sql-01",
+   "n": 1,
+   "points": 10,
+   "tables": [
+    "orders"
+   ],
+   "starter": "-- Orders by status\nSELECT *\nFROM orders\nLIMIT 10;"
+  },
+  {
+   "tool": "sql",
+   "level": "Foundations",
+   "title": "Top cities by customers",
+   "question": "List the 5 cities with the most customers. Return city and customers, highest first; break ties by city name A to Z.",
+   "solution": "SELECT city, COUNT(*) AS customers FROM customers GROUP BY city ORDER BY customers DESC, city LIMIT 5",
+   "hint": "ORDER BY two columns, then LIMIT 5.",
+   "ordered": true,
+   "explain": "",
+   "id": "da-sql-02",
+   "n": 2,
+   "points": 10,
+   "tables": [
+    "customers"
+   ],
+   "starter": "-- Top cities by customers\nSELECT *\nFROM customers\nLIMIT 10;"
+  },
+  {
+   "tool": "sql",
+   "level": "Foundations",
+   "title": "Priciest products",
+   "question": "Show the 5 products with the highest list price. Return product_name and list_price, highest first; break ties by product_name A to Z.",
+   "solution": "SELECT product_name, list_price FROM products ORDER BY list_price DESC, product_name LIMIT 5",
+   "hint": "Sort descending by list_price.",
+   "ordered": true,
+   "explain": "",
+   "id": "da-sql-03",
+   "n": 3,
+   "points": 10,
+   "tables": [
+    "products"
+   ],
+   "starter": "-- Priciest products\nSELECT *\nFROM products\nLIMIT 10;"
+  },
+  {
+   "tool": "sql",
+   "level": "Applied",
+   "title": "Delivered revenue by month",
+   "question": "For Delivered orders only, what is revenue per month? Return month as YYYY-MM and revenue (2 decimals).",
+   "solution": "SELECT strftime(o.order_date, '%Y-%m') AS month, ROUND(SUM(oi.quantity * oi.unit_price * (1 - oi.discount)), 2) AS revenue\nFROM orders o JOIN order_items oi ON oi.order_id = o.order_id\nWHERE o.status = 'Delivered'\nGROUP BY 1",
+   "hint": "Join orders to order_items. strftime(order_date, '%Y-%m') gives the month.",
+   "ordered": false,
+   "explain": "",
+   "id": "da-sql-04",
+   "n": 4,
+   "points": 20,
+   "tables": [
+    "orders",
+    "order_items"
+   ],
+   "starter": "-- Delivered revenue by month\nSELECT *\nFROM orders\nLIMIT 10;"
+  },
+  {
+   "tool": "sql",
+   "level": "Applied",
+   "title": "Average order value by channel",
+   "question": "For Delivered orders, what is the average order value (total revenue / number of orders) for App and Web? Return channel and aov (2 decimals).",
+   "solution": "SELECT o.channel, ROUND(SUM(oi.quantity * oi.unit_price * (1 - oi.discount)) / COUNT(DISTINCT o.order_id), 2) AS aov\nFROM orders o JOIN order_items oi ON oi.order_id = o.order_id\nWHERE o.status = 'Delivered'\nGROUP BY o.channel",
+   "hint": "Divide by COUNT(DISTINCT order_id), not COUNT(*): an order can have several lines.",
+   "ordered": false,
+   "explain": "",
+   "id": "da-sql-05",
+   "n": 5,
+   "points": 20,
+   "tables": [
+    "orders",
+    "order_items"
+   ],
+   "starter": "-- Average order value by channel\nSELECT *\nFROM orders\nLIMIT 10;"
+  },
+  {
+   "tool": "sql",
+   "level": "Applied",
+   "title": "Category revenue share",
+   "question": "For Delivered orders, return each category with its revenue and its share of total revenue in percent. Columns: category, revenue, share_pct (both 2 decimals).",
+   "solution": "SELECT p.category, ROUND(SUM(oi.quantity * oi.unit_price * (1 - oi.discount)), 2) AS revenue,\n       ROUND(100 * SUM(oi.quantity * oi.unit_price * (1 - oi.discount)) / SUM(SUM(oi.quantity * oi.unit_price * (1 - oi.discount))) OVER (), 2) AS share_pct\nFROM orders o JOIN order_items oi ON oi.order_id = o.order_id JOIN products p ON p.product_id = oi.product_id\nWHERE o.status = 'Delivered'\nGROUP BY p.category",
+   "hint": "SUM(SUM(x)) OVER () gives the grand total next to each group.",
+   "ordered": false,
+   "explain": "",
+   "id": "da-sql-06",
+   "n": 6,
+   "points": 20,
+   "tables": [
+    "products",
+    "orders",
+    "order_items"
+   ],
+   "starter": "-- Category revenue share\nSELECT *\nFROM products\nLIMIT 10;"
+  },
+  {
+   "tool": "sql",
+   "level": "Business case",
+   "title": "Top 10 customers",
+   "question": "The CRM team wants the 10 customers with the most Delivered revenue. Return customer_id, customer_name, city, revenue (2 decimals), highest first; ties by customer_id.",
+   "solution": "SELECT c.customer_id, c.customer_name, c.city, ROUND(SUM(oi.quantity * oi.unit_price * (1 - oi.discount)), 2) AS revenue\nFROM orders o JOIN order_items oi ON oi.order_id = o.order_id JOIN customers c ON c.customer_id = o.customer_id\nWHERE o.status = 'Delivered'\nGROUP BY 1, 2, 3\nORDER BY revenue DESC, c.customer_id\nLIMIT 10",
+   "hint": "Three-table join, group by the customer columns, order and limit.",
+   "ordered": true,
+   "explain": "",
+   "id": "da-sql-07",
+   "n": 7,
+   "points": 30,
+   "tables": [
+    "customers",
+    "orders",
+    "order_items"
+   ],
+   "starter": "-- Top 10 customers\nSELECT *\nFROM customers\nLIMIT 10;"
+  },
+  {
+   "tool": "sql",
+   "level": "Business case",
+   "title": "Repeat purchase rate",
+   "question": "Of customers with at least one Delivered order, what percent have 2 or more Delivered orders? Return one value: repeat_rate_pct (2 decimals).",
+   "solution": "WITH c AS (SELECT customer_id, COUNT(*) AS n FROM orders WHERE status = 'Delivered' GROUP BY customer_id)\nSELECT ROUND(100.0 * COUNT(*) FILTER (WHERE n >= 2) / COUNT(*), 2) AS repeat_rate_pct FROM c",
+   "hint": "Count orders per customer in a CTE first, then compute the share.",
+   "ordered": false,
+   "explain": "",
+   "id": "da-sql-08",
+   "n": 8,
+   "points": 30,
+   "tables": [
+    "orders"
+   ],
+   "starter": "-- Repeat purchase rate\nSELECT *\nFROM orders\nLIMIT 10;"
+  },
+  {
+   "tool": "sql",
+   "level": "Interview",
+   "title": "Month-over-month growth",
+   "question": "For Delivered revenue by month, return month (YYYY-MM), revenue, prev_revenue and growth_pct (percent change vs previous month, 2 decimals). Sort by month; the first month has empty prev_revenue and growth_pct.",
+   "solution": "WITH m AS (\n  SELECT strftime(o.order_date, '%Y-%m') AS month, SUM(oi.quantity * oi.unit_price * (1 - oi.discount)) AS revenue\n  FROM orders o JOIN order_items oi ON oi.order_id = o.order_id\n  WHERE o.status = 'Delivered' GROUP BY 1)\nSELECT month, ROUND(revenue, 2) AS revenue, ROUND(LAG(revenue) OVER (ORDER BY month), 2) AS prev_revenue,\n       ROUND(100 * (revenue - LAG(revenue) OVER (ORDER BY month)) / LAG(revenue) OVER (ORDER BY month), 2) AS growth_pct\nFROM m ORDER BY month",
+   "hint": "LAG(revenue) OVER (ORDER BY month) gives the previous month.",
+   "ordered": true,
+   "explain": "",
+   "id": "da-sql-09",
+   "n": 9,
+   "points": 40,
+   "tables": [
+    "orders",
+    "order_items"
+   ],
+   "starter": "-- Month-over-month growth\nSELECT *\nFROM orders\nLIMIT 10;"
+  },
+  {
+   "tool": "sql",
+   "level": "Interview",
+   "title": "Best seller in each category",
+   "question": "For each category, find the product with the most units sold in Delivered orders (ties go to the lower product_id). Return category, product_name, units.",
+   "solution": "WITH u AS (\n  SELECT p.category, p.product_id, p.product_name, SUM(oi.quantity) AS units\n  FROM orders o JOIN order_items oi ON oi.order_id = o.order_id JOIN products p ON p.product_id = oi.product_id\n  WHERE o.status = 'Delivered' GROUP BY 1, 2, 3)\nSELECT category, product_name, units FROM (\n  SELECT *, ROW_NUMBER() OVER (PARTITION BY category ORDER BY units DESC, product_id) AS rn FROM u)\nWHERE rn = 1",
+   "hint": "ROW_NUMBER() OVER (PARTITION BY category ORDER BY units DESC, product_id), keep rn = 1.",
+   "ordered": false,
+   "explain": "",
+   "id": "da-sql-10",
+   "n": 10,
+   "points": 40,
+   "tables": [
+    "products",
+    "orders",
+    "order_items"
+   ],
+   "starter": "-- Best seller in each category\nSELECT *\nFROM products\nLIMIT 10;"
+  },
+  {
+   "tool": "python",
+   "level": "Foundations",
+   "title": "UPI orders",
+   "question": "How many orders were paid by UPI? Store the number in result.",
+   "solution": "result = (orders['payment_method'] == 'UPI').sum()",
+   "hint": "Compare the column to \"UPI\" and .sum() the True values.",
+   "ordered": false,
+   "explain": "",
+   "id": "da-py-01",
+   "n": 1,
+   "points": 10,
+   "tables": [
+    "orders"
+   ],
+   "starter": "# UPI orders\n# DataFrames ready: customers, products, orders, order_items\n# Put your final answer in a variable called result\nresult = orders.head()"
+  },
+  {
+   "tool": "python",
+   "level": "Foundations",
+   "title": "Cancellation rate",
+   "question": "What percent of all orders were Cancelled? result should be one number, 2 decimals.",
+   "solution": "result = round((orders['status'] == 'Cancelled').mean() * 100, 2)",
+   "hint": "The mean of a True/False column is the share of True.",
+   "ordered": false,
+   "explain": "",
+   "id": "da-py-02",
+   "n": 2,
+   "points": 10,
+   "tables": [
+    "orders"
+   ],
+   "starter": "# Cancellation rate\n# DataFrames ready: customers, products, orders, order_items\n# Put your final answer in a variable called result\nresult = orders.head()"
+  },
+  {
+   "tool": "python",
+   "level": "Foundations",
+   "title": "Products per category",
+   "question": "How many products are in each category? result: category and count.",
+   "solution": "result = products['category'].value_counts()",
+   "hint": "value_counts() does this in one line.",
+   "ordered": false,
+   "explain": "",
+   "id": "da-py-03",
+   "n": 3,
+   "points": 10,
+   "tables": [
+    "products"
+   ],
+   "starter": "# Products per category\n# DataFrames ready: customers, products, orders, order_items\n# Put your final answer in a variable called result\nresult = products.head()"
+  },
+  {
+   "tool": "python",
+   "level": "Applied",
+   "title": "Biggest orders",
+   "question": "Add a revenue column to order_items (quantity * unit_price * (1 - discount)) and return the 10 orders with the highest total revenue: order_id and revenue (2 decimals), highest first; ties by order_id.",
+   "solution": "oi = order_items.assign(revenue=order_items.quantity * order_items.unit_price * (1 - order_items.discount))\nr = oi.groupby('order_id', as_index=False)['revenue'].sum()\nr['revenue'] = r['revenue'].round(2)\nresult = r.sort_values(['revenue', 'order_id'], ascending=[False, True]).head(10)",
+   "hint": "assign(), groupby().sum(), then sort_values on two columns.",
+   "ordered": true,
+   "explain": "",
+   "id": "da-py-04",
+   "n": 4,
+   "points": 20,
+   "tables": [
+    "order_items"
+   ],
+   "starter": "# Biggest orders\n# DataFrames ready: customers, products, orders, order_items\n# Put your final answer in a variable called result\nresult = order_items.head()"
+  },
+  {
+   "tool": "python",
+   "level": "Applied",
+   "title": "Signups by quarter",
+   "question": "How many customers signed up in each quarter? result: quarter (like 2023Q1) and customers.",
+   "solution": "q = pd.to_datetime(customers['signup_date']).dt.to_period('Q').astype(str)\nresult = q.value_counts().rename_axis('quarter').reset_index(name='customers')",
+   "hint": "pd.to_datetime(...).dt.to_period('Q') turns dates into quarters.",
+   "ordered": false,
+   "explain": "",
+   "id": "da-py-05",
+   "n": 5,
+   "points": 20,
+   "tables": [
+    "customers"
+   ],
+   "starter": "# Signups by quarter\n# DataFrames ready: customers, products, orders, order_items\n# Put your final answer in a variable called result\nresult = customers.head()"
+  },
+  {
+   "tool": "python",
+   "level": "Applied",
+   "title": "Payment mix by channel",
+   "question": "Build a table of order counts with one row per channel and one column per payment method (columns in A to Z order). result: channel, Card, COD, Netbanking, UPI.",
+   "solution": "result = pd.crosstab(orders['channel'], orders['payment_method'])",
+   "hint": "pd.crosstab(rows, columns) counts combinations.",
+   "ordered": false,
+   "explain": "",
+   "id": "da-py-06",
+   "n": 6,
+   "points": 20,
+   "tables": [
+    "orders"
+   ],
+   "starter": "# Payment mix by channel\n# DataFrames ready: customers, products, orders, order_items\n# Put your final answer in a variable called result\nresult = orders.head()"
+  },
+  {
+   "tool": "python",
+   "level": "Business case",
+   "title": "Return rate by category",
+   "question": "For each category, what percent of order lines belong to Returned orders? result: category and return_rate (2 decimals).",
+   "solution": "m = order_items.merge(orders[['order_id', 'status']], on='order_id').merge(products[['product_id', 'category']], on='product_id')\nm['ret'] = m['status'] == 'Returned'\nresult = (m.groupby('category')['ret'].mean() * 100).round(2).rename('return_rate')",
+   "hint": "Merge in status and category, then take the mean of a True/False column per category.",
+   "ordered": false,
+   "explain": "",
+   "id": "da-py-07",
+   "n": 7,
+   "points": 30,
+   "tables": [
+    "products",
+    "orders",
+    "order_items"
+   ],
+   "starter": "# Return rate by category\n# DataFrames ready: customers, products, orders, order_items\n# Put your final answer in a variable called result\nresult = products.head()"
+  },
+  {
+   "tool": "python",
+   "level": "Business case",
+   "title": "Weekend vs weekday",
+   "question": "Split Delivered revenue into Weekend (Saturday, Sunday) and Weekday. result: day_type and revenue (2 decimals).",
+   "solution": "m = order_items.merge(orders, on='order_id')\nm = m[m.status == 'Delivered']\nm['revenue'] = m.quantity * m.unit_price * (1 - m.discount)\nwk = pd.to_datetime(m['order_date']).dt.dayofweek >= 5\nm['day_type'] = np.where(wk, 'Weekend', 'Weekday')\nresult = m.groupby('day_type')['revenue'].sum().round(2)",
+   "hint": ".dt.dayofweek is 5 for Saturday and 6 for Sunday.",
+   "ordered": false,
+   "explain": "",
+   "id": "da-py-08",
+   "n": 8,
+   "points": 30,
+   "tables": [
+    "orders",
+    "order_items"
+   ],
+   "starter": "# Weekend vs weekday\n# DataFrames ready: customers, products, orders, order_items\n# Put your final answer in a variable called result\nresult = orders.head()"
+  },
+  {
+   "tool": "python",
+   "level": "Interview",
+   "title": "Cohort repeaters",
+   "question": "Group customers by the month of their first Delivered order (cohort, YYYY-MM). For each cohort return customers (how many) and repeaters (how many placed at least one more Delivered order later).",
+   "solution": "d = orders[orders.status == 'Delivered'].copy()\nd['order_date'] = pd.to_datetime(d['order_date'])\nfirst = d.groupby('customer_id')['order_date'].min().rename('first')\nd = d.join(first, on='customer_id')\nc = d.groupby('customer_id').agg(first=('first', 'min'), n=('order_id', 'count'))\nc['cohort'] = c['first'].dt.strftime('%Y-%m')\nresult = c.groupby('cohort').agg(customers=('n', 'size'), repeaters=('n', lambda s: (s >= 2).sum()))",
+   "hint": "Find each customer's first order date, then count customers with 2+ orders per cohort.",
+   "ordered": false,
+   "explain": "",
+   "id": "da-py-09",
+   "n": 9,
+   "points": 40,
+   "tables": [
+    "customers",
+    "orders"
+   ],
+   "starter": "# Cohort repeaters\n# DataFrames ready: customers, products, orders, order_items\n# Put your final answer in a variable called result\nresult = customers.head()"
+  },
+  {
+   "tool": "python",
+   "level": "Interview",
+   "title": "RFM segments",
+   "question": "Using Delivered orders: recency = days from the customer's last order to 2024-12-31, frequency = number of orders. Label Champion if frequency >= 3 and recency <= 60, At risk if recency > 120, otherwise Regular. result: segment and customers.",
+   "solution": "d = orders[orders.status == 'Delivered'].copy()\nd['order_date'] = pd.to_datetime(d['order_date'])\ng = d.groupby('customer_id').agg(last=('order_date', 'max'), frequency=('order_id', 'count'))\ng['recency'] = (pd.Timestamp('2024-12-31') - g['last']).dt.days\ng['segment'] = np.select([(g.frequency >= 3) & (g.recency <= 60), g.recency > 120], ['Champion', 'At risk'], 'Regular')\nresult = g['segment'].value_counts()",
+   "hint": "np.select takes a list of conditions and a list of labels, checked in order.",
+   "ordered": false,
+   "explain": "",
+   "id": "da-py-10",
+   "n": 10,
+   "points": 40,
+   "tables": [
+    "orders"
+   ],
+   "starter": "# RFM segments\n# DataFrames ready: customers, products, orders, order_items\n# Put your final answer in a variable called result\nresult = orders.head()"
+  }
+ ]
+}

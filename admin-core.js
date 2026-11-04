@@ -79,6 +79,8 @@
       icon:'<path d="M4 4h16v12H7l-3 3z"/>' },
     { key:'import', href:'import.html', label:'Import a dataset',
       icon:'<path d="M12 3v12M7 10l5 5 5-5M5 21h14"/>' },
+    { key:'practice', href:'practice.html', label:'Practice',
+      icon:'<polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>' },
     { key:'submissions', href:'submissions.html', label:'Challenge submissions',
       icon:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6l6 6v10a2 2 0 0 1-2 2h-1M9 15l2 2 4-4"/>' }
   ];

@@ -1,0 +1,485 @@
+{
+ "id": "business-analyst",
+ "short": "ba",
+ "title": "Business Analyst",
+ "company": "Urbanmart",
+ "story": "Urbanmart runs 17 retail stores across India. Leadership reviews performance against targets every month, and the ops team tracks support tickets raised by stores.",
+ "tables": [
+  {
+   "name": "stores",
+   "file": "ba_stores.csv",
+   "about": "One row per store: region, city, format, opening date, size in sq ft.",
+   "columns": [
+    [
+     "store_id",
+     "BIGINT"
+    ],
+    [
+     "store_name",
+     "VARCHAR"
+    ],
+    [
+     "region",
+     "VARCHAR"
+    ],
+    [
+     "city",
+     "VARCHAR"
+    ],
+    [
+     "format",
+     "VARCHAR"
+    ],
+    [
+     "opened_on",
+     "DATE"
+    ],
+    [
+     "area_sqft",
+     "BIGINT"
+    ]
+   ],
+   "rows": 17
+  },
+  {
+   "name": "sales",
+   "file": "ba_sales.csv",
+   "about": "Daily sales per store and category (Apr to Sep 2024). footfall is per store per day, repeated on each category row.",
+   "columns": [
+    [
+     "store_id",
+     "BIGINT"
+    ],
+    [
+     "sale_date",
+     "DATE"
+    ],
+    [
+     "category",
+     "VARCHAR"
+    ],
+    [
+     "units",
+     "BIGINT"
+    ],
+    [
+     "revenue",
+     "DOUBLE"
+    ],
+    [
+     "footfall",
+     "BIGINT"
+    ]
+   ],
+   "rows": 12444
+  },
+  {
+   "name": "targets",
+   "file": "ba_targets.csv",
+   "about": "Monthly revenue target per store; month is YYYY-MM.",
+   "columns": [
+    [
+     "store_id",
+     "BIGINT"
+    ],
+    [
+     "month",
+     "VARCHAR"
+    ],
+    [
+     "revenue_target",
+     "BIGINT"
+    ]
+   ],
+   "rows": 102
+  },
+  {
+   "name": "tickets",
+   "file": "ba_tickets.csv",
+   "about": "Support tickets raised by stores: priority, opened and closed time, CSAT 1 to 5 (blank if not rated).",
+   "columns": [
+    [
+     "ticket_id",
+     "BIGINT"
+    ],
+    [
+     "store_id",
+     "BIGINT"
+    ],
+    [
+     "category",
+     "VARCHAR"
+    ],
+    [
+     "priority",
+     "VARCHAR"
+    ],
+    [
+     "opened_at",
+     "TIMESTAMP"
+    ],
+    [
+     "closed_at",
+     "TIMESTAMP"
+    ],
+    [
+     "csat",
+     "BIGINT"
+    ]
+   ],
+   "rows": 900
+  }
+ ],
+ "tasks": [
+  {
+   "tool": "sql",
+   "level": "Foundations",
+   "title": "Stores per region",
+   "question": "How many stores does each region have? Return region and stores.",
+   "solution": "SELECT region, COUNT(*) AS stores FROM stores GROUP BY region",
+   "hint": "COUNT(*) grouped by region.",
+   "ordered": false,
+   "explain": "",
+   "id": "ba-sql-01",
+   "n": 1,
+   "points": 10,
+   "tables": [
+    "stores"
+   ],
+   "starter": "-- Stores per region\nSELECT *\nFROM stores\nLIMIT 10;"
+  },
+  {
+   "tool": "sql",
+   "level": "Foundations",
+   "title": "Revenue by category",
+   "question": "What is total revenue per category? Return category and revenue (2 decimals).",
+   "solution": "SELECT category, ROUND(SUM(revenue), 2) AS revenue FROM sales GROUP BY category",
+   "hint": "SUM and ROUND.",
+   "ordered": false,
+   "explain": "",
+   "id": "ba-sql-02",
+   "n": 2,
+   "points": 10,
+   "tables": [
+    "sales"
+   ],
+   "starter": "-- Revenue by category\nSELECT *\nFROM sales\nLIMIT 10;"
+  },
+  {
+   "tool": "sql",
+   "level": "Foundations",
+   "title": "Largest stores",
+   "question": "List the 5 largest stores by area. Return store_name, city, area_sqft, largest first; ties by store_name A to Z.",
+   "solution": "SELECT store_name, city, area_sqft FROM stores ORDER BY area_sqft DESC, store_name LIMIT 5",
+   "hint": "ORDER BY then LIMIT.",
+   "ordered": true,
+   "explain": "",
+   "id": "ba-sql-03",
+   "n": 3,
+   "points": 10,
+   "tables": [
+    "stores"
+   ],
+   "starter": "-- Largest stores\nSELECT *\nFROM stores\nLIMIT 10;"
+  },
+  {
+   "tool": "sql",
+   "level": "Applied",
+   "title": "Target achievement",
+   "question": "For every store and month, compare actual revenue with target. Return store_id, month (YYYY-MM), actual, target, achievement_pct (actual / target * 100). Round money and percent to 2 decimals.",
+   "solution": "WITH a AS (SELECT store_id, strftime(sale_date, '%Y-%m') AS month, SUM(revenue) AS actual FROM sales GROUP BY 1, 2)\nSELECT a.store_id, a.month, ROUND(a.actual, 2) AS actual, t.revenue_target AS target,\n       ROUND(100 * a.actual / t.revenue_target, 2) AS achievement_pct\nFROM a JOIN targets t ON t.store_id = a.store_id AND t.month = a.month",
+   "hint": "Aggregate sales to store-month first, then join targets on both keys.",
+   "ordered": false,
+   "explain": "",
+   "id": "ba-sql-04",
+   "n": 4,
+   "points": 20,
+   "tables": [
+    "sales",
+    "targets"
+   ],
+   "starter": "-- Target achievement\nSELECT *\nFROM sales\nLIMIT 10;"
+  },
+  {
+   "tool": "sql",
+   "level": "Applied",
+   "title": "Footfall by region",
+   "question": "What was total footfall per region? Careful: footfall repeats on each category row, so count each store-day once. Return region and footfall.",
+   "solution": "WITH d AS (SELECT DISTINCT store_id, sale_date, footfall FROM sales)\nSELECT s.region, SUM(d.footfall) AS footfall FROM d JOIN stores s ON s.store_id = d.store_id GROUP BY s.region",
+   "hint": "SELECT DISTINCT store_id, sale_date, footfall first.",
+   "ordered": false,
+   "explain": "",
+   "id": "ba-sql-05",
+   "n": 5,
+   "points": 20,
+   "tables": [
+    "stores",
+    "sales"
+   ],
+   "starter": "-- Footfall by region\nSELECT *\nFROM stores\nLIMIT 10;"
+  },
+  {
+   "tool": "sql",
+   "level": "Applied",
+   "title": "Stores that keep missing target",
+   "question": "Which stores missed their target in 3 or more months? Return store_name and months_missed.",
+   "solution": "WITH a AS (SELECT store_id, strftime(sale_date, '%Y-%m') AS month, SUM(revenue) AS actual FROM sales GROUP BY 1, 2)\nSELECT s.store_name, COUNT(*) AS months_missed\nFROM a JOIN targets t USING (store_id, month) JOIN stores s USING (store_id)\nWHERE a.actual < t.revenue_target\nGROUP BY s.store_name HAVING COUNT(*) >= 3",
+   "hint": "Filter missed months with WHERE, then HAVING COUNT(*) >= 3.",
+   "ordered": false,
+   "explain": "",
+   "id": "ba-sql-06",
+   "n": 6,
+   "points": 20,
+   "tables": [
+    "stores",
+    "sales",
+    "targets"
+   ],
+   "starter": "-- Stores that keep missing target\nSELECT *\nFROM stores\nLIMIT 10;"
+  },
+  {
+   "tool": "sql",
+   "level": "Business case",
+   "title": "Weekend uplift by format",
+   "question": "Leadership asks: how much better are weekends? For each store format, compute average daily store revenue on weekdays and on weekends (Sat, Sun), and uplift_pct = (weekend_avg / weekday_avg - 1) * 100. Return format, weekday_avg, weekend_avg, uplift_pct (2 decimals).",
+   "solution": "WITH d AS (SELECT store_id, sale_date, SUM(revenue) AS rev FROM sales GROUP BY 1, 2)\nSELECT s.format,\n  ROUND(AVG(rev) FILTER (WHERE dayofweek(sale_date) NOT IN (0, 6)), 2) AS weekday_avg,\n  ROUND(AVG(rev) FILTER (WHERE dayofweek(sale_date) IN (0, 6)), 2) AS weekend_avg,\n  ROUND(100 * (AVG(rev) FILTER (WHERE dayofweek(sale_date) IN (0, 6)) / AVG(rev) FILTER (WHERE dayofweek(sale_date) NOT IN (0, 6)) - 1), 2) AS uplift_pct\nFROM d JOIN stores s USING (store_id) GROUP BY s.format",
+   "hint": "Sum to store-day first. In DuckDB dayofweek() is 0 for Sunday and 6 for Saturday.",
+   "ordered": false,
+   "explain": "",
+   "id": "ba-sql-07",
+   "n": 7,
+   "points": 30,
+   "tables": [
+    "stores",
+    "sales"
+   ],
+   "starter": "-- Weekend uplift by format\nSELECT *\nFROM stores\nLIMIT 10;"
+  },
+  {
+   "tool": "sql",
+   "level": "Business case",
+   "title": "SLA breaches",
+   "question": "The SLA is 24 hours for High, 48 for Medium, 96 for Low priority tickets. For closed tickets, return priority, tickets, breached (took longer than SLA) and breach_pct (2 decimals).",
+   "solution": "WITH t AS (\n  SELECT priority, date_diff('minute', opened_at, closed_at) / 60.0 AS hrs,\n         CASE priority WHEN 'High' THEN 24 WHEN 'Medium' THEN 48 ELSE 96 END AS sla\n  FROM tickets WHERE closed_at IS NOT NULL)\nSELECT priority, COUNT(*) AS tickets, COUNT(*) FILTER (WHERE hrs > sla) AS breached,\n       ROUND(100.0 * COUNT(*) FILTER (WHERE hrs > sla) / COUNT(*), 2) AS breach_pct\nFROM t GROUP BY priority",
+   "hint": "date_diff('minute', opened_at, closed_at) / 60.0 gives hours.",
+   "ordered": false,
+   "explain": "",
+   "id": "ba-sql-08",
+   "n": 8,
+   "points": 30,
+   "tables": [
+    "tickets"
+   ],
+   "starter": "-- SLA breaches\nSELECT *\nFROM tickets\nLIMIT 10;"
+  },
+  {
+   "tool": "sql",
+   "level": "Interview",
+   "title": "Running total",
+   "question": "For store 1, return month (YYYY-MM), revenue and running_total (cumulative revenue), sorted by month, 2 decimals.",
+   "solution": "SELECT month, ROUND(rev, 2) AS revenue, ROUND(SUM(rev) OVER (ORDER BY month), 2) AS running_total\nFROM (SELECT strftime(sale_date, '%Y-%m') AS month, SUM(revenue) AS rev FROM sales WHERE store_id = 1 GROUP BY 1)\nORDER BY month",
+   "hint": "SUM(...) OVER (ORDER BY month) is a running total.",
+   "ordered": true,
+   "explain": "",
+   "id": "ba-sql-09",
+   "n": 9,
+   "points": 40,
+   "tables": [
+    "sales"
+   ],
+   "starter": "-- Running total\nSELECT *\nFROM sales\nLIMIT 10;"
+  },
+  {
+   "tool": "sql",
+   "level": "Interview",
+   "title": "Top 2 stores per region",
+   "question": "For each region, return the top 2 stores by total revenue: region, store_name, revenue (2 decimals), rnk (1 or 2). Ties go to the lower store_id. Regions with one store return one row.",
+   "solution": "WITH r AS (SELECT s.region, s.store_id, s.store_name, SUM(x.revenue) AS revenue FROM sales x JOIN stores s USING (store_id) GROUP BY 1, 2, 3)\nSELECT region, store_name, ROUND(revenue, 2) AS revenue, rnk FROM (\n  SELECT *, ROW_NUMBER() OVER (PARTITION BY region ORDER BY revenue DESC, store_id) AS rnk FROM r)\nWHERE rnk <= 2",
+   "hint": "ROW_NUMBER() partitioned by region.",
+   "ordered": false,
+   "explain": "",
+   "id": "ba-sql-10",
+   "n": 10,
+   "points": 40,
+   "tables": [
+    "stores",
+    "sales"
+   ],
+   "starter": "-- Top 2 stores per region\nSELECT *\nFROM stores\nLIMIT 10;"
+  },
+  {
+   "tool": "python",
+   "level": "Foundations",
+   "title": "Average CSAT",
+   "question": "What is the average CSAT of rated tickets? result: one number, 2 decimals.",
+   "solution": "result = round(tickets['csat'].mean(), 2)",
+   "hint": ".mean() skips blanks automatically.",
+   "ordered": false,
+   "explain": "",
+   "id": "ba-py-01",
+   "n": 1,
+   "points": 10,
+   "tables": [
+    "tickets"
+   ],
+   "starter": "# Average CSAT\n# DataFrames ready: stores, sales, targets, tickets\n# Put your final answer in a variable called result\nresult = tickets.head()"
+  },
+  {
+   "tool": "python",
+   "level": "Foundations",
+   "title": "Open tickets",
+   "question": "How many tickets are still open (no closed_at)? result: one number.",
+   "solution": "result = tickets['closed_at'].isna().sum()",
+   "hint": ".isna().sum() counts blanks.",
+   "ordered": false,
+   "explain": "",
+   "id": "ba-py-02",
+   "n": 2,
+   "points": 10,
+   "tables": [
+    "tickets"
+   ],
+   "starter": "# Open tickets\n# DataFrames ready: stores, sales, targets, tickets\n# Put your final answer in a variable called result\nresult = tickets.head()"
+  },
+  {
+   "tool": "python",
+   "level": "Foundations",
+   "title": "Tickets by category",
+   "question": "How many tickets were raised in each category? result: category and count.",
+   "solution": "result = tickets['category'].value_counts()",
+   "hint": "value_counts().",
+   "ordered": false,
+   "explain": "",
+   "id": "ba-py-03",
+   "n": 3,
+   "points": 10,
+   "tables": [
+    "tickets"
+   ],
+   "starter": "# Tickets by category\n# DataFrames ready: stores, sales, targets, tickets\n# Put your final answer in a variable called result\nresult = tickets.head()"
+  },
+  {
+   "tool": "python",
+   "level": "Applied",
+   "title": "Median resolution time",
+   "question": "For closed tickets, what is the median resolution time in hours per priority? result: priority and median_hours (2 decimals).",
+   "solution": "t = tickets.dropna(subset=['closed_at']).copy()\nt['hours'] = (pd.to_datetime(t.closed_at) - pd.to_datetime(t.opened_at)).dt.total_seconds() / 3600\nresult = t.groupby('priority')['hours'].median().round(2).rename('median_hours')",
+   "hint": "Subtract two datetime columns, then .dt.total_seconds() / 3600.",
+   "ordered": false,
+   "explain": "",
+   "id": "ba-py-04",
+   "n": 4,
+   "points": 20,
+   "tables": [
+    "tickets"
+   ],
+   "starter": "# Median resolution time\n# DataFrames ready: stores, sales, targets, tickets\n# Put your final answer in a variable called result\nresult = tickets.head()"
+  },
+  {
+   "tool": "python",
+   "level": "Applied",
+   "title": "Revenue by weekday",
+   "question": "Which weekday sells most? result: day (Monday, Tuesday ...) and revenue (2 decimals), across all stores.",
+   "solution": "d = pd.to_datetime(sales['sale_date']).dt.day_name()\nresult = sales.groupby(d.rename('day'))['revenue'].sum().round(2)",
+   "hint": ".dt.day_name() returns Monday, Tuesday and so on.",
+   "ordered": false,
+   "explain": "",
+   "id": "ba-py-05",
+   "n": 5,
+   "points": 20,
+   "tables": [
+    "sales"
+   ],
+   "starter": "# Revenue by weekday\n# DataFrames ready: stores, sales, targets, tickets\n# Put your final answer in a variable called result\nresult = sales.head()"
+  },
+  {
+   "tool": "python",
+   "level": "Applied",
+   "title": "Revenue per square foot",
+   "question": "Return the 5 stores with the highest total revenue per sq ft: store_name and rev_per_sqft (2 decimals), highest first.",
+   "solution": "r = sales.groupby('store_id')['revenue'].sum().rename('rev').reset_index().merge(stores, on='store_id')\nr['rev_per_sqft'] = (r['rev'] / r['area_sqft']).round(2)\nresult = r.sort_values('rev_per_sqft', ascending=False).head(5)[['store_name', 'rev_per_sqft']]",
+   "hint": "Total revenue per store, merge stores, divide by area_sqft.",
+   "ordered": true,
+   "explain": "",
+   "id": "ba-py-06",
+   "n": 6,
+   "points": 20,
+   "tables": [
+    "stores",
+    "sales"
+   ],
+   "starter": "# Revenue per square foot\n# DataFrames ready: stores, sales, targets, tickets\n# Put your final answer in a variable called result\nresult = stores.head()"
+  },
+  {
+   "tool": "python",
+   "level": "Business case",
+   "title": "Region by category pivot",
+   "question": "Build a pivot of revenue: one row per region, one column per category (A to Z), values rounded to 2 decimals. result: region, Apparel, Electronics, Grocery, Home.",
+   "solution": "m = sales.merge(stores[['store_id', 'region']], on='store_id')\nresult = m.pivot_table(index='region', columns='category', values='revenue', aggfunc='sum').round(2)",
+   "hint": "pivot_table(index=..., columns=..., values=..., aggfunc='sum').",
+   "ordered": false,
+   "explain": "",
+   "id": "ba-py-07",
+   "n": 7,
+   "points": 30,
+   "tables": [
+    "stores",
+    "sales"
+   ],
+   "starter": "# Region by category pivot\n# DataFrames ready: stores, sales, targets, tickets\n# Put your final answer in a variable called result\nresult = stores.head()"
+  },
+  {
+   "tool": "python",
+   "level": "Business case",
+   "title": "Achievement by region",
+   "question": "For each region and month, achievement_pct = total actual revenue / total target * 100 (2 decimals). result: region, month (YYYY-MM), achievement_pct.",
+   "solution": "a = sales.assign(month=sales['sale_date'].str[:7]).groupby(['store_id', 'month'], as_index=False)['revenue'].sum()\nm = a.merge(targets, on=['store_id', 'month']).merge(stores[['store_id', 'region']], on='store_id')\ng = m.groupby(['region', 'month'])[['revenue', 'revenue_target']].sum()\nresult = (g['revenue'] / g['revenue_target'] * 100).round(2).rename('achievement_pct')",
+   "hint": "Sum actual and target separately per region-month before dividing.",
+   "ordered": false,
+   "explain": "",
+   "id": "ba-py-08",
+   "n": 8,
+   "points": 30,
+   "tables": [
+    "stores",
+    "sales",
+    "targets"
+   ],
+   "starter": "# Achievement by region\n# DataFrames ready: stores, sales, targets, tickets\n# Put your final answer in a variable called result\nresult = stores.head()"
+  },
+  {
+   "tool": "python",
+   "level": "Interview",
+   "title": "Does SLA drive CSAT?",
+   "question": "Using the same SLA (High 24h, Medium 48h, Low 96h), compare average CSAT of rated, closed tickets that were 'Within SLA' vs 'Breached'. result: sla_status and avg_csat (2 decimals).",
+   "solution": "t = tickets.dropna(subset=['closed_at', 'csat']).copy()\nh = (pd.to_datetime(t.closed_at) - pd.to_datetime(t.opened_at)).dt.total_seconds() / 3600\nsla = t['priority'].map({'High': 24, 'Medium': 48, 'Low': 96})\nt['sla_status'] = np.where(h > sla, 'Breached', 'Within SLA')\nresult = t.groupby('sla_status')['csat'].mean().round(2).rename('avg_csat')",
+   "hint": "map() the SLA hours per priority, compare, then group.",
+   "ordered": false,
+   "explain": "",
+   "id": "ba-py-09",
+   "n": 9,
+   "points": 40,
+   "tables": [
+    "tickets"
+   ],
+   "starter": "# Does SLA drive CSAT?\n# DataFrames ready: stores, sales, targets, tickets\n# Put your final answer in a variable called result\nresult = tickets.head()"
+  },
+  {
+   "tool": "python",
+   "level": "Interview",
+   "title": "Pareto check",
+   "question": "How many stores, counted from the highest-revenue store down, does it take to reach 80% of total revenue? result: one number.",
+   "solution": "r = sales.groupby('store_id')['revenue'].sum().sort_values(ascending=False)\nshare = r.cumsum() / r.sum()\nresult = int((share < 0.8).sum() + 1)",
+   "hint": "Sort descending, cumsum() / sum(), find where it first reaches 0.8.",
+   "ordered": false,
+   "explain": "",
+   "id": "ba-py-10",
+   "n": 10,
+   "points": 40,
+   "tables": [
+    "sales"
+   ],
+   "starter": "# Pareto check\n# DataFrames ready: stores, sales, targets, tickets\n# Put your final answer in a variable called result\nresult = sales.head()"
+  }
+ ]
+}

@@ -1,0 +1,18 @@
+store_id,store_name,region,city,format,opened_on,area_sqft
+1,Urbanmart Delhi 1,North,Delhi,Mall,2020-03-18,1900
+2,Urbanmart Noida 1,North,Noida,High Street,2020-02-07,3600
+3,Urbanmart Jaipur 1,North,Jaipur,High Street,2020-07-28,3800
+4,Urbanmart Jaipur 2,North,Jaipur,High Street,2019-01-07,3700
+5,Urbanmart Lucknow 1,North,Lucknow,High Street,2019-12-31,3700
+6,Urbanmart Mumbai 1,West,Mumbai,High Street,2021-07-13,3500
+7,Urbanmart Pune 1,West,Pune,Mall,2020-07-13,1900
+8,Urbanmart Pune 2,West,Pune,Mall,2019-06-23,2200
+9,Urbanmart Ahmedabad 1,West,Ahmedabad,High Street,2023-06-09,3600
+10,Urbanmart Ahmedabad 2,West,Ahmedabad,Mall,2021-04-12,2800
+11,Urbanmart Indore 1,West,Indore,Kiosk,2021-09-24,1700
+12,Urbanmart Bengaluru 1,South,Bengaluru,Mall,2022-08-28,1500
+13,Urbanmart Bengaluru 2,South,Bengaluru,Mall,2019-08-23,2300
+14,Urbanmart Hyderabad 1,South,Hyderabad,Mall,2023-04-19,3100
+15,Urbanmart Hyderabad 2,South,Hyderabad,Mall,2022-06-16,2700
+16,Urbanmart Chennai 1,South,Chennai,High Street,2021-12-07,1200
+17,Urbanmart Kolkata 1,East,Kolkata,Mall,2023-07-27,3600

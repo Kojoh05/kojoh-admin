@@ -1,0 +1,401 @@
+customer_id,customer_name,city,state,segment,signup_date
+1,Simran Sharma,Mumbai,Maharashtra,Consumer,2024-04-25
+2,Nikhil Patel,Noida,Uttar Pradesh,Consumer,2023-02-03
+3,Karan Nair,Jaipur,Rajasthan,Business,2023-08-06
+4,Simran Rao,Chennai,Tamil Nadu,Consumer,2023-09-08
+5,Diya Joshi,Chennai,Tamil Nadu,Business,2024-03-12
+6,Sneha Joshi,Ahmedabad,Gujarat,Consumer,2023-03-12
+7,Ananya Nair,Mumbai,Maharashtra,Business,2023-08-26
+8,Ishaan Verma,Lucknow,Uttar Pradesh,Consumer,2023-03-25
+9,Yash Reddy,Pune,Maharashtra,Consumer,2024-03-06
+10,Aarav Bose,Mumbai,Maharashtra,Consumer,2023-12-12
+11,Kabir Sharma,Kolkata,West Bengal,Consumer,2023-09-29
+12,Rohan Rao,Indore,Madhya Pradesh,Consumer,2023-08-03
+13,Arjun Mehta,Lucknow,Uttar Pradesh,Business,2023-03-25
+14,Ishaan Singh,Noida,Uttar Pradesh,Business,2024-05-19
+15,Aarav Joshi,Lucknow,Uttar Pradesh,Consumer,2023-12-21
+16,Sahil Khan,Noida,Uttar Pradesh,Consumer,2023-06-24
+17,Simran Sharma,Kolkata,West Bengal,Consumer,2023-08-15
+18,Aditya Verma,Mumbai,Maharashtra,Consumer,2024-02-02
+19,Karan Mehta,Ahmedabad,Gujarat,Consumer,2024-01-29
+20,Sneha Bose,Chennai,Tamil Nadu,Consumer,2023-09-10
+21,Yash Sharma,Kolkata,West Bengal,Consumer,2023-06-15
+22,Sahil Mehta,Hyderabad,Telangana,Consumer,2023-12-27
+23,Nikhil Verma,Pune,Maharashtra,Business,2023-12-27
+24,Riya Mehta,Indore,Madhya Pradesh,Consumer,2023-11-25
+25,Ananya Das,Noida,Uttar Pradesh,Business,2023-02-09
+26,Kabir Verma,Jaipur,Rajasthan,Consumer,2023-09-16
+27,Manav Mehta,Hyderabad,Telangana,Consumer,2023-12-02
+28,Isha Rao,Noida,Uttar Pradesh,Consumer,2024-06-03
+29,Aarav Rao,Kolkata,West Bengal,Consumer,2023-10-15
+30,Tanvi Sharma,Chennai,Tamil Nadu,Business,2023-07-07
+31,Aditya Singh,Chennai,Tamil Nadu,Business,2023-11-01
+32,Tanvi Singh,Pune,Maharashtra,Business,2023-04-07
+33,Isha Iyer,Mumbai,Maharashtra,Consumer,2023-02-19
+34,Ishaan Gupta,Kolkata,West Bengal,Consumer,2024-01-06
+35,Ananya Khan,Ahmedabad,Gujarat,Consumer,2024-06-23
+36,Aditya Joshi,Delhi,Delhi,Consumer,2024-04-07
+37,Riya Khan,Ahmedabad,Gujarat,Consumer,2023-11-16
+38,Yash Gupta,Noida,Uttar Pradesh,Consumer,2023-01-23
+39,Vivaan Sharma,Bengaluru,Karnataka,Consumer,2024-06-24
+40,Priya Rao,Jaipur,Rajasthan,Business,2023-09-03
+41,Simran Patel,Mumbai,Maharashtra,Consumer,2023-06-08
+42,Karan Mehta,Noida,Uttar Pradesh,Business,2024-05-03
+43,Ishaan Rao,Lucknow,Uttar Pradesh,Consumer,2024-02-13
+44,Diya Sharma,Hyderabad,Telangana,Consumer,2024-02-15
+45,Sneha Sharma,Delhi,Delhi,Consumer,2023-06-01
+46,Meera Sharma,Indore,Madhya Pradesh,Business,2024-06-26
+47,Karan Gupta,Chennai,Tamil Nadu,Consumer,2023-09-05
+48,Yash Sharma,Ahmedabad,Gujarat,Consumer,2023-10-18
+49,Sneha Khan,Lucknow,Uttar Pradesh,Consumer,2024-02-15
+50,Arjun Das,Noida,Uttar Pradesh,Consumer,2023-12-28
+51,Simran Bose,Noida,Uttar Pradesh,Consumer,2023-04-05
+52,Yash Khan,Pune,Maharashtra,Business,2023-06-15
+53,Diya Bose,Hyderabad,Telangana,Consumer,2023-07-17
+54,Aarav Singh,Chennai,Tamil Nadu,Consumer,2024-06-02
+55,Pooja Patel,Chennai,Tamil Nadu,Business,2024-01-26
+56,Riya Khan,Delhi,Delhi,Consumer,2023-07-20
+57,Ishaan Singh,Kolkata,West Bengal,Business,2024-02-06
+58,Meera Sharma,Mumbai,Maharashtra,Consumer,2024-02-08
+59,Manav Mehta,Lucknow,Uttar Pradesh,Consumer,2023-08-04
+60,Aditya Khan,Lucknow,Uttar Pradesh,Consumer,2023-08-09
+61,Tanvi Bose,Indore,Madhya Pradesh,Consumer,2024-05-04
+62,Ishaan Rao,Lucknow,Uttar Pradesh,Business,2023-11-04
+63,Tanvi Verma,Hyderabad,Telangana,Consumer,2023-03-23
+64,Ananya Joshi,Indore,Madhya Pradesh,Consumer,2024-01-29
+65,Aarav Khan,Hyderabad,Telangana,Consumer,2023-11-19
+66,Simran Mehta,Bengaluru,Karnataka,Consumer,2023-10-06
+67,Ishaan Khan,Ahmedabad,Gujarat,Business,2024-02-01
+68,Pooja Khan,Hyderabad,Telangana,Business,2024-05-11
+69,Kabir Iyer,Delhi,Delhi,Consumer,2023-06-30
+70,Yash Sharma,Chennai,Tamil Nadu,Consumer,2023-08-18
+71,Tanvi Iyer,Noida,Uttar Pradesh,Consumer,2023-04-14
+72,Isha Gupta,Pune,Maharashtra,Consumer,2023-12-20
+73,Ananya Verma,Chennai,Tamil Nadu,Business,2023-08-09
+74,Diya Verma,Mumbai,Maharashtra,Consumer,2023-07-07
+75,Meera Mehta,Lucknow,Uttar Pradesh,Consumer,2024-01-16
+76,Nikhil Nair,Chennai,Tamil Nadu,Consumer,2023-08-12
+77,Manav Nair,Bengaluru,Karnataka,Business,2023-09-12
+78,Aarav Joshi,Pune,Maharashtra,Consumer,2023-08-29
+79,Meera Nair,Kolkata,West Bengal,Consumer,2023-05-22
+80,Aditya Das,Lucknow,Uttar Pradesh,Consumer,2023-03-10
+81,Arjun Verma,Indore,Madhya Pradesh,Consumer,2024-03-28
+82,Isha Khan,Chennai,Tamil Nadu,Consumer,2023-02-20
+83,Arjun Iyer,Mumbai,Maharashtra,Consumer,2023-06-27
+84,Isha Gupta,Noida,Uttar Pradesh,Consumer,2024-01-01
+85,Diya Khan,Jaipur,Rajasthan,Consumer,2023-03-13
+86,Rohan Joshi,Lucknow,Uttar Pradesh,Consumer,2023-12-25
+87,Neha Sharma,Mumbai,Maharashtra,Consumer,2024-02-05
+88,Sneha Gupta,Bengaluru,Karnataka,Business,2023-12-29
+89,Nikhil Sharma,Noida,Uttar Pradesh,Consumer,2023-06-16
+90,Pooja Singh,Noida,Uttar Pradesh,Consumer,2023-01-11
+91,Yash Verma,Chennai,Tamil Nadu,Consumer,2024-04-30
+92,Manav Mehta,Noida,Uttar Pradesh,Business,2023-06-28
+93,Nikhil Nair,Ahmedabad,Gujarat,Consumer,2024-03-16
+94,Pooja Bose,Hyderabad,Telangana,Consumer,2023-04-19
+95,Arjun Joshi,Ahmedabad,Gujarat,Business,2023-03-30
+96,Priya Das,Bengaluru,Karnataka,Consumer,2024-03-01
+97,Aditya Nair,Pune,Maharashtra,Consumer,2024-05-29
+98,Neha Sharma,Lucknow,Uttar Pradesh,Consumer,2024-04-15
+99,Yash Sharma,Jaipur,Rajasthan,Consumer,2024-02-15
+100,Ananya Das,Mumbai,Maharashtra,Consumer,2023-05-15
+101,Aditya Sharma,Noida,Uttar Pradesh,Consumer,2024-05-14
+102,Meera Sharma,Pune,Maharashtra,Consumer,2024-01-01
+103,Simran Singh,Noida,Uttar Pradesh,Consumer,2023-04-05
+104,Manav Rao,Delhi,Delhi,Business,2023-03-12
+105,Arjun Iyer,Noida,Uttar Pradesh,Consumer,2024-04-21
+106,Ananya Mehta,Noida,Uttar Pradesh,Consumer,2023-05-31
+107,Sneha Reddy,Noida,Uttar Pradesh,Consumer,2024-02-23
+108,Rohan Gupta,Jaipur,Rajasthan,Consumer,2023-03-17
+109,Arjun Reddy,Chennai,Tamil Nadu,Consumer,2023-06-03
+110,Rohan Verma,Lucknow,Uttar Pradesh,Consumer,2023-06-05
+111,Simran Joshi,Bengaluru,Karnataka,Business,2023-06-03
+112,Tanvi Gupta,Noida,Uttar Pradesh,Consumer,2024-01-05
+113,Manav Reddy,Kolkata,West Bengal,Business,2024-05-15
+114,Isha Bose,Chennai,Tamil Nadu,Business,2024-05-12
+115,Simran Das,Kolkata,West Bengal,Consumer,2024-02-10
+116,Aditya Iyer,Kolkata,West Bengal,Consumer,2023-04-21
+117,Kavya Nair,Delhi,Delhi,Consumer,2024-06-09
+118,Vivaan Joshi,Mumbai,Maharashtra,Consumer,2023-10-24
+119,Diya Singh,Pune,Maharashtra,Consumer,2023-10-26
+120,Pooja Das,Mumbai,Maharashtra,Business,2024-01-19
+121,Neha Rao,Chennai,Tamil Nadu,Consumer,2024-02-25
+122,Ishaan Das,Lucknow,Uttar Pradesh,Consumer,2024-06-05
+123,Kabir Iyer,Jaipur,Rajasthan,Consumer,2023-11-15
+124,Isha Gupta,Chennai,Tamil Nadu,Business,2023-11-30
+125,Karan Singh,Ahmedabad,Gujarat,Consumer,2024-02-12
+126,Karan Bose,Kolkata,West Bengal,Consumer,2023-05-20
+127,Yash Nair,Delhi,Delhi,Consumer,2023-06-18
+128,Ishaan Patel,Noida,Uttar Pradesh,Consumer,2023-12-09
+129,Kavya Reddy,Kolkata,West Bengal,Consumer,2023-02-05
+130,Yash Das,Jaipur,Rajasthan,Consumer,2023-06-25
+131,Pooja Nair,Kolkata,West Bengal,Consumer,2024-01-28
+132,Ishaan Mehta,Kolkata,West Bengal,Consumer,2024-06-17
+133,Ishaan Singh,Mumbai,Maharashtra,Consumer,2023-10-12
+134,Arjun Mehta,Kolkata,West Bengal,Consumer,2023-08-07
+135,Riya Iyer,Noida,Uttar Pradesh,Consumer,2023-08-29
+136,Ishaan Bose,Bengaluru,Karnataka,Consumer,2024-01-10
+137,Ananya Gupta,Jaipur,Rajasthan,Consumer,2023-10-25
+138,Aditya Gupta,Delhi,Delhi,Consumer,2023-01-13
+139,Sneha Iyer,Hyderabad,Telangana,Consumer,2023-10-22
+140,Aarav Nair,Chennai,Tamil Nadu,Consumer,2023-08-07
+141,Tanvi Mehta,Indore,Madhya Pradesh,Consumer,2024-01-19
+142,Vivaan Reddy,Pune,Maharashtra,Consumer,2024-04-23
+143,Kabir Rao,Bengaluru,Karnataka,Business,2024-06-10
+144,Kabir Iyer,Hyderabad,Telangana,Consumer,2023-11-30
+145,Isha Verma,Indore,Madhya Pradesh,Consumer,2023-07-18
+146,Vivaan Verma,Ahmedabad,Gujarat,Consumer,2023-08-31
+147,Ananya Bose,Delhi,Delhi,Consumer,2023-04-07
+148,Pooja Verma,Pune,Maharashtra,Consumer,2024-05-26
+149,Sneha Bose,Noida,Uttar Pradesh,Consumer,2024-04-08
+150,Sahil Singh,Delhi,Delhi,Business,2024-04-12
+151,Isha Verma,Ahmedabad,Gujarat,Consumer,2023-06-29
+152,Priya Patel,Bengaluru,Karnataka,Consumer,2023-06-26
+153,Isha Das,Indore,Madhya Pradesh,Consumer,2024-04-13
+154,Karan Reddy,Bengaluru,Karnataka,Consumer,2023-10-25
+155,Simran Joshi,Chennai,Tamil Nadu,Consumer,2024-01-21
+156,Sneha Das,Jaipur,Rajasthan,Consumer,2023-09-25
+157,Tanvi Reddy,Mumbai,Maharashtra,Consumer,2023-08-31
+158,Kavya Das,Kolkata,West Bengal,Business,2023-12-12
+159,Isha Bose,Kolkata,West Bengal,Consumer,2024-03-20
+160,Manav Reddy,Noida,Uttar Pradesh,Consumer,2023-07-02
+161,Sneha Gupta,Indore,Madhya Pradesh,Consumer,2024-03-18
+162,Vivaan Reddy,Jaipur,Rajasthan,Consumer,2023-05-14
+163,Diya Khan,Hyderabad,Telangana,Consumer,2023-08-09
+164,Kabir Singh,Hyderabad,Telangana,Consumer,2024-05-14
+165,Kavya Bose,Chennai,Tamil Nadu,Business,2024-06-06
+166,Rohan Das,Noida,Uttar Pradesh,Consumer,2024-05-20
+167,Rohan Das,Bengaluru,Karnataka,Consumer,2023-06-22
+168,Rohan Patel,Pune,Maharashtra,Consumer,2024-04-06
+169,Meera Rao,Hyderabad,Telangana,Consumer,2024-05-27
+170,Riya Sharma,Delhi,Delhi,Consumer,2024-06-19
+171,Yash Patel,Mumbai,Maharashtra,Consumer,2023-01-12
+172,Priya Reddy,Mumbai,Maharashtra,Consumer,2024-02-12
+173,Arjun Iyer,Noida,Uttar Pradesh,Consumer,2024-06-29
+174,Vivaan Iyer,Lucknow,Uttar Pradesh,Business,2024-02-23
+175,Aarav Gupta,Lucknow,Uttar Pradesh,Consumer,2023-05-08
+176,Neha Singh,Chennai,Tamil Nadu,Business,2024-02-22
+177,Yash Verma,Lucknow,Uttar Pradesh,Consumer,2023-02-27
+178,Sneha Das,Mumbai,Maharashtra,Consumer,2023-09-20
+179,Kavya Patel,Ahmedabad,Gujarat,Consumer,2023-12-09
+180,Aditya Nair,Kolkata,West Bengal,Business,2023-09-07
+181,Aditya Das,Indore,Madhya Pradesh,Consumer,2024-01-18
+182,Manav Mehta,Mumbai,Maharashtra,Business,2023-05-12
+183,Aditya Nair,Chennai,Tamil Nadu,Consumer,2023-11-28
+184,Vivaan Mehta,Lucknow,Uttar Pradesh,Consumer,2023-12-19
+185,Priya Das,Chennai,Tamil Nadu,Business,2023-12-13
+186,Yash Mehta,Chennai,Tamil Nadu,Consumer,2023-06-08
+187,Sahil Das,Mumbai,Maharashtra,Business,2023-06-17
+188,Aditya Patel,Hyderabad,Telangana,Consumer,2023-05-22
+189,Manav Singh,Pune,Maharashtra,Consumer,2023-09-10
+190,Manav Khan,Bengaluru,Karnataka,Consumer,2023-11-17
+191,Isha Patel,Lucknow,Uttar Pradesh,Consumer,2023-07-18
+192,Kavya Nair,Jaipur,Rajasthan,Consumer,2023-08-13
+193,Rohan Gupta,Jaipur,Rajasthan,Consumer,2023-06-06
+194,Simran Iyer,Hyderabad,Telangana,Consumer,2023-04-30
+195,Karan Nair,Indore,Madhya Pradesh,Consumer,2023-12-26
+196,Isha Das,Mumbai,Maharashtra,Consumer,2024-03-22
+197,Riya Nair,Hyderabad,Telangana,Consumer,2023-06-09
+198,Nikhil Reddy,Mumbai,Maharashtra,Consumer,2024-04-15
+199,Meera Bose,Hyderabad,Telangana,Consumer,2023-11-09
+200,Meera Nair,Indore,Madhya Pradesh,Consumer,2023-04-02
+201,Pooja Khan,Hyderabad,Telangana,Consumer,2023-07-20
+202,Nikhil Joshi,Ahmedabad,Gujarat,Consumer,2023-01-05
+203,Tanvi Nair,Chennai,Tamil Nadu,Business,2023-01-22
+204,Ishaan Rao,Lucknow,Uttar Pradesh,Consumer,2023-07-03
+205,Isha Verma,Chennai,Tamil Nadu,Consumer,2023-09-06
+206,Sneha Rao,Bengaluru,Karnataka,Consumer,2024-03-12
+207,Karan Khan,Noida,Uttar Pradesh,Consumer,2023-03-15
+208,Sneha Nair,Indore,Madhya Pradesh,Consumer,2024-04-04
+209,Simran Joshi,Bengaluru,Karnataka,Consumer,2023-05-09
+210,Manav Nair,Noida,Uttar Pradesh,Business,2023-03-17
+211,Manav Singh,Bengaluru,Karnataka,Consumer,2024-01-18
+212,Diya Khan,Lucknow,Uttar Pradesh,Consumer,2024-02-28
+213,Nikhil Singh,Noida,Uttar Pradesh,Business,2023-11-27
+214,Priya Patel,Chennai,Tamil Nadu,Consumer,2023-03-05
+215,Sahil Nair,Lucknow,Uttar Pradesh,Consumer,2023-03-05
+216,Meera Khan,Bengaluru,Karnataka,Business,2023-08-02
+217,Rohan Reddy,Delhi,Delhi,Business,2023-09-04
+218,Arjun Iyer,Mumbai,Maharashtra,Consumer,2024-06-30
+219,Vivaan Sharma,Chennai,Tamil Nadu,Consumer,2023-06-06
+220,Ishaan Verma,Ahmedabad,Gujarat,Consumer,2023-04-16
+221,Ananya Sharma,Mumbai,Maharashtra,Consumer,2024-06-01
+222,Diya Verma,Chennai,Tamil Nadu,Consumer,2023-03-26
+223,Ishaan Rao,Lucknow,Uttar Pradesh,Consumer,2023-01-15
+224,Ananya Khan,Pune,Maharashtra,Consumer,2023-08-20
+225,Pooja Khan,Lucknow,Uttar Pradesh,Business,2023-08-08
+226,Rohan Sharma,Bengaluru,Karnataka,Consumer,2023-12-05
+227,Neha Verma,Noida,Uttar Pradesh,Consumer,2024-04-25
+228,Neha Singh,Kolkata,West Bengal,Consumer,2024-05-25
+229,Sneha Nair,Kolkata,West Bengal,Business,2023-06-08
+230,Neha Patel,Pune,Maharashtra,Consumer,2024-06-20
+231,Tanvi Iyer,Chennai,Tamil Nadu,Consumer,2023-12-13
+232,Karan Gupta,Ahmedabad,Gujarat,Consumer,2023-02-08
+233,Ananya Joshi,Delhi,Delhi,Consumer,2024-05-28
+234,Priya Patel,Noida,Uttar Pradesh,Consumer,2023-03-17
+235,Kabir Sharma,Chennai,Tamil Nadu,Consumer,2023-11-18
+236,Sahil Joshi,Lucknow,Uttar Pradesh,Consumer,2024-03-08
+237,Rohan Rao,Jaipur,Rajasthan,Consumer,2023-05-17
+238,Karan Sharma,Chennai,Tamil Nadu,Business,2023-05-29
+239,Isha Iyer,Bengaluru,Karnataka,Consumer,2023-09-18
+240,Yash Khan,Jaipur,Rajasthan,Consumer,2024-04-29
+241,Sahil Mehta,Mumbai,Maharashtra,Consumer,2023-05-03
+242,Kavya Khan,Jaipur,Rajasthan,Consumer,2023-12-29
+243,Manav Reddy,Mumbai,Maharashtra,Consumer,2023-09-05
+244,Diya Reddy,Jaipur,Rajasthan,Consumer,2023-03-03
+245,Nikhil Mehta,Jaipur,Rajasthan,Consumer,2024-01-24
+246,Karan Gupta,Mumbai,Maharashtra,Business,2024-03-31
+247,Diya Singh,Noida,Uttar Pradesh,Consumer,2023-11-11
+248,Sneha Das,Hyderabad,Telangana,Consumer,2023-04-07
+249,Simran Mehta,Noida,Uttar Pradesh,Consumer,2023-03-27
+250,Manav Verma,Delhi,Delhi,Business,2023-08-20
+251,Diya Nair,Pune,Maharashtra,Consumer,2023-10-05
+252,Meera Reddy,Chennai,Tamil Nadu,Consumer,2023-10-30
+253,Kabir Nair,Pune,Maharashtra,Business,2023-05-14
+254,Isha Bose,Bengaluru,Karnataka,Business,2023-10-01
+255,Riya Verma,Jaipur,Rajasthan,Consumer,2023-06-11
+256,Sneha Bose,Mumbai,Maharashtra,Consumer,2024-01-11
+257,Nikhil Iyer,Lucknow,Uttar Pradesh,Consumer,2024-03-11
+258,Meera Joshi,Mumbai,Maharashtra,Business,2023-12-24
+259,Vivaan Reddy,Pune,Maharashtra,Consumer,2023-01-01
+260,Arjun Patel,Jaipur,Rajasthan,Consumer,2024-06-26
+261,Kabir Joshi,Noida,Uttar Pradesh,Consumer,2023-01-14
+262,Tanvi Mehta,Pune,Maharashtra,Consumer,2024-06-30
+263,Aarav Gupta,Bengaluru,Karnataka,Consumer,2023-01-18
+264,Kabir Mehta,Indore,Madhya Pradesh,Consumer,2023-10-10
+265,Pooja Joshi,Indore,Madhya Pradesh,Consumer,2023-02-27
+266,Sahil Reddy,Kolkata,West Bengal,Business,2023-02-22
+267,Sneha Rao,Chennai,Tamil Nadu,Business,2024-01-09
+268,Manav Das,Hyderabad,Telangana,Consumer,2024-02-03
+269,Yash Patel,Jaipur,Rajasthan,Consumer,2023-03-06
+270,Ishaan Sharma,Jaipur,Rajasthan,Consumer,2024-06-18
+271,Yash Mehta,Bengaluru,Karnataka,Consumer,2023-06-25
+272,Pooja Gupta,Delhi,Delhi,Consumer,2023-06-24
+273,Meera Joshi,Mumbai,Maharashtra,Business,2023-06-12
+274,Aditya Nair,Indore,Madhya Pradesh,Consumer,2023-09-10
+275,Pooja Iyer,Chennai,Tamil Nadu,Consumer,2023-04-08
+276,Tanvi Gupta,Chennai,Tamil Nadu,Business,2023-08-21
+277,Riya Mehta,Chennai,Tamil Nadu,Consumer,2023-04-25
+278,Aditya Gupta,Noida,Uttar Pradesh,Consumer,2023-01-29
+279,Sneha Reddy,Delhi,Delhi,Consumer,2023-07-21
+280,Yash Khan,Delhi,Delhi,Consumer,2024-01-03
+281,Tanvi Rao,Bengaluru,Karnataka,Consumer,2024-02-22
+282,Ishaan Bose,Chennai,Tamil Nadu,Consumer,2023-07-13
+283,Simran Bose,Lucknow,Uttar Pradesh,Business,2023-06-27
+284,Simran Nair,Chennai,Tamil Nadu,Consumer,2024-03-06
+285,Kabir Gupta,Chennai,Tamil Nadu,Consumer,2024-01-08
+286,Isha Khan,Indore,Madhya Pradesh,Consumer,2024-03-31
+287,Priya Khan,Mumbai,Maharashtra,Consumer,2024-05-10
+288,Pooja Bose,Kolkata,West Bengal,Consumer,2024-03-25
+289,Ananya Mehta,Kolkata,West Bengal,Consumer,2024-05-27
+290,Nikhil Verma,Chennai,Tamil Nadu,Consumer,2023-08-16
+291,Simran Nair,Noida,Uttar Pradesh,Consumer,2023-08-04
+292,Isha Iyer,Bengaluru,Karnataka,Business,2023-06-25
+293,Yash Khan,Indore,Madhya Pradesh,Consumer,2023-05-09
+294,Yash Reddy,Bengaluru,Karnataka,Consumer,2024-02-14
+295,Aditya Patel,Kolkata,West Bengal,Consumer,2024-01-26
+296,Arjun Verma,Kolkata,West Bengal,Business,2024-03-14
+297,Tanvi Khan,Ahmedabad,Gujarat,Consumer,2023-04-02
+298,Pooja Joshi,Chennai,Tamil Nadu,Consumer,2023-09-26
+299,Vivaan Sharma,Bengaluru,Karnataka,Consumer,2023-05-02
+300,Aditya Iyer,Delhi,Delhi,Consumer,2024-05-03
+301,Sneha Iyer,Hyderabad,Telangana,Consumer,2023-05-27
+302,Pooja Iyer,Noida,Uttar Pradesh,Consumer,2023-03-20
+303,Kabir Rao,Delhi,Delhi,Consumer,2023-11-08
+304,Kabir Gupta,Ahmedabad,Gujarat,Consumer,2024-04-25
+305,Ishaan Patel,Kolkata,West Bengal,Business,2024-05-15
+306,Riya Gupta,Mumbai,Maharashtra,Consumer,2023-02-22
+307,Aarav Singh,Bengaluru,Karnataka,Consumer,2023-06-28
+308,Riya Rao,Kolkata,West Bengal,Consumer,2023-03-25
+309,Diya Bose,Bengaluru,Karnataka,Consumer,2023-06-18
+310,Diya Sharma,Mumbai,Maharashtra,Consumer,2023-10-20
+311,Sahil Das,Jaipur,Rajasthan,Consumer,2023-06-03
+312,Sneha Singh,Lucknow,Uttar Pradesh,Business,2023-02-06
+313,Tanvi Gupta,Mumbai,Maharashtra,Business,2023-10-06
+314,Nikhil Patel,Bengaluru,Karnataka,Business,2023-01-29
+315,Yash Gupta,Pune,Maharashtra,Business,2023-05-05
+316,Isha Iyer,Jaipur,Rajasthan,Business,2023-01-01
+317,Sneha Bose,Lucknow,Uttar Pradesh,Consumer,2023-02-17
+318,Diya Das,Lucknow,Uttar Pradesh,Consumer,2023-08-27
+319,Rohan Joshi,Indore,Madhya Pradesh,Consumer,2024-04-10
+320,Pooja Iyer,Noida,Uttar Pradesh,Consumer,2024-02-28
+321,Ishaan Sharma,Bengaluru,Karnataka,Consumer,2023-02-24
+322,Yash Verma,Mumbai,Maharashtra,Business,2023-01-20
+323,Manav Singh,Jaipur,Rajasthan,Consumer,2023-07-04
+324,Aditya Singh,Ahmedabad,Gujarat,Consumer,2023-12-23
+325,Nikhil Khan,Indore,Madhya Pradesh,Consumer,2024-02-13
+326,Aditya Khan,Pune,Maharashtra,Consumer,2024-03-26
+327,Tanvi Khan,Pune,Maharashtra,Consumer,2023-07-07
+328,Aditya Das,Delhi,Delhi,Business,2023-04-02
+329,Diya Nair,Mumbai,Maharashtra,Consumer,2023-01-15
+330,Meera Mehta,Kolkata,West Bengal,Consumer,2023-03-22
+331,Tanvi Reddy,Kolkata,West Bengal,Consumer,2023-02-05
+332,Ananya Mehta,Hyderabad,Telangana,Consumer,2024-04-15
+333,Yash Khan,Bengaluru,Karnataka,Consumer,2023-05-27
+334,Nikhil Joshi,Noida,Uttar Pradesh,Consumer,2024-03-26
+335,Kabir Das,Chennai,Tamil Nadu,Consumer,2023-10-30
+336,Sahil Sharma,Noida,Uttar Pradesh,Consumer,2023-10-22
+337,Tanvi Joshi,Indore,Madhya Pradesh,Business,2023-09-06
+338,Neha Reddy,Bengaluru,Karnataka,Consumer,2024-03-24
+339,Tanvi Joshi,Pune,Maharashtra,Business,2023-01-24
+340,Kavya Nair,Indore,Madhya Pradesh,Consumer,2023-02-20
+341,Isha Rao,Jaipur,Rajasthan,Consumer,2023-08-20
+342,Nikhil Patel,Bengaluru,Karnataka,Business,2023-08-04
+343,Meera Bose,Jaipur,Rajasthan,Consumer,2023-10-26
+344,Arjun Khan,Kolkata,West Bengal,Consumer,2024-02-08
+345,Isha Patel,Ahmedabad,Gujarat,Consumer,2023-11-18
+346,Neha Iyer,Bengaluru,Karnataka,Consumer,2023-05-21
+347,Sneha Nair,Indore,Madhya Pradesh,Consumer,2023-06-29
+348,Karan Joshi,Indore,Madhya Pradesh,Business,2024-02-16
+349,Karan Mehta,Pune,Maharashtra,Business,2023-04-21
+350,Ishaan Khan,Mumbai,Maharashtra,Consumer,2023-10-03
+351,Simran Reddy,Kolkata,West Bengal,Consumer,2023-10-22
+352,Ishaan Nair,Delhi,Delhi,Consumer,2024-02-15
+353,Aditya Iyer,Bengaluru,Karnataka,Consumer,2024-01-26
+354,Yash Rao,Chennai,Tamil Nadu,Consumer,2023-09-12
+355,Riya Patel,Indore,Madhya Pradesh,Business,2023-06-19
+356,Ananya Das,Indore,Madhya Pradesh,Business,2023-07-21
+357,Tanvi Verma,Mumbai,Maharashtra,Consumer,2023-08-14
+358,Priya Khan,Ahmedabad,Gujarat,Consumer,2023-04-30
+359,Ishaan Reddy,Mumbai,Maharashtra,Consumer,2023-12-09
+360,Tanvi Patel,Lucknow,Uttar Pradesh,Consumer,2023-04-24
+361,Kabir Das,Ahmedabad,Gujarat,Consumer,2023-12-21
+362,Riya Iyer,Ahmedabad,Gujarat,Consumer,2024-02-16
+363,Yash Khan,Pune,Maharashtra,Consumer,2024-06-10
+364,Yash Nair,Ahmedabad,Gujarat,Consumer,2023-03-07
+365,Neha Nair,Mumbai,Maharashtra,Business,2024-02-20
+366,Nikhil Verma,Kolkata,West Bengal,Consumer,2023-02-17
+367,Pooja Sharma,Chennai,Tamil Nadu,Business,2023-07-04
+368,Diya Reddy,Bengaluru,Karnataka,Consumer,2023-04-07
+369,Ishaan Bose,Delhi,Delhi,Consumer,2023-03-30
+370,Priya Rao,Noida,Uttar Pradesh,Consumer,2023-04-06
+371,Meera Das,Hyderabad,Telangana,Consumer,2023-01-25
+372,Simran Das,Jaipur,Rajasthan,Consumer,2024-03-26
+373,Aarav Reddy,Hyderabad,Telangana,Consumer,2023-02-03
+374,Tanvi Gupta,Hyderabad,Telangana,Business,2023-08-06
+375,Manav Sharma,Ahmedabad,Gujarat,Consumer,2024-01-18
+376,Yash Patel,Mumbai,Maharashtra,Consumer,2024-06-25
+377,Ananya Patel,Lucknow,Uttar Pradesh,Consumer,2024-04-11
+378,Aditya Gupta,Lucknow,Uttar Pradesh,Consumer,2023-03-17
+379,Arjun Singh,Hyderabad,Telangana,Consumer,2024-06-24
+380,Manav Sharma,Bengaluru,Karnataka,Consumer,2023-12-24
+381,Kavya Das,Delhi,Delhi,Business,2023-04-09
+382,Meera Rao,Indore,Madhya Pradesh,Business,2023-09-03
+383,Aditya Mehta,Indore,Madhya Pradesh,Consumer,2024-05-17
+384,Aditya Iyer,Pune,Maharashtra,Consumer,2023-08-03
+385,Diya Reddy,Delhi,Delhi,Consumer,2023-04-11
+386,Pooja Patel,Mumbai,Maharashtra,Business,2024-04-23
+387,Aarav Verma,Delhi,Delhi,Consumer,2024-06-05
+388,Sahil Das,Noida,Uttar Pradesh,Consumer,2024-06-17
+389,Riya Nair,Ahmedabad,Gujarat,Consumer,2024-06-06
+390,Aarav Sharma,Mumbai,Maharashtra,Consumer,2024-04-22
+391,Aditya Reddy,Lucknow,Uttar Pradesh,Consumer,2023-09-06
+392,Ananya Singh,Pune,Maharashtra,Consumer,2023-04-16
+393,Tanvi Gupta,Hyderabad,Telangana,Consumer,2023-12-04
+394,Isha Mehta,Jaipur,Rajasthan,Consumer,2023-05-01
+395,Ananya Nair,Lucknow,Uttar Pradesh,Business,2023-09-16
+396,Karan Das,Ahmedabad,Gujarat,Consumer,2023-12-25
+397,Simran Mehta,Delhi,Delhi,Consumer,2024-06-01
+398,Diya Bose,Pune,Maharashtra,Consumer,2023-06-08
+399,Karan Khan,Bengaluru,Karnataka,Business,2023-05-18
+400,Ananya Das,Bengaluru,Karnataka,Consumer,2024-02-06
