@@ -2,482 +2,963 @@
  "id": "data-engineer",
  "short": "de",
  "title": "Data Engineer",
- "company": "Cartwheel",
- "story": "Cartwheel streams app events into a raw table and loads orders into a warehouse every day. You own the pipelines: cleaning, deduplication, slowly changing dimensions and incremental loads.",
- "tables": [
+ "levels": [
   {
-   "name": "events_raw",
-   "file": "de_events_raw.csv",
-   "about": "Raw app events. Has duplicate event_id rows, missing user_id, messy event_type (case, spaces). ingested_at is when the row landed.",
-   "columns": [
-    [
-     "event_id",
-     "VARCHAR"
-    ],
-    [
-     "user_id",
-     "BIGINT"
-    ],
-    [
-     "event_type",
-     "VARCHAR"
-    ],
-    [
-     "event_ts",
-     "TIMESTAMP"
-    ],
-    [
-     "device",
-     "VARCHAR"
-    ],
-    [
-     "amount",
-     "BIGINT"
-    ],
-    [
-     "ingested_at",
-     "TIMESTAMP"
-    ]
-   ],
-   "rows": 4130
-  },
-  {
-   "name": "customer_dim",
-   "file": "de_customer_dim.csv",
-   "about": "Type 2 slowly changing dimension: one row per customer version, valid_from to valid_to (9999-12-31 = current).",
-   "columns": [
-    [
-     "customer_id",
-     "BIGINT"
-    ],
-    [
-     "customer_name",
-     "VARCHAR"
-    ],
-    [
-     "city",
-     "VARCHAR"
-    ],
-    [
-     "tier",
-     "VARCHAR"
-    ],
-    [
-     "valid_from",
-     "DATE"
-    ],
-    [
-     "valid_to",
-     "DATE"
-    ],
-    [
-     "is_current",
-     "BIGINT"
-    ]
-   ],
-   "rows": 490
-  },
-  {
-   "name": "orders_wh",
-   "file": "de_orders_wh.csv",
-   "about": "Orders already in the warehouse.",
-   "columns": [
-    [
-     "order_id",
-     "BIGINT"
-    ],
-    [
-     "customer_id",
-     "BIGINT"
-    ],
-    [
-     "amount",
-     "BIGINT"
-    ],
-    [
-     "status",
-     "VARCHAR"
-    ],
-    [
-     "updated_at",
-     "TIMESTAMP"
-    ]
-   ],
-   "rows": 600
-  },
-  {
-   "name": "orders_src",
-   "file": "de_orders_src.csv",
-   "about": "Today's extract from the source system: updates to existing orders and new orders. Some rows are bad.",
-   "columns": [
-    [
-     "order_id",
-     "BIGINT"
-    ],
-    [
-     "customer_id",
-     "BIGINT"
-    ],
-    [
-     "amount",
-     "BIGINT"
-    ],
-    [
-     "status",
-     "VARCHAR"
-    ],
-    [
-     "updated_at",
-     "TIMESTAMP"
-    ]
-   ],
-   "rows": 220
-  }
- ],
- "tasks": [
-  {
-   "tool": "sql",
-   "level": "Foundations",
-   "title": "Find duplicates",
-   "question": "How many rows does events_raw have, how many distinct event_ids, and how many duplicate rows? Return total_rows, distinct_events, duplicate_rows.",
-   "solution": "SELECT COUNT(*) AS total_rows, COUNT(DISTINCT event_id) AS distinct_events, COUNT(*) - COUNT(DISTINCT event_id) AS duplicate_rows FROM events_raw",
-   "hint": "COUNT(*) vs COUNT(DISTINCT event_id).",
-   "ordered": false,
-   "explain": "",
-   "id": "de-sql-01",
-   "n": 1,
-   "points": 10,
+   "key": "beginner",
+   "name": "Beginner",
+   "company": "Cartwheel",
+   "story": "Cartwheel streams app events into a raw table and loads orders into a warehouse every day. You own the pipelines: cleaning, deduplication, slowly changing dimensions and incremental loads.",
    "tables": [
-    "events_raw"
+    {
+     "name": "events_raw",
+     "file": "de_events_raw.csv",
+     "about": "Raw app events. Has duplicate event_id rows, missing user_id, messy event_type (case, spaces). ingested_at is when the row landed.",
+     "columns": [
+      [
+       "event_id",
+       "VARCHAR"
+      ],
+      [
+       "user_id",
+       "BIGINT"
+      ],
+      [
+       "event_type",
+       "VARCHAR"
+      ],
+      [
+       "event_ts",
+       "TIMESTAMP"
+      ],
+      [
+       "device",
+       "VARCHAR"
+      ],
+      [
+       "amount",
+       "BIGINT"
+      ],
+      [
+       "ingested_at",
+       "TIMESTAMP"
+      ]
+     ],
+     "rows": 4130
+    },
+    {
+     "name": "customer_dim",
+     "file": "de_customer_dim.csv",
+     "about": "Type 2 slowly changing dimension: one row per customer version, valid_from to valid_to (9999-12-31 = current).",
+     "columns": [
+      [
+       "customer_id",
+       "BIGINT"
+      ],
+      [
+       "customer_name",
+       "VARCHAR"
+      ],
+      [
+       "city",
+       "VARCHAR"
+      ],
+      [
+       "tier",
+       "VARCHAR"
+      ],
+      [
+       "valid_from",
+       "DATE"
+      ],
+      [
+       "valid_to",
+       "DATE"
+      ],
+      [
+       "is_current",
+       "BIGINT"
+      ]
+     ],
+     "rows": 490
+    },
+    {
+     "name": "orders_wh",
+     "file": "de_orders_wh.csv",
+     "about": "Orders already in the warehouse.",
+     "columns": [
+      [
+       "order_id",
+       "BIGINT"
+      ],
+      [
+       "customer_id",
+       "BIGINT"
+      ],
+      [
+       "amount",
+       "BIGINT"
+      ],
+      [
+       "status",
+       "VARCHAR"
+      ],
+      [
+       "updated_at",
+       "TIMESTAMP"
+      ]
+     ],
+     "rows": 600
+    },
+    {
+     "name": "orders_src",
+     "file": "de_orders_src.csv",
+     "about": "Today's extract from the source system: updates to existing orders and new orders. Some rows are bad.",
+     "columns": [
+      [
+       "order_id",
+       "BIGINT"
+      ],
+      [
+       "customer_id",
+       "BIGINT"
+      ],
+      [
+       "amount",
+       "BIGINT"
+      ],
+      [
+       "status",
+       "VARCHAR"
+      ],
+      [
+       "updated_at",
+       "TIMESTAMP"
+      ]
+     ],
+     "rows": 220
+    }
    ],
-   "starter": "-- Find duplicates\nSELECT *\nFROM events_raw\nLIMIT 10;"
+   "tasks": [
+    {
+     "tool": "sql",
+     "title": "Find duplicates",
+     "question": "How many rows does events_raw have, how many distinct event_ids, and how many duplicate rows? Return total_rows, distinct_events, duplicate_rows.",
+     "solution": "SELECT COUNT(*) AS total_rows, COUNT(DISTINCT event_id) AS distinct_events, COUNT(*) - COUNT(DISTINCT event_id) AS duplicate_rows FROM events_raw",
+     "hint": "COUNT(*) vs COUNT(DISTINCT event_id).",
+     "ordered": false,
+     "explain": "",
+     "id": "de-sql-01",
+     "points": 10,
+     "tables": [
+      "events_raw"
+     ],
+     "starter": "-- Find duplicates\nSELECT *\nFROM events_raw\nLIMIT 10;",
+     "stage": "Foundations"
+    },
+    {
+     "tool": "python",
+     "title": "Shape check",
+     "question": "Return the number of rows and columns of events_raw as a dict: {'rows': ..., 'columns': ...}.",
+     "solution": "result = {'rows': events_raw.shape[0], 'columns': events_raw.shape[1]}",
+     "hint": "df.shape gives (rows, columns).",
+     "ordered": false,
+     "explain": "",
+     "id": "de-py-01",
+     "points": 10,
+     "tables": [
+      "events_raw"
+     ],
+     "starter": "# Shape check\n# DataFrames ready: events_raw, customer_dim, orders_wh, orders_src\n# Put your final answer in a variable called result\nresult = events_raw.head()",
+     "stage": "Foundations"
+    },
+    {
+     "tool": "sql",
+     "title": "Null audit",
+     "question": "Count missing values in events_raw. Return null_user_id, null_device and null_amount.",
+     "solution": "SELECT COUNT(*) FILTER (WHERE user_id IS NULL) AS null_user_id, COUNT(*) FILTER (WHERE device IS NULL) AS null_device,\n       COUNT(*) FILTER (WHERE amount IS NULL) AS null_amount FROM events_raw",
+     "hint": "COUNT(*) FILTER (WHERE col IS NULL).",
+     "ordered": false,
+     "explain": "",
+     "id": "de-sql-02",
+     "points": 10,
+     "tables": [
+      "events_raw"
+     ],
+     "starter": "-- Null audit\nSELECT *\nFROM events_raw\nLIMIT 10;",
+     "stage": "Foundations"
+    },
+    {
+     "tool": "python",
+     "title": "Missing user ids",
+     "question": "How many rows have no user_id? result: one number.",
+     "solution": "result = events_raw['user_id'].isna().sum()",
+     "hint": ".isna().sum().",
+     "ordered": false,
+     "explain": "",
+     "id": "de-py-02",
+     "points": 10,
+     "tables": [
+      "events_raw"
+     ],
+     "starter": "# Missing user ids\n# DataFrames ready: events_raw, customer_dim, orders_wh, orders_src\n# Put your final answer in a variable called result\nresult = events_raw.head()",
+     "stage": "Foundations"
+    },
+    {
+     "tool": "sql",
+     "title": "Raw event types",
+     "question": "List every raw event_type value exactly as stored with its row count. Return event_type and rows.",
+     "solution": "SELECT event_type, COUNT(*) AS rows FROM events_raw GROUP BY event_type",
+     "hint": "Plain GROUP BY. Notice the messy variants.",
+     "ordered": false,
+     "explain": "",
+     "id": "de-sql-03",
+     "points": 10,
+     "tables": [
+      "events_raw"
+     ],
+     "starter": "-- Raw event types\nSELECT *\nFROM events_raw\nLIMIT 10;",
+     "stage": "Foundations"
+    },
+    {
+     "tool": "python",
+     "title": "Standardise event types",
+     "question": "Trim and lowercase event_type, then count rows per clean value (do not deduplicate). result: event_type and count.",
+     "solution": "result = events_raw['event_type'].str.strip().str.lower().value_counts()",
+     "hint": ".str.strip().str.lower().",
+     "ordered": false,
+     "explain": "",
+     "id": "de-py-03",
+     "points": 10,
+     "tables": [
+      "events_raw"
+     ],
+     "starter": "# Standardise event types\n# DataFrames ready: events_raw, customer_dim, orders_wh, orders_src\n# Put your final answer in a variable called result\nresult = events_raw.head()",
+     "stage": "Foundations"
+    },
+    {
+     "tool": "sql",
+     "title": "Events per device",
+     "question": "How many raw rows per device (missing device as unknown)? Return device and rows.",
+     "solution": "SELECT COALESCE(device, 'unknown') AS device, COUNT(*) AS rows FROM events_raw GROUP BY 1",
+     "hint": "COALESCE.",
+     "ordered": false,
+     "explain": "",
+     "id": "de-sql-11",
+     "points": 10,
+     "tables": [
+      "events_raw"
+     ],
+     "starter": "-- Events per device\nSELECT *\nFROM events_raw\nLIMIT 10;",
+     "stage": "Foundations"
+    },
+    {
+     "tool": "python",
+     "title": "Column names",
+     "question": "Return the list of column names of events_raw. result: a list.",
+     "solution": "result = list(events_raw.columns)",
+     "hint": "df.columns.",
+     "ordered": false,
+     "explain": "",
+     "id": "de-py-11",
+     "points": 10,
+     "tables": [
+      "events_raw"
+     ],
+     "starter": "# Column names\n# DataFrames ready: events_raw, customer_dim, orders_wh, orders_src\n# Put your final answer in a variable called result\nresult = events_raw.head()",
+     "stage": "Foundations"
+    },
+    {
+     "tool": "sql",
+     "title": "Date range",
+     "question": "What are the first and last event_ts in events_raw? Return first_ts and last_ts.",
+     "solution": "SELECT MIN(event_ts) AS first_ts, MAX(event_ts) AS last_ts FROM events_raw",
+     "hint": "MIN and MAX.",
+     "ordered": false,
+     "explain": "",
+     "id": "de-sql-12",
+     "points": 10,
+     "tables": [
+      "events_raw"
+     ],
+     "starter": "-- Date range\nSELECT *\nFROM events_raw\nLIMIT 10;",
+     "stage": "Foundations"
+    },
+    {
+     "tool": "python",
+     "title": "Rows per event type (raw)",
+     "question": "How many distinct raw event_type spellings exist? result: one number.",
+     "solution": "result = events_raw['event_type'].nunique()",
+     "hint": ".nunique().",
+     "ordered": false,
+     "explain": "",
+     "id": "de-py-12",
+     "points": 10,
+     "tables": [
+      "events_raw"
+     ],
+     "starter": "# Rows per event type (raw)\n# DataFrames ready: events_raw, customer_dim, orders_wh, orders_src\n# Put your final answer in a variable called result\nresult = events_raw.head()",
+     "stage": "Foundations"
+    },
+    {
+     "tool": "sql",
+     "title": "Current customers",
+     "question": "How many rows in customer_dim are current (is_current = 1)? Return one value: current_rows.",
+     "solution": "SELECT COUNT(*) AS current_rows FROM customer_dim WHERE is_current = 1",
+     "hint": "Filter is_current.",
+     "ordered": false,
+     "explain": "",
+     "id": "de-sql-13",
+     "points": 10,
+     "tables": [
+      "customer_dim"
+     ],
+     "starter": "-- Current customers\nSELECT *\nFROM customer_dim\nLIMIT 10;",
+     "stage": "Foundations"
+    },
+    {
+     "tool": "python",
+     "title": "Fill missing device",
+     "question": "Replace missing device with 'unknown' and count rows per device. result: device and count.",
+     "solution": "result = events_raw['device'].fillna('unknown').value_counts()",
+     "hint": "fillna then value_counts.",
+     "ordered": false,
+     "explain": "",
+     "id": "de-py-13",
+     "points": 10,
+     "tables": [
+      "events_raw"
+     ],
+     "starter": "# Fill missing device\n# DataFrames ready: events_raw, customer_dim, orders_wh, orders_src\n# Put your final answer in a variable called result\nresult = events_raw.head()",
+     "stage": "Foundations"
+    },
+    {
+     "tool": "sql",
+     "title": "Clean event types",
+     "question": "Deduplicate by event_id, standardise event_type (trim + lowercase), and count events per clean type. Return event_type and events.",
+     "solution": "SELECT lower(trim(event_type)) AS event_type, COUNT(DISTINCT event_id) AS events FROM events_raw GROUP BY 1",
+     "hint": "lower(trim(...)) and COUNT(DISTINCT event_id).",
+     "ordered": false,
+     "explain": "",
+     "id": "de-sql-04",
+     "points": 20,
+     "tables": [
+      "events_raw"
+     ],
+     "starter": "-- Clean event types\nSELECT *\nFROM events_raw\nLIMIT 10;",
+     "stage": "Applied"
+    },
+    {
+     "tool": "python",
+     "title": "Deduplicate",
+     "question": "Keep the latest copy of each event_id by ingested_at. How many rows are left? result: one number.",
+     "solution": "d = events_raw.sort_values('ingested_at', ascending=False).drop_duplicates('event_id')\nresult = len(d)",
+     "hint": "sort_values then drop_duplicates(subset).",
+     "ordered": false,
+     "explain": "",
+     "id": "de-py-04",
+     "points": 20,
+     "tables": [
+      "events_raw"
+     ],
+     "starter": "# Deduplicate\n# DataFrames ready: events_raw, customer_dim, orders_wh, orders_src\n# Put your final answer in a variable called result\nresult = events_raw.head()",
+     "stage": "Applied"
+    },
+    {
+     "tool": "written",
+     "title": "Explain the dedup rule",
+     "question": "Explain to an analyst why the events table has duplicates and why you keep the latest ingested_at copy. What could go wrong with a different rule?",
+     "guidance": "Cover at-least-once delivery, why latest wins, and the risk of keeping the first copy.",
+     "rubric": "Mentions retries / at-least-once delivery; justifies latest; names a risk of the alternative.",
+     "word_limit": 150,
+     "solution": "",
+     "hint": "",
+     "id": "de-wr-01",
+     "points": 20,
+     "tables": [],
+     "starter": "",
+     "stage": "Applied"
+    },
+    {
+     "tool": "sql",
+     "title": "Daily purchase revenue",
+     "question": "Keep only the latest copy of each event_id (by ingested_at), then for purchase events (clean type) return date, purchases and revenue (sum of amount).",
+     "solution": "WITH d AS (SELECT * FROM (SELECT *, ROW_NUMBER() OVER (PARTITION BY event_id ORDER BY ingested_at DESC) AS rn FROM events_raw) WHERE rn = 1)\nSELECT CAST(event_ts AS DATE) AS date, COUNT(*) AS purchases, SUM(amount) AS revenue\nFROM d WHERE lower(trim(event_type)) = 'purchase' GROUP BY 1",
+     "hint": "ROW_NUMBER() OVER (PARTITION BY event_id ORDER BY ingested_at DESC) = 1 keeps the latest.",
+     "ordered": false,
+     "explain": "",
+     "id": "de-sql-05",
+     "points": 20,
+     "tables": [
+      "events_raw"
+     ],
+     "starter": "-- Daily purchase revenue\nSELECT *\nFROM events_raw\nLIMIT 10;",
+     "stage": "Applied"
+    },
+    {
+     "tool": "python",
+     "title": "Events per hour",
+     "question": "After deduplicating by event_id, count events per hour of day (0 to 23) of event_ts. result: hour and events.",
+     "solution": "d = events_raw.drop_duplicates('event_id')\nh = pd.to_datetime(d['event_ts']).dt.hour.rename('hour')\nresult = d.groupby(h).size().rename('events')",
+     "hint": ".dt.hour after pd.to_datetime.",
+     "ordered": false,
+     "explain": "",
+     "id": "de-py-05",
+     "points": 20,
+     "tables": [
+      "events_raw"
+     ],
+     "starter": "# Events per hour\n# DataFrames ready: events_raw, customer_dim, orders_wh, orders_src\n# Put your final answer in a variable called result\nresult = events_raw.head()",
+     "stage": "Applied"
+    },
+    {
+     "tool": "written",
+     "title": "Design the clean layer",
+     "question": "Describe the bronze, silver and gold layers you would build from events_raw. What happens in each layer?",
+     "guidance": "Raw landing, cleaned and deduplicated, business-ready aggregates. Give one table per layer.",
+     "rubric": "Three layers with clear responsibilities; examples of tables; where tests run.",
+     "word_limit": 200,
+     "solution": "",
+     "hint": "",
+     "id": "de-wr-02",
+     "points": 20,
+     "tables": [],
+     "starter": "",
+     "stage": "Applied"
+    },
+    {
+     "tool": "sql",
+     "title": "Ingestion lag",
+     "question": "Average lag in minutes between event_ts and ingested_at per device, with missing device shown as unknown. Return device and avg_lag_min (2 decimals), using all raw rows.",
+     "solution": "SELECT COALESCE(device, 'unknown') AS device, ROUND(AVG(date_diff('second', event_ts, ingested_at)) / 60.0, 2) AS avg_lag_min\nFROM events_raw GROUP BY 1",
+     "hint": "date_diff('second', a, b) / 60.0 gives minutes.",
+     "ordered": false,
+     "explain": "",
+     "id": "de-sql-06",
+     "points": 20,
+     "tables": [
+      "events_raw"
+     ],
+     "starter": "-- Ingestion lag\nSELECT *\nFROM events_raw\nLIMIT 10;",
+     "stage": "Applied"
+    },
+    {
+     "tool": "python",
+     "title": "Data quality report",
+     "question": "For every column in events_raw, return the percent of missing values. result: column and null_pct (2 decimals).",
+     "solution": "result = (events_raw.isna().mean() * 100).round(2).rename_axis('column').rename('null_pct')",
+     "hint": "df.isna().mean() works column by column.",
+     "ordered": false,
+     "explain": "",
+     "id": "de-py-06",
+     "points": 20,
+     "tables": [
+      "events_raw"
+     ],
+     "starter": "# Data quality report\n# DataFrames ready: events_raw, customer_dim, orders_wh, orders_src\n# Put your final answer in a variable called result\nresult = events_raw.head()",
+     "stage": "Applied"
+    },
+    {
+     "tool": "sql",
+     "title": "Distinct users per day",
+     "question": "After cleaning, count distinct user_ids (non-null) per event date. Return date and users.",
+     "solution": "SELECT CAST(event_ts AS DATE) AS date, COUNT(DISTINCT user_id) AS users FROM events_raw WHERE user_id IS NOT NULL GROUP BY 1",
+     "hint": "COUNT(DISTINCT) ignores nulls anyway.",
+     "ordered": false,
+     "explain": "",
+     "id": "de-sql-14",
+     "points": 20,
+     "tables": [
+      "events_raw"
+     ],
+     "starter": "-- Distinct users per day\nSELECT *\nFROM events_raw\nLIMIT 10;",
+     "stage": "Applied"
+    },
+    {
+     "tool": "python",
+     "title": "Ingestion lag stats",
+     "question": "Lag in minutes between event_ts and ingested_at: return the median and the 95th percentile as a dict {\"median\": ..., \"p95\": ...} (2 decimals).",
+     "solution": "lag = (pd.to_datetime(events_raw['ingested_at']) - pd.to_datetime(events_raw['event_ts'])).dt.total_seconds() / 60\nresult = {'median': round(lag.median(), 2), 'p95': round(lag.quantile(0.95), 2)}",
+     "hint": ".quantile(0.95).",
+     "ordered": false,
+     "explain": "",
+     "id": "de-py-14",
+     "points": 20,
+     "tables": [
+      "events_raw"
+     ],
+     "starter": "# Ingestion lag stats\n# DataFrames ready: events_raw, customer_dim, orders_wh, orders_src\n# Put your final answer in a variable called result\nresult = events_raw.head()",
+     "stage": "Applied"
+    },
+    {
+     "tool": "sql",
+     "title": "Duplicate event ids",
+     "question": "List event_ids that appear more than once, with how many copies. Return event_id and copies.",
+     "solution": "SELECT event_id, COUNT(*) AS copies FROM events_raw GROUP BY event_id HAVING COUNT(*) > 1",
+     "hint": "HAVING COUNT(*) > 1.",
+     "ordered": false,
+     "explain": "",
+     "id": "de-sql-15",
+     "points": 20,
+     "tables": [
+      "events_raw"
+     ],
+     "starter": "-- Duplicate event ids\nSELECT *\nFROM events_raw\nLIMIT 10;",
+     "stage": "Applied"
+    },
+    {
+     "tool": "python",
+     "title": "Clean table",
+     "question": "Produce the clean events table: dedup by event_id (keep latest ingested_at), drop rows with no user_id, trim/lower event_type. How many rows per clean event_type? result: event_type and count.",
+     "solution": "d = events_raw.sort_values('ingested_at', ascending=False).drop_duplicates('event_id').dropna(subset=['user_id']).copy()\nd['event_type'] = d['event_type'].str.strip().str.lower()\nresult = d['event_type'].value_counts()",
+     "hint": "Chain the cleaning steps.",
+     "ordered": false,
+     "explain": "",
+     "id": "de-py-15",
+     "points": 20,
+     "tables": [
+      "events_raw"
+     ],
+     "starter": "# Clean table\n# DataFrames ready: events_raw, customer_dim, orders_wh, orders_src\n# Put your final answer in a variable called result\nresult = events_raw.head()",
+     "stage": "Applied"
+    },
+    {
+     "tool": "sql",
+     "title": "Late arriving events",
+     "question": "How many raw rows landed more than 60 minutes after the event happened? Return one value: late_rows.",
+     "solution": "SELECT COUNT(*) AS late_rows FROM events_raw WHERE date_diff('minute', event_ts, ingested_at) > 60",
+     "hint": "date_diff('minute', ...).",
+     "ordered": false,
+     "explain": "",
+     "id": "de-sql-16",
+     "points": 20,
+     "tables": [
+      "events_raw"
+     ],
+     "starter": "-- Late arriving events\nSELECT *\nFROM events_raw\nLIMIT 10;",
+     "stage": "Applied"
+    },
+    {
+     "tool": "python",
+     "title": "Daily partitions",
+     "question": "If you partition deduplicated events by event date, how many rows land in each partition? result: date and rows.",
+     "solution": "d = events_raw.drop_duplicates('event_id')\nresult = d.groupby(d['event_ts'].str[:10].rename('date')).size().rename('rows')",
+     "hint": "The first 10 characters are the date.",
+     "ordered": false,
+     "explain": "",
+     "id": "de-py-16",
+     "points": 20,
+     "tables": [
+      "events_raw"
+     ],
+     "starter": "# Daily partitions\n# DataFrames ready: events_raw, customer_dim, orders_wh, orders_src\n# Put your final answer in a variable called result\nresult = events_raw.head()",
+     "stage": "Applied"
+    },
+    {
+     "tool": "sql",
+     "title": "Purchases missing amount",
+     "question": "Clean purchase events (trim/lower type, dedup by event_id) with no amount. Return one value: rows.",
+     "solution": "SELECT COUNT(DISTINCT event_id) AS rows FROM events_raw WHERE lower(trim(event_type)) = 'purchase' AND amount IS NULL",
+     "hint": "Expect 0 if the source is healthy; prove it.",
+     "ordered": false,
+     "explain": "",
+     "id": "de-sql-17",
+     "points": 20,
+     "tables": [
+      "events_raw"
+     ],
+     "starter": "-- Purchases missing amount\nSELECT *\nFROM events_raw\nLIMIT 10;",
+     "stage": "Applied"
+    },
+    {
+     "tool": "python",
+     "title": "Schema check",
+     "question": "Check orders_src has exactly the same columns, in the same order, as orders_wh. result: True or False.",
+     "solution": "result = list(orders_src.columns) == list(orders_wh.columns)",
+     "hint": "Compare the column lists.",
+     "ordered": false,
+     "explain": "",
+     "id": "de-py-17",
+     "points": 20,
+     "tables": [
+      "orders_wh",
+      "orders_src"
+     ],
+     "starter": "# Schema check\n# DataFrames ready: events_raw, customer_dim, orders_wh, orders_src\n# Put your final answer in a variable called result\nresult = orders_wh.head()",
+     "stage": "Applied"
+    },
+    {
+     "tool": "sql",
+     "title": "Point-in-time lookup",
+     "question": "Using customer_dim, how many customers lived in each city on 2023-09-01? A version is valid when valid_from <= date < valid_to. Return city and customers.",
+     "solution": "SELECT city, COUNT(*) AS customers FROM customer_dim\nWHERE valid_from <= DATE '2023-09-01' AND valid_to > DATE '2023-09-01'\nGROUP BY city",
+     "hint": "Filter versions that cover the date, then group.",
+     "ordered": false,
+     "explain": "",
+     "id": "de-sql-07",
+     "points": 30,
+     "tables": [
+      "customer_dim"
+     ],
+     "starter": "-- Point-in-time lookup\nSELECT *\nFROM customer_dim\nLIMIT 10;",
+     "stage": "Business case"
+    },
+    {
+     "tool": "python",
+     "title": "Sessionise events",
+     "question": "Deduplicate by event_id and drop rows without user_id. Sort each user's events by event_ts; a new session starts when the gap from the previous event is more than 30 minutes (or it is the user's first event). How many sessions are there? result: one number.",
+     "solution": "d = events_raw.drop_duplicates('event_id').dropna(subset=['user_id']).copy()\nd['ts'] = pd.to_datetime(d['event_ts'])\nd = d.sort_values(['user_id', 'ts'])\ngap = d.groupby('user_id')['ts'].diff()\nresult = int((gap.isna() | (gap > pd.Timedelta(minutes=30))).sum())",
+     "hint": "groupby('user_id')['ts'].diff() gives the gap to the previous event.",
+     "ordered": false,
+     "explain": "",
+     "id": "de-py-07",
+     "points": 30,
+     "tables": [
+      "events_raw"
+     ],
+     "starter": "# Sessionise events\n# DataFrames ready: events_raw, customer_dim, orders_wh, orders_src\n# Put your final answer in a variable called result\nresult = events_raw.head()",
+     "stage": "Business case"
+    },
+    {
+     "tool": "written",
+     "title": "Incremental vs full load",
+     "question": "The orders extract arrives daily. Compare full reloads with incremental merges for this table and recommend one.",
+     "guidance": "Cover cost, correctness with late updates, and how to handle stale or bad rows.",
+     "rubric": "Trade-offs explained; handles stale updates and negative amounts; clear recommendation.",
+     "word_limit": 200,
+     "solution": "",
+     "hint": "",
+     "id": "de-wr-03",
+     "points": 30,
+     "tables": [],
+     "starter": "",
+     "stage": "Business case"
+    },
+    {
+     "tool": "sql",
+     "title": "Customers who moved",
+     "question": "How many customers changed city at least once across their versions? Return one value: customers.",
+     "solution": "SELECT COUNT(*) AS customers FROM (SELECT customer_id FROM customer_dim GROUP BY customer_id HAVING COUNT(DISTINCT city) > 1)",
+     "hint": "HAVING COUNT(DISTINCT city) > 1.",
+     "ordered": false,
+     "explain": "",
+     "id": "de-sql-08",
+     "points": 30,
+     "tables": [
+      "customer_dim"
+     ],
+     "starter": "-- Customers who moved\nSELECT *\nFROM customer_dim\nLIMIT 10;",
+     "stage": "Business case"
+    },
+    {
+     "tool": "python",
+     "title": "Current tier from history",
+     "question": "Without using is_current, take each customer's latest version (largest valid_from) in customer_dim and count customers per tier. result: tier and customers.",
+     "solution": "c = customer_dim.sort_values('valid_from').groupby('customer_id').tail(1)\nresult = c['tier'].value_counts().rename_axis('tier').rename('customers')",
+     "hint": "sort_values then groupby().tail(1).",
+     "ordered": false,
+     "explain": "",
+     "id": "de-py-08",
+     "points": 30,
+     "tables": [
+      "customer_dim"
+     ],
+     "starter": "# Current tier from history\n# DataFrames ready: events_raw, customer_dim, orders_wh, orders_src\n# Put your final answer in a variable called result\nresult = customer_dim.head()",
+     "stage": "Business case"
+    },
+    {
+     "tool": "written",
+     "title": "When SCD2 breaks",
+     "question": "Describe two ways a Type 2 customer dimension can become wrong, and the checks you would schedule to catch them.",
+     "guidance": "Think overlapping versions, gaps, and two current rows.",
+     "rubric": "Two realistic failure modes; a concrete scheduled check for each.",
+     "word_limit": 150,
+     "solution": "",
+     "hint": "",
+     "id": "de-wr-04",
+     "points": 30,
+     "tables": [],
+     "starter": "",
+     "stage": "Business case"
+    },
+    {
+     "tool": "sql",
+     "title": "Versions per customer",
+     "question": "How many customers have 1, 2 and 3 versions in customer_dim? Return versions and customers.",
+     "solution": "SELECT versions, COUNT(*) AS customers FROM (SELECT customer_id, COUNT(*) AS versions FROM customer_dim GROUP BY 1) GROUP BY versions",
+     "hint": "Count per customer, then count the counts.",
+     "ordered": false,
+     "explain": "",
+     "id": "de-sql-18",
+     "points": 30,
+     "tables": [
+      "customer_dim"
+     ],
+     "starter": "-- Versions per customer\nSELECT *\nFROM customer_dim\nLIMIT 10;",
+     "stage": "Business case"
+    },
+    {
+     "tool": "python",
+     "title": "Surrogate keys",
+     "question": "Give every customer_dim row a surrogate key 1..N ordered by customer_id then valid_from. What is the key of the current version of customer 42? result: one number.",
+     "solution": "c = customer_dim.sort_values(['customer_id', 'valid_from']).reset_index(drop=True)\nc['sk'] = range(1, len(c) + 1)\nresult = int(c[(c.customer_id == 42) & (c.is_current == 1)]['sk'].iloc[0])",
+     "hint": "sort_values, then a range column.",
+     "ordered": false,
+     "explain": "",
+     "id": "de-py-18",
+     "points": 30,
+     "tables": [
+      "customer_dim"
+     ],
+     "starter": "# Surrogate keys\n# DataFrames ready: events_raw, customer_dim, orders_wh, orders_src\n# Put your final answer in a variable called result\nresult = customer_dim.head()",
+     "stage": "Business case"
+    },
+    {
+     "tool": "sql",
+     "title": "Gaps in history",
+     "question": "Check that each customer version starts exactly when the previous one ended. How many version rows break that rule? Return one value: broken.",
+     "solution": "SELECT COUNT(*) AS broken FROM (SELECT valid_from, LAG(valid_to) OVER (PARTITION BY customer_id ORDER BY valid_from) AS prev_to FROM customer_dim) WHERE prev_to IS NOT NULL AND prev_to <> valid_from",
+     "hint": "LAG(valid_to) by customer.",
+     "ordered": false,
+     "explain": "",
+     "id": "de-sql-19",
+     "points": 30,
+     "tables": [
+      "customer_dim"
+     ],
+     "starter": "-- Gaps in history\nSELECT *\nFROM customer_dim\nLIMIT 10;",
+     "stage": "Business case"
+    },
+    {
+     "tool": "python",
+     "title": "Point-in-time join",
+     "question": "For each order in orders_wh, attach the customer's tier valid at the order's updated_at date. How many orders per tier? result: tier and orders.",
+     "solution": "o = orders_wh.copy(); o['d'] = o['updated_at'].str[:10]\nm = o.merge(customer_dim, on='customer_id')\nm = m[(m['valid_from'] <= m['d']) & (m['d'] < m['valid_to'])]\nresult = m['tier'].value_counts().rename_axis('tier').rename('orders')",
+     "hint": "Merge on customer then filter by the validity window.",
+     "ordered": false,
+     "explain": "",
+     "id": "de-py-19",
+     "points": 30,
+     "tables": [
+      "customer_dim",
+      "orders_wh"
+     ],
+     "starter": "# Point-in-time join\n# DataFrames ready: events_raw, customer_dim, orders_wh, orders_src\n# Put your final answer in a variable called result\nresult = customer_dim.head()",
+     "stage": "Business case"
+    },
+    {
+     "tool": "sql",
+     "title": "New orders in the extract",
+     "question": "How many orders_src rows are new orders (not in orders_wh)? Return one value: new_orders.",
+     "solution": "SELECT COUNT(*) AS new_orders FROM orders_src s WHERE NOT EXISTS (SELECT 1 FROM orders_wh w WHERE w.order_id = s.order_id)",
+     "hint": "Anti-join.",
+     "ordered": false,
+     "explain": "",
+     "id": "de-sql-20",
+     "points": 30,
+     "tables": [
+      "orders_wh",
+      "orders_src"
+     ],
+     "starter": "-- New orders in the extract\nSELECT *\nFROM orders_wh\nLIMIT 10;",
+     "stage": "Business case"
+    },
+    {
+     "tool": "python",
+     "title": "Idempotent load",
+     "question": "Loading orders_src twice must not create duplicates. Concatenate orders_wh with orders_src twice, then keep the latest updated_at per order_id. How many rows remain? result: one number.",
+     "solution": "a = pd.concat([orders_wh, orders_src, orders_src])\nresult = len(a.sort_values('updated_at').drop_duplicates('order_id', keep='last'))",
+     "hint": "drop_duplicates(keep=\"last\") after sorting.",
+     "ordered": false,
+     "explain": "",
+     "id": "de-py-20",
+     "points": 30,
+     "tables": [
+      "orders_wh",
+      "orders_src"
+     ],
+     "starter": "# Idempotent load\n# DataFrames ready: events_raw, customer_dim, orders_wh, orders_src\n# Put your final answer in a variable called result\nresult = orders_wh.head()",
+     "stage": "Business case"
+    },
+    {
+     "tool": "sql",
+     "title": "Incremental upsert",
+     "question": "Merge orders_src into orders_wh by order_id: new orders are inserted; existing orders take the source row only if src.updated_at is newer. Ignore source rows with amount <= 0. Return status and orders after the merge.",
+     "solution": "WITH s AS (SELECT * FROM orders_src WHERE amount > 0),\nm AS (\n  SELECT w.order_id, CASE WHEN s.order_id IS NOT NULL AND s.updated_at > w.updated_at THEN s.status ELSE w.status END AS status FROM orders_wh w LEFT JOIN s USING (order_id)\n  UNION ALL\n  SELECT s.order_id, s.status FROM s WHERE s.order_id NOT IN (SELECT order_id FROM orders_wh))\nSELECT status, COUNT(*) AS orders FROM m GROUP BY status",
+     "hint": "Update existing rows with a LEFT JOIN + CASE, then UNION ALL the new ones.",
+     "ordered": false,
+     "explain": "",
+     "id": "de-sql-09",
+     "points": 40,
+     "tables": [
+      "orders_wh",
+      "orders_src"
+     ],
+     "starter": "-- Incremental upsert\nSELECT *\nFROM orders_wh\nLIMIT 10;",
+     "stage": "Interview"
+    },
+    {
+     "tool": "python",
+     "title": "Upsert in pandas",
+     "question": "Apply the same merge rules as the SQL task (skip amount <= 0; existing orders take the source row only if its updated_at is newer; insert new orders). Return a dict: {'rows': total orders, 'total_amount': sum of amount}.",
+     "solution": "s = orders_src[orders_src.amount > 0]\nw = orders_wh.set_index('order_id')\nfor r in s.itertuples(index=False):\n    if r.order_id not in w.index or r.updated_at > w.at[r.order_id, 'updated_at']:\n        w.loc[r.order_id] = [r.customer_id, r.amount, r.status, r.updated_at]\nresult = {'rows': len(w), 'total_amount': int(w['amount'].sum())}",
+     "hint": "Index the warehouse by order_id, then update or add rows.",
+     "ordered": false,
+     "explain": "",
+     "id": "de-py-09",
+     "points": 40,
+     "tables": [
+      "orders_wh",
+      "orders_src"
+     ],
+     "starter": "# Upsert in pandas\n# DataFrames ready: events_raw, customer_dim, orders_wh, orders_src\n# Put your final answer in a variable called result\nresult = orders_wh.head()",
+     "stage": "Interview"
+    },
+    {
+     "tool": "written",
+     "title": "Pipeline monitoring",
+     "question": "What would you monitor on this pipeline every day, and what would trigger an alert? List at least four signals with thresholds.",
+     "guidance": "Volume, freshness (lag), duplicates, nulls and schema changes are good starting points.",
+     "rubric": "At least four signals; sensible thresholds; who gets alerted and how.",
+     "word_limit": 200,
+     "solution": "",
+     "hint": "",
+     "id": "de-wr-05",
+     "points": 40,
+     "tables": [],
+     "starter": "",
+     "stage": "Interview"
+    },
+    {
+     "tool": "sql",
+     "title": "Change data capture",
+     "question": "Classify each orders_src row as insert (order not in warehouse), update (exists and status or amount differs) or no change. Return change_type and rows.",
+     "solution": "SELECT CASE WHEN w.order_id IS NULL THEN 'insert' WHEN s.status <> w.status OR s.amount <> w.amount THEN 'update' ELSE 'no change' END AS change_type,\n       COUNT(*) AS rows\nFROM orders_src s LEFT JOIN orders_wh w USING (order_id) GROUP BY 1",
+     "hint": "LEFT JOIN source to target and test the columns.",
+     "ordered": false,
+     "explain": "",
+     "id": "de-sql-10",
+     "points": 40,
+     "tables": [
+      "orders_wh",
+      "orders_src"
+     ],
+     "starter": "-- Change data capture\nSELECT *\nFROM orders_wh\nLIMIT 10;",
+     "stage": "Interview"
+    },
+    {
+     "tool": "python",
+     "title": "Validate the extract",
+     "question": "Before loading orders_src, count rows breaking each rule: negative_amount (amount <= 0) and stale_update (order exists in orders_wh and src updated_at is not newer). result: rule and failed.",
+     "solution": "m = orders_src.merge(orders_wh[['order_id', 'updated_at']], on='order_id', how='left', suffixes=('', '_wh'))\nstale = m['updated_at_wh'].notna() & (m['updated_at'] <= m['updated_at_wh'])\nresult = pd.DataFrame({'rule': ['negative_amount', 'stale_update'], 'failed': [int((orders_src.amount <= 0).sum()), int(stale.sum())]})",
+     "hint": "Left merge the warehouse timestamps in and compare.",
+     "ordered": false,
+     "explain": "",
+     "id": "de-py-10",
+     "points": 40,
+     "tables": [
+      "orders_wh",
+      "orders_src"
+     ],
+     "starter": "# Validate the extract\n# DataFrames ready: events_raw, customer_dim, orders_wh, orders_src\n# Put your final answer in a variable called result\nresult = orders_wh.head()",
+     "stage": "Interview"
+    },
+    {
+     "tool": "written",
+     "title": "Postmortem",
+     "question": "Yesterday the dashboard showed double revenue for 1 October. Write a short postmortem: likely cause, how you would confirm it, the fix and the prevention.",
+     "guidance": "Likely duplicates; confirm with a query; fix with dedup + backfill; add a uniqueness test.",
+     "rubric": "Plausible cause; verification steps; fix and backfill; prevention test; blameless tone.",
+     "word_limit": 200,
+     "solution": "",
+     "hint": "",
+     "id": "de-wr-06",
+     "points": 40,
+     "tables": [],
+     "starter": "",
+     "stage": "Interview"
+    },
+    {
+     "tool": "sql",
+     "title": "Amount drift",
+     "question": "For orders in both tables, how many changed amount, and what is the total change (src minus wh)? Return changed and total_change.",
+     "solution": "SELECT COUNT(*) FILTER (WHERE s.amount <> w.amount) AS changed, SUM(s.amount - w.amount) AS total_change FROM orders_src s JOIN orders_wh w USING (order_id)",
+     "hint": "Inner join both tables.",
+     "ordered": false,
+     "explain": "",
+     "id": "de-sql-21",
+     "points": 40,
+     "tables": [
+      "orders_wh",
+      "orders_src"
+     ],
+     "starter": "-- Amount drift\nSELECT *\nFROM orders_wh\nLIMIT 10;",
+     "stage": "Interview"
+    },
+    {
+     "tool": "python",
+     "title": "Build SCD2 change",
+     "question": "Customer 7 moves to Pune on 2024-10-15. Apply SCD2 to customer_dim: close the current row (valid_to = 2024-10-15, is_current = 0) and add a new current row. How many rows does customer 7 have now? result: one number.",
+     "solution": "c = customer_dim.copy()\ncur = (c.customer_id == 7) & (c.is_current == 1)\nnew = c[cur].copy()\nc.loc[cur, ['valid_to', 'is_current']] = ['2024-10-15', 0]\nnew['city'] = 'Pune'; new['valid_from'] = '2024-10-15'; new['valid_to'] = '9999-12-31'; new['is_current'] = 1\nc = pd.concat([c, new])\nresult = int((c.customer_id == 7).sum())",
+     "hint": "Close the old row, append the new one.",
+     "ordered": false,
+     "explain": "",
+     "id": "de-py-21",
+     "points": 40,
+     "tables": [
+      "customer_dim"
+     ],
+     "starter": "# Build SCD2 change\n# DataFrames ready: events_raw, customer_dim, orders_wh, orders_src\n# Put your final answer in a variable called result\nresult = customer_dim.head()",
+     "stage": "Interview"
+    },
+    {
+     "tool": "sql",
+     "title": "Funnel by user",
+     "question": "Using clean, deduplicated events, how many users did page_view, add_to_cart and purchase (each counted if the user did it at least once)? Return viewers, carters, buyers.",
+     "solution": "WITH d AS (SELECT DISTINCT event_id, user_id, lower(trim(event_type)) AS t FROM events_raw WHERE user_id IS NOT NULL)\nSELECT COUNT(DISTINCT user_id) FILTER (WHERE t = 'page_view') AS viewers, COUNT(DISTINCT user_id) FILTER (WHERE t = 'add_to_cart') AS carters, COUNT(DISTINCT user_id) FILTER (WHERE t = 'purchase') AS buyers FROM d",
+     "hint": "COUNT(DISTINCT ...) FILTER (...).",
+     "ordered": false,
+     "explain": "",
+     "id": "de-sql-22",
+     "points": 40,
+     "tables": [
+      "events_raw"
+     ],
+     "starter": "-- Funnel by user\nSELECT *\nFROM events_raw\nLIMIT 10;",
+     "stage": "Interview"
+    },
+    {
+     "tool": "python",
+     "title": "Data contract",
+     "question": "Validate events_raw against a contract: event_id not null, event_type in the 4 clean types after trim/lower, amount >= 0 when present. Return failing row counts as a dict {'event_id': n, 'event_type': n, 'amount': n}.",
+     "solution": "t = events_raw['event_type'].str.strip().str.lower()\nresult = {'event_id': int(events_raw['event_id'].isna().sum()), 'event_type': int((~t.isin(['page_view', 'add_to_cart', 'purchase', 'signup'])).sum()),\n          'amount': int((events_raw['amount'] < 0).sum())}",
+     "hint": "One boolean mask per rule.",
+     "ordered": false,
+     "explain": "",
+     "id": "de-py-22",
+     "points": 40,
+     "tables": [
+      "events_raw"
+     ],
+     "starter": "# Data contract\n# DataFrames ready: events_raw, customer_dim, orders_wh, orders_src\n# Put your final answer in a variable called result\nresult = events_raw.head()",
+     "stage": "Interview"
+    }
+   ]
   },
   {
-   "tool": "sql",
-   "level": "Foundations",
-   "title": "Null audit",
-   "question": "Count missing values in events_raw. Return null_user_id, null_device and null_amount.",
-   "solution": "SELECT COUNT(*) FILTER (WHERE user_id IS NULL) AS null_user_id, COUNT(*) FILTER (WHERE device IS NULL) AS null_device,\n       COUNT(*) FILTER (WHERE amount IS NULL) AS null_amount FROM events_raw",
-   "hint": "COUNT(*) FILTER (WHERE col IS NULL).",
-   "ordered": false,
-   "explain": "",
-   "id": "de-sql-02",
-   "n": 2,
-   "points": 10,
-   "tables": [
-    "events_raw"
-   ],
-   "starter": "-- Null audit\nSELECT *\nFROM events_raw\nLIMIT 10;"
+   "key": "intermediate",
+   "name": "Intermediate",
+   "company": "",
+   "story": "",
+   "tables": [],
+   "tasks": []
   },
   {
-   "tool": "sql",
-   "level": "Foundations",
-   "title": "Raw event types",
-   "question": "List every raw event_type value exactly as stored with its row count. Return event_type and rows.",
-   "solution": "SELECT event_type, COUNT(*) AS rows FROM events_raw GROUP BY event_type",
-   "hint": "Plain GROUP BY. Notice the messy variants.",
-   "ordered": false,
-   "explain": "",
-   "id": "de-sql-03",
-   "n": 3,
-   "points": 10,
-   "tables": [
-    "events_raw"
-   ],
-   "starter": "-- Raw event types\nSELECT *\nFROM events_raw\nLIMIT 10;"
-  },
-  {
-   "tool": "sql",
-   "level": "Applied",
-   "title": "Clean event types",
-   "question": "Deduplicate by event_id, standardise event_type (trim + lowercase), and count events per clean type. Return event_type and events.",
-   "solution": "SELECT lower(trim(event_type)) AS event_type, COUNT(DISTINCT event_id) AS events FROM events_raw GROUP BY 1",
-   "hint": "lower(trim(...)) and COUNT(DISTINCT event_id).",
-   "ordered": false,
-   "explain": "",
-   "id": "de-sql-04",
-   "n": 4,
-   "points": 20,
-   "tables": [
-    "events_raw"
-   ],
-   "starter": "-- Clean event types\nSELECT *\nFROM events_raw\nLIMIT 10;"
-  },
-  {
-   "tool": "sql",
-   "level": "Applied",
-   "title": "Daily purchase revenue",
-   "question": "Keep only the latest copy of each event_id (by ingested_at), then for purchase events (clean type) return date, purchases and revenue (sum of amount).",
-   "solution": "WITH d AS (SELECT * FROM (SELECT *, ROW_NUMBER() OVER (PARTITION BY event_id ORDER BY ingested_at DESC) AS rn FROM events_raw) WHERE rn = 1)\nSELECT CAST(event_ts AS DATE) AS date, COUNT(*) AS purchases, SUM(amount) AS revenue\nFROM d WHERE lower(trim(event_type)) = 'purchase' GROUP BY 1",
-   "hint": "ROW_NUMBER() OVER (PARTITION BY event_id ORDER BY ingested_at DESC) = 1 keeps the latest.",
-   "ordered": false,
-   "explain": "",
-   "id": "de-sql-05",
-   "n": 5,
-   "points": 20,
-   "tables": [
-    "events_raw"
-   ],
-   "starter": "-- Daily purchase revenue\nSELECT *\nFROM events_raw\nLIMIT 10;"
-  },
-  {
-   "tool": "sql",
-   "level": "Applied",
-   "title": "Ingestion lag",
-   "question": "Average lag in minutes between event_ts and ingested_at per device, with missing device shown as unknown. Return device and avg_lag_min (2 decimals), using all raw rows.",
-   "solution": "SELECT COALESCE(device, 'unknown') AS device, ROUND(AVG(date_diff('second', event_ts, ingested_at)) / 60.0, 2) AS avg_lag_min\nFROM events_raw GROUP BY 1",
-   "hint": "date_diff('second', a, b) / 60.0 gives minutes.",
-   "ordered": false,
-   "explain": "",
-   "id": "de-sql-06",
-   "n": 6,
-   "points": 20,
-   "tables": [
-    "events_raw"
-   ],
-   "starter": "-- Ingestion lag\nSELECT *\nFROM events_raw\nLIMIT 10;"
-  },
-  {
-   "tool": "sql",
-   "level": "Business case",
-   "title": "Point-in-time lookup",
-   "question": "Using customer_dim, how many customers lived in each city on 2023-09-01? A version is valid when valid_from <= date < valid_to. Return city and customers.",
-   "solution": "SELECT city, COUNT(*) AS customers FROM customer_dim\nWHERE valid_from <= DATE '2023-09-01' AND valid_to > DATE '2023-09-01'\nGROUP BY city",
-   "hint": "Filter versions that cover the date, then group.",
-   "ordered": false,
-   "explain": "",
-   "id": "de-sql-07",
-   "n": 7,
-   "points": 30,
-   "tables": [
-    "customer_dim"
-   ],
-   "starter": "-- Point-in-time lookup\nSELECT *\nFROM customer_dim\nLIMIT 10;"
-  },
-  {
-   "tool": "sql",
-   "level": "Business case",
-   "title": "Customers who moved",
-   "question": "How many customers changed city at least once across their versions? Return one value: customers.",
-   "solution": "SELECT COUNT(*) AS customers FROM (SELECT customer_id FROM customer_dim GROUP BY customer_id HAVING COUNT(DISTINCT city) > 1)",
-   "hint": "HAVING COUNT(DISTINCT city) > 1.",
-   "ordered": false,
-   "explain": "",
-   "id": "de-sql-08",
-   "n": 8,
-   "points": 30,
-   "tables": [
-    "customer_dim"
-   ],
-   "starter": "-- Customers who moved\nSELECT *\nFROM customer_dim\nLIMIT 10;"
-  },
-  {
-   "tool": "sql",
-   "level": "Interview",
-   "title": "Incremental upsert",
-   "question": "Merge orders_src into orders_wh by order_id: new orders are inserted; existing orders take the source row only if src.updated_at is newer. Ignore source rows with amount <= 0. Return status and orders after the merge.",
-   "solution": "WITH s AS (SELECT * FROM orders_src WHERE amount > 0),\nm AS (\n  SELECT w.order_id, CASE WHEN s.order_id IS NOT NULL AND s.updated_at > w.updated_at THEN s.status ELSE w.status END AS status FROM orders_wh w LEFT JOIN s USING (order_id)\n  UNION ALL\n  SELECT s.order_id, s.status FROM s WHERE s.order_id NOT IN (SELECT order_id FROM orders_wh))\nSELECT status, COUNT(*) AS orders FROM m GROUP BY status",
-   "hint": "Update existing rows with a LEFT JOIN + CASE, then UNION ALL the new ones.",
-   "ordered": false,
-   "explain": "",
-   "id": "de-sql-09",
-   "n": 9,
-   "points": 40,
-   "tables": [
-    "orders_wh",
-    "orders_src"
-   ],
-   "starter": "-- Incremental upsert\nSELECT *\nFROM orders_wh\nLIMIT 10;"
-  },
-  {
-   "tool": "sql",
-   "level": "Interview",
-   "title": "Change data capture",
-   "question": "Classify each orders_src row as insert (order not in warehouse), update (exists and status or amount differs) or no change. Return change_type and rows.",
-   "solution": "SELECT CASE WHEN w.order_id IS NULL THEN 'insert' WHEN s.status <> w.status OR s.amount <> w.amount THEN 'update' ELSE 'no change' END AS change_type,\n       COUNT(*) AS rows\nFROM orders_src s LEFT JOIN orders_wh w USING (order_id) GROUP BY 1",
-   "hint": "LEFT JOIN source to target and test the columns.",
-   "ordered": false,
-   "explain": "",
-   "id": "de-sql-10",
-   "n": 10,
-   "points": 40,
-   "tables": [
-    "orders_wh",
-    "orders_src"
-   ],
-   "starter": "-- Change data capture\nSELECT *\nFROM orders_wh\nLIMIT 10;"
-  },
-  {
-   "tool": "python",
-   "level": "Foundations",
-   "title": "Shape check",
-   "question": "Return the number of rows and columns of events_raw as a dict: {'rows': ..., 'columns': ...}.",
-   "solution": "result = {'rows': events_raw.shape[0], 'columns': events_raw.shape[1]}",
-   "hint": "df.shape gives (rows, columns).",
-   "ordered": false,
-   "explain": "",
-   "id": "de-py-01",
-   "n": 1,
-   "points": 10,
-   "tables": [
-    "events_raw"
-   ],
-   "starter": "# Shape check\n# DataFrames ready: events_raw, customer_dim, orders_wh, orders_src\n# Put your final answer in a variable called result\nresult = events_raw.head()"
-  },
-  {
-   "tool": "python",
-   "level": "Foundations",
-   "title": "Missing user ids",
-   "question": "How many rows have no user_id? result: one number.",
-   "solution": "result = events_raw['user_id'].isna().sum()",
-   "hint": ".isna().sum().",
-   "ordered": false,
-   "explain": "",
-   "id": "de-py-02",
-   "n": 2,
-   "points": 10,
-   "tables": [
-    "events_raw"
-   ],
-   "starter": "# Missing user ids\n# DataFrames ready: events_raw, customer_dim, orders_wh, orders_src\n# Put your final answer in a variable called result\nresult = events_raw.head()"
-  },
-  {
-   "tool": "python",
-   "level": "Foundations",
-   "title": "Standardise event types",
-   "question": "Trim and lowercase event_type, then count rows per clean value (do not deduplicate). result: event_type and count.",
-   "solution": "result = events_raw['event_type'].str.strip().str.lower().value_counts()",
-   "hint": ".str.strip().str.lower().",
-   "ordered": false,
-   "explain": "",
-   "id": "de-py-03",
-   "n": 3,
-   "points": 10,
-   "tables": [
-    "events_raw"
-   ],
-   "starter": "# Standardise event types\n# DataFrames ready: events_raw, customer_dim, orders_wh, orders_src\n# Put your final answer in a variable called result\nresult = events_raw.head()"
-  },
-  {
-   "tool": "python",
-   "level": "Applied",
-   "title": "Deduplicate",
-   "question": "Keep the latest copy of each event_id by ingested_at. How many rows are left? result: one number.",
-   "solution": "d = events_raw.sort_values('ingested_at', ascending=False).drop_duplicates('event_id')\nresult = len(d)",
-   "hint": "sort_values then drop_duplicates(subset).",
-   "ordered": false,
-   "explain": "",
-   "id": "de-py-04",
-   "n": 4,
-   "points": 20,
-   "tables": [
-    "events_raw"
-   ],
-   "starter": "# Deduplicate\n# DataFrames ready: events_raw, customer_dim, orders_wh, orders_src\n# Put your final answer in a variable called result\nresult = events_raw.head()"
-  },
-  {
-   "tool": "python",
-   "level": "Applied",
-   "title": "Events per hour",
-   "question": "After deduplicating by event_id, count events per hour of day (0 to 23) of event_ts. result: hour and events.",
-   "solution": "d = events_raw.drop_duplicates('event_id')\nh = pd.to_datetime(d['event_ts']).dt.hour.rename('hour')\nresult = d.groupby(h).size().rename('events')",
-   "hint": ".dt.hour after pd.to_datetime.",
-   "ordered": false,
-   "explain": "",
-   "id": "de-py-05",
-   "n": 5,
-   "points": 20,
-   "tables": [
-    "events_raw"
-   ],
-   "starter": "# Events per hour\n# DataFrames ready: events_raw, customer_dim, orders_wh, orders_src\n# Put your final answer in a variable called result\nresult = events_raw.head()"
-  },
-  {
-   "tool": "python",
-   "level": "Applied",
-   "title": "Data quality report",
-   "question": "For every column in events_raw, return the percent of missing values. result: column and null_pct (2 decimals).",
-   "solution": "result = (events_raw.isna().mean() * 100).round(2).rename_axis('column').rename('null_pct')",
-   "hint": "df.isna().mean() works column by column.",
-   "ordered": false,
-   "explain": "",
-   "id": "de-py-06",
-   "n": 6,
-   "points": 20,
-   "tables": [
-    "events_raw"
-   ],
-   "starter": "# Data quality report\n# DataFrames ready: events_raw, customer_dim, orders_wh, orders_src\n# Put your final answer in a variable called result\nresult = events_raw.head()"
-  },
-  {
-   "tool": "python",
-   "level": "Business case",
-   "title": "Sessionise events",
-   "question": "Deduplicate by event_id and drop rows without user_id. Sort each user's events by event_ts; a new session starts when the gap from the previous event is more than 30 minutes (or it is the user's first event). How many sessions are there? result: one number.",
-   "solution": "d = events_raw.drop_duplicates('event_id').dropna(subset=['user_id']).copy()\nd['ts'] = pd.to_datetime(d['event_ts'])\nd = d.sort_values(['user_id', 'ts'])\ngap = d.groupby('user_id')['ts'].diff()\nresult = int((gap.isna() | (gap > pd.Timedelta(minutes=30))).sum())",
-   "hint": "groupby('user_id')['ts'].diff() gives the gap to the previous event.",
-   "ordered": false,
-   "explain": "",
-   "id": "de-py-07",
-   "n": 7,
-   "points": 30,
-   "tables": [
-    "events_raw"
-   ],
-   "starter": "# Sessionise events\n# DataFrames ready: events_raw, customer_dim, orders_wh, orders_src\n# Put your final answer in a variable called result\nresult = events_raw.head()"
-  },
-  {
-   "tool": "python",
-   "level": "Business case",
-   "title": "Current tier from history",
-   "question": "Without using is_current, take each customer's latest version (largest valid_from) in customer_dim and count customers per tier. result: tier and customers.",
-   "solution": "c = customer_dim.sort_values('valid_from').groupby('customer_id').tail(1)\nresult = c['tier'].value_counts().rename_axis('tier').rename('customers')",
-   "hint": "sort_values then groupby().tail(1).",
-   "ordered": false,
-   "explain": "",
-   "id": "de-py-08",
-   "n": 8,
-   "points": 30,
-   "tables": [
-    "customer_dim"
-   ],
-   "starter": "# Current tier from history\n# DataFrames ready: events_raw, customer_dim, orders_wh, orders_src\n# Put your final answer in a variable called result\nresult = customer_dim.head()"
-  },
-  {
-   "tool": "python",
-   "level": "Interview",
-   "title": "Upsert in pandas",
-   "question": "Apply the same merge rules as the SQL task (skip amount <= 0; existing orders take the source row only if its updated_at is newer; insert new orders). Return a dict: {'rows': total orders, 'total_amount': sum of amount}.",
-   "solution": "s = orders_src[orders_src.amount > 0]\nw = orders_wh.set_index('order_id')\nfor r in s.itertuples(index=False):\n    if r.order_id not in w.index or r.updated_at > w.at[r.order_id, 'updated_at']:\n        w.loc[r.order_id] = [r.customer_id, r.amount, r.status, r.updated_at]\nresult = {'rows': len(w), 'total_amount': int(w['amount'].sum())}",
-   "hint": "Index the warehouse by order_id, then update or add rows.",
-   "ordered": false,
-   "explain": "",
-   "id": "de-py-09",
-   "n": 9,
-   "points": 40,
-   "tables": [
-    "orders_wh",
-    "orders_src"
-   ],
-   "starter": "# Upsert in pandas\n# DataFrames ready: events_raw, customer_dim, orders_wh, orders_src\n# Put your final answer in a variable called result\nresult = orders_wh.head()"
-  },
-  {
-   "tool": "python",
-   "level": "Interview",
-   "title": "Validate the extract",
-   "question": "Before loading orders_src, count rows breaking each rule: negative_amount (amount <= 0) and stale_update (order exists in orders_wh and src updated_at is not newer). result: rule and failed.",
-   "solution": "m = orders_src.merge(orders_wh[['order_id', 'updated_at']], on='order_id', how='left', suffixes=('', '_wh'))\nstale = m['updated_at_wh'].notna() & (m['updated_at'] <= m['updated_at_wh'])\nresult = pd.DataFrame({'rule': ['negative_amount', 'stale_update'], 'failed': [int((orders_src.amount <= 0).sum()), int(stale.sum())]})",
-   "hint": "Left merge the warehouse timestamps in and compare.",
-   "ordered": false,
-   "explain": "",
-   "id": "de-py-10",
-   "n": 10,
-   "points": 40,
-   "tables": [
-    "orders_wh",
-    "orders_src"
-   ],
-   "starter": "# Validate the extract\n# DataFrames ready: events_raw, customer_dim, orders_wh, orders_src\n# Put your final answer in a variable called result\nresult = orders_wh.head()"
+   "key": "hard",
+   "name": "Hard",
+   "company": "",
+   "story": "",
+   "tables": [],
+   "tasks": []
   }
  ]
 }

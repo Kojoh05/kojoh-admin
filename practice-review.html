@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+if (/^\/admin(\/|$)/.test(location.pathname)) document.write('<base href="/admin/">');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>KOJOH Admin | Practice reviews</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+<style>
+.rv-item{border:1px solid var(--line); border-radius:var(--radius-sm); padding:1rem; background:var(--bg); margin-bottom:0.75rem;}
+.rv-meta{font-size:0.75rem; color:var(--muted); margin-bottom:0.4rem;}
+.rv-q{font-weight:600; font-size:0.875rem; margin:0 0 0.5rem;}
+.rv-a{white-space:pre-wrap; font-size:0.875rem; line-height:1.6; border-left:3px solid var(--ink); padding-left:0.75rem; margin:0 0 0.75rem;}
+.rv-rub{font-size:0.75rem; color:var(--muted); background:var(--card); border:1px dashed var(--line); border-radius:8px; padding:0.5rem 0.7rem; margin:0 0 0.75rem;}
+.rv-row{display:grid; grid-template-columns:7rem minmax(0, 1fr) auto; gap:0.6rem; align-items:start;}
+@media (max-width:40rem){ .rv-row{grid-template-columns:1fr;} }
+.kp-tabs{display:flex; gap:0.4rem; margin:0 0 1rem;}
+.kp-tab{font:inherit; font-size:0.8125rem; font-weight:600; border:1px solid var(--line); background:var(--card); color:var(--text); border-radius:999px; padding:0.45rem 0.9rem; cursor:pointer;}
+.kp-tab.on{background:var(--ink); color:var(--bg); border-color:var(--ink);}
+</style>
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="supabase-config.js"></script>
+<script src="admin-core.js"></script>
+<script>
+KA.boot('practice', function (ctx) {
+  var main = ctx.main, supa = KA.supa, esc = KA.esc, view = 'written', rubrics = {}, people = {};
+  var LV = { beginner: 'Beginner', intermediate: 'Intermediate', hard: 'Hard' };
+  main.innerHTML = '<div class="ka-head"><div><h1>Practice reviews</h1><p>Mark written answers, then issue certificates. A certificate can be issued once every written answer in that level is marked. Score = (auto points + written marks) / (max points + max marks).</p></div>'
+    + '<div class="ka-btnrow"><a class="ka-btn" href="practice.html">Back to Practice</a></div></div>'
+    + '<div class="kp-tabs"><button class="kp-tab on" data-v="written" type="button">Written answers</button><button class="kp-tab" data-v="certs" type="button">Certificates</button><button class="kp-tab" data-v="done" type="button">Recently marked</button></div>'
+    + '<div class="ka-card" id="rvBody"><div class="ka-empty">Loading</div></div>';
+  main.querySelector('.kp-tabs').onclick = function (e) {
+    var b = e.target.closest('[data-v]'); if (!b) return;
+    view = b.getAttribute('data-v');
+    Array.prototype.forEach.call(this.children, function (x) { x.classList.toggle('on', x === b); });
+    load();
+  };
+  async function loadRubrics(roles) {
+    for (var i = 0; i < roles.length; i++) {
+      var r = roles[i]; if (rubrics[r]) continue; rubrics[r] = {};
+      var d = await supa.storage.from('practice-pro').download('src/' + r + '.json');
+      if (d.error || !d.data) continue;
+      var src = JSON.parse(await d.data.text());
+      (src.levels || [{ tasks: src.tasks || [] }]).forEach(function (l) { l.tasks.forEach(function (t) { if (t.tool === 'written') rubrics[r][t.id] = t; }); });
+    }
+  }
+  async function loadPeople(ids) {
+    ids = ids.filter(function (id) { return !people[id]; });
+    if (!ids.length) return;
+    var p = await supa.from('profiles').select('id, username, email, first_name, last_name').in('id', ids);
+    (p.data || []).forEach(function (u) { people[u.id] = u; });
+  }
+  function who(id) { var u = people[id]; return u ? esc([u.first_name, u.last_name].filter(Boolean).join(' ') || u.username) + ' &middot; ' + esc(u.email) : esc(id.slice(0, 8)); }
+
+  async function load() {
+    var body = document.getElementById('rvBody');
+    body.innerHTML = '<div class="ka-empty">Loading</div>';
+    if (view === 'certs') return loadCerts(body);
+    var r = await supa.from('practice_written').select('*').eq('status', view === 'done' ? 'reviewed' : 'submitted')
+      .order(view === 'done' ? 'reviewed_at' : 'created_at', { ascending: view !== 'done' }).limit(view === 'done' ? 50 : 100);
+    if (r.error) { body.innerHTML = '<div class="ka-empty">' + esc(r.error.message) + '. Run supabase/schema-practice-levels.sql.</div>'; return; }
+    var rows = r.data || [];
+    if (!rows.length) { body.innerHTML = '<div class="ka-empty">' + (view === 'done' ? 'Nothing marked yet.' : 'Nothing waiting. New written answers appear here.') + '</div>'; return; }
+    await Promise.all([loadRubrics(rows.map(function (x) { return x.role; }).filter(function (v, i, a) { return a.indexOf(v) === i; })), loadPeople(rows.map(function (x) { return x.user_id; }))]);
+    body.innerHTML = rows.map(function (w) {
+      var t = (rubrics[w.role] || {})[w.task_id] || {};
+      return '<div class="rv-item" data-id="' + w.id + '"><div class="rv-meta">' + who(w.user_id) + ' &middot; ' + esc(w.role) + ' / ' + esc(LV[w.level] || w.level) + ' &middot; ' + esc(w.task_id) + ' &middot; ' + w.words + ' words &middot; ' + KA.date(w.created_at) + '</div>'
+        + '<p class="rv-q">' + esc(t.title ? t.title + ': ' : '') + esc(w.question || t.question || '') + '</p><div class="rv-a">' + esc(w.answer) + '</div>'
+        + (t.rubric ? '<div class="rv-rub"><b>Rubric:</b> ' + esc(t.rubric) + '</div>' : '')
+        + '<div class="rv-row"><div><label class="ka-label">Marks / ' + w.max_marks + '</label><input class="ka-input" type="number" min="0" max="' + w.max_marks + '" data-marks value="' + (w.marks === null || w.marks === undefined ? '' : w.marks) + '"></div>'
+        + '<div><label class="ka-label">Feedback for the learner</label><textarea class="ka-textarea" data-fb style="min-height:4.5rem">' + esc(w.feedback || '') + '</textarea></div>'
+        + '<div><label class="ka-label">&nbsp;</label><button class="ka-btn ka-btn-primary" type="button" data-save>' + (view === 'done' ? 'Update' : 'Save mark') + '</button></div></div></div>';
+    }).join('');
+    Array.prototype.forEach.call(body.querySelectorAll('[data-save]'), function (b) {
+      b.onclick = async function () {
+        var item = b.closest('.rv-item'), id = item.getAttribute('data-id'), w = rows.filter(function (x) { return x.id === id; })[0];
+        var m = parseInt(item.querySelector('[data-marks]').value, 10);
+        if (isNaN(m) || m < 0 || m > w.max_marks) { KA.toast('Marks must be between 0 and ' + w.max_marks, true); return; }
+        b.disabled = true;
+        var u = await supa.from('practice_written').update({ marks: m, feedback: item.querySelector('[data-fb]').value.trim(), status: 'reviewed', reviewed_at: new Date().toISOString() }).eq('id', id);
+        b.disabled = false;
+        if (u.error) { KA.toast(u.error.message, true); return; }
+        KA.toast('Marked ' + m + ' / ' + w.max_marks);
+        if (view === 'written') item.remove();
+      };
+    });
+  }
+
+  async function loadCerts(body) {
+    var r = await supa.from('practice_certificates').select('*').eq('status', 'requested').order('created_at');
+    if (r.error) { body.innerHTML = '<div class="ka-empty">' + esc(r.error.message) + '</div>'; return; }
+    var rows = r.data || [];
+    if (!rows.length) { body.innerHTML = '<div class="ka-empty">No certificate requests. Learners request one when they finish a level.</div>'; return; }
+    await loadPeople(rows.map(function (x) { return x.user_id; }));
+    var wr = await supa.from('practice_written').select('user_id, role, level, status, marks, max_marks').in('user_id', rows.map(function (x) { return x.user_id; }));
+    var W = wr.data || [];
+    body.innerHTML = rows.map(function (c) {
+      var mine = W.filter(function (w) { return w.user_id === c.user_id && w.role === c.role && w.level === c.level; });
+      var pending = mine.filter(function (w) { return w.status !== 'reviewed'; }).length;
+      var wm = mine.reduce(function (a, w) { return a + (w.marks || 0); }, 0), wmax = mine.reduce(function (a, w) { return a + (w.max_marks || 0); }, 0);
+      var score = (c.auto_max + wmax) ? Math.round(100 * ((c.auto_points || 0) + wm) / ((c.auto_max || 0) + wmax)) : 0;
+      return '<div class="rv-item" data-id="' + c.id + '" data-score="' + score + '"><div class="rv-meta">' + who(c.user_id) + ' &middot; requested ' + KA.date(c.created_at) + '</div>'
+        + '<p class="rv-q">' + esc(c.name) + ' &middot; ' + esc(c.role_title || c.role) + ' &middot; ' + esc(LV[c.level] || c.level) + '</p>'
+        + '<p class="ka-hint">Auto: ' + (c.auto_points || 0) + ' / ' + (c.auto_max || 0) + ' &middot; Written: ' + wm + ' / ' + wmax + (pending ? ' (' + pending + ' still to mark)' : '') + ' &middot; <b>Score ' + score + '%</b></p>'
+        + '<div class="ka-btnrow" style="margin-top:0.5rem"><button class="ka-btn ka-btn-primary" type="button" data-issue' + (pending ? ' disabled title="Mark the written answers first"' : '') + '>Issue certificate</button>'
+        + '<button class="ka-btn ka-btn-danger" type="button" data-reject>Reject</button></div></div>';
+    }).join('');
+    Array.prototype.forEach.call(body.querySelectorAll('[data-issue]'), function (b) {
+      b.onclick = async function () {
+        var item = b.closest('.rv-item');
+        var u = await supa.from('practice_certificates').update({ status: 'issued', score: +item.getAttribute('data-score'), issued_at: new Date().toISOString() }).eq('id', item.getAttribute('data-id'));
+        if (u.error) { KA.toast(u.error.message, true); return; }
+        KA.toast('Certificate issued'); item.remove();
+      };
+    });
+    Array.prototype.forEach.call(body.querySelectorAll('[data-reject]'), function (b) {
+      b.onclick = async function () {
+        var note = window.prompt('Reason (the learner can request again later)'); if (note === null) return;
+        var item = b.closest('.rv-item');
+        var u = await supa.from('practice_certificates').delete().eq('id', item.getAttribute('data-id'));
+        if (u.error) { KA.toast(u.error.message, true); return; }
+        KA.toast('Request removed'); item.remove();
+      };
+    });
+  }
+  load();
+});
+</script>
+</body>
+</html>

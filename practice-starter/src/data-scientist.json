@@ -2,446 +2,928 @@
  "id": "data-scientist",
  "short": "ds",
  "title": "Data Scientist",
- "company": "Streamly",
- "story": "Streamly is a video subscription app with Free, Plus and Pro plans. The product team wants to understand churn and has just run an A/B test on the paywall.",
- "tables": [
+ "levels": [
   {
-   "name": "users",
-   "file": "ds_users.csv",
-   "about": "One row per user: plan, channel, age band, city tier, monthly minutes, support tickets, churned (1/0).",
-   "columns": [
-    [
-     "user_id",
-     "BIGINT"
-    ],
-    [
-     "signup_date",
-     "DATE"
-    ],
-    [
-     "plan",
-     "VARCHAR"
-    ],
-    [
-     "acquisition_channel",
-     "VARCHAR"
-    ],
-    [
-     "age_band",
-     "VARCHAR"
-    ],
-    [
-     "city_tier",
-     "VARCHAR"
-    ],
-    [
-     "monthly_minutes",
-     "BIGINT"
-    ],
-    [
-     "support_tickets",
-     "BIGINT"
-    ],
-    [
-     "churned",
-     "BIGINT"
-    ]
-   ],
-   "rows": 2000
-  },
-  {
-   "name": "sessions",
-   "file": "ds_sessions.csv",
-   "about": "App sessions: user, date, minutes, main feature used.",
-   "columns": [
-    [
-     "user_id",
-     "BIGINT"
-    ],
-    [
-     "session_date",
-     "DATE"
-    ],
-    [
-     "minutes",
-     "BIGINT"
-    ],
-    [
-     "feature",
-     "VARCHAR"
-    ]
-   ],
-   "rows": 17303
-  },
-  {
-   "name": "experiment",
-   "file": "ds_experiment.csv",
-   "about": "Paywall test: variant A (control) or B, converted (1/0), revenue.",
-   "columns": [
-    [
-     "user_id",
-     "BIGINT"
-    ],
-    [
-     "variant",
-     "VARCHAR"
-    ],
-    [
-     "converted",
-     "BIGINT"
-    ],
-    [
-     "revenue",
-     "BIGINT"
-    ]
-   ],
-   "rows": 2000
-  }
- ],
- "tasks": [
-  {
-   "tool": "sql",
-   "level": "Foundations",
-   "title": "Churn rate",
-   "question": "What percent of users churned? Return one value: churn_pct (2 decimals).",
-   "solution": "SELECT ROUND(100.0 * AVG(churned), 2) AS churn_pct FROM users",
-   "hint": "AVG of a 1/0 column is a rate.",
-   "ordered": false,
-   "explain": "",
-   "id": "ds-sql-01",
-   "n": 1,
-   "points": 10,
+   "key": "beginner",
+   "name": "Beginner",
+   "company": "Streamly",
+   "story": "Streamly is a video subscription app with Free, Plus and Pro plans. The product team wants to understand churn and has just run an A/B test on the paywall.",
    "tables": [
-    "users"
+    {
+     "name": "users",
+     "file": "ds_users.csv",
+     "about": "One row per user: plan, channel, age band, city tier, monthly minutes, support tickets, churned (1/0).",
+     "columns": [
+      [
+       "user_id",
+       "BIGINT"
+      ],
+      [
+       "signup_date",
+       "DATE"
+      ],
+      [
+       "plan",
+       "VARCHAR"
+      ],
+      [
+       "acquisition_channel",
+       "VARCHAR"
+      ],
+      [
+       "age_band",
+       "VARCHAR"
+      ],
+      [
+       "city_tier",
+       "VARCHAR"
+      ],
+      [
+       "monthly_minutes",
+       "BIGINT"
+      ],
+      [
+       "support_tickets",
+       "BIGINT"
+      ],
+      [
+       "churned",
+       "BIGINT"
+      ]
+     ],
+     "rows": 2000
+    },
+    {
+     "name": "sessions",
+     "file": "ds_sessions.csv",
+     "about": "App sessions: user, date, minutes, main feature used.",
+     "columns": [
+      [
+       "user_id",
+       "BIGINT"
+      ],
+      [
+       "session_date",
+       "DATE"
+      ],
+      [
+       "minutes",
+       "BIGINT"
+      ],
+      [
+       "feature",
+       "VARCHAR"
+      ]
+     ],
+     "rows": 17303
+    },
+    {
+     "name": "experiment",
+     "file": "ds_experiment.csv",
+     "about": "Paywall test: variant A (control) or B, converted (1/0), revenue.",
+     "columns": [
+      [
+       "user_id",
+       "BIGINT"
+      ],
+      [
+       "variant",
+       "VARCHAR"
+      ],
+      [
+       "converted",
+       "BIGINT"
+      ],
+      [
+       "revenue",
+       "BIGINT"
+      ]
+     ],
+     "rows": 2000
+    }
    ],
-   "starter": "-- Churn rate\nSELECT *\nFROM users\nLIMIT 10;"
+   "tasks": [
+    {
+     "tool": "sql",
+     "title": "Churn rate",
+     "question": "What percent of users churned? Return one value: churn_pct (2 decimals).",
+     "solution": "SELECT ROUND(100.0 * AVG(churned), 2) AS churn_pct FROM users",
+     "hint": "AVG of a 1/0 column is a rate.",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-sql-01",
+     "points": 10,
+     "tables": [
+      "users"
+     ],
+     "starter": "-- Churn rate\nSELECT *\nFROM users\nLIMIT 10;",
+     "stage": "Foundations"
+    },
+    {
+     "tool": "python",
+     "title": "Median minutes",
+     "question": "What is the median monthly_minutes? result: one number.",
+     "solution": "result = users['monthly_minutes'].median()",
+     "hint": ".median().",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-py-01",
+     "points": 10,
+     "tables": [
+      "users"
+     ],
+     "starter": "# Median minutes\n# DataFrames ready: users, sessions, experiment\n# Put your final answer in a variable called result\nresult = users.head()",
+     "stage": "Foundations"
+    },
+    {
+     "tool": "sql",
+     "title": "Users per plan",
+     "question": "How many users are on each plan? Return plan and users.",
+     "solution": "SELECT plan, COUNT(*) AS users FROM users GROUP BY plan",
+     "hint": "GROUP BY plan.",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-sql-02",
+     "points": 10,
+     "tables": [
+      "users"
+     ],
+     "starter": "-- Users per plan\nSELECT *\nFROM users\nLIMIT 10;",
+     "stage": "Foundations"
+    },
+    {
+     "tool": "python",
+     "title": "Plan by churn crosstab",
+     "question": "Count users by plan (rows) and churned (columns 0 and 1). result: plan, 0, 1.",
+     "solution": "result = pd.crosstab(users['plan'], users['churned'])",
+     "hint": "pd.crosstab.",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-py-02",
+     "points": 10,
+     "tables": [
+      "users"
+     ],
+     "starter": "# Plan by churn crosstab\n# DataFrames ready: users, sessions, experiment\n# Put your final answer in a variable called result\nresult = users.head()",
+     "stage": "Foundations"
+    },
+    {
+     "tool": "sql",
+     "title": "Minutes by plan",
+     "question": "What are average monthly minutes per plan? Return plan and avg_minutes (2 decimals).",
+     "solution": "SELECT plan, ROUND(AVG(monthly_minutes), 2) AS avg_minutes FROM users GROUP BY plan",
+     "hint": "AVG and ROUND.",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-sql-03",
+     "points": 10,
+     "tables": [
+      "users"
+     ],
+     "starter": "-- Minutes by plan\nSELECT *\nFROM users\nLIMIT 10;",
+     "stage": "Foundations"
+    },
+    {
+     "tool": "python",
+     "title": "Long sessions",
+     "question": "How many sessions lasted more than 60 minutes? result: one number.",
+     "solution": "result = (sessions['minutes'] > 60).sum()",
+     "hint": "Boolean filter then sum.",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-py-03",
+     "points": 10,
+     "tables": [
+      "sessions"
+     ],
+     "starter": "# Long sessions\n# DataFrames ready: users, sessions, experiment\n# Put your final answer in a variable called result\nresult = sessions.head()",
+     "stage": "Foundations"
+    },
+    {
+     "tool": "sql",
+     "title": "Users per age band",
+     "question": "How many users are in each age band? Return age_band and users.",
+     "solution": "SELECT age_band, COUNT(*) AS users FROM users GROUP BY age_band",
+     "hint": "GROUP BY age_band.",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-sql-11",
+     "points": 10,
+     "tables": [
+      "users"
+     ],
+     "starter": "-- Users per age band\nSELECT *\nFROM users\nLIMIT 10;",
+     "stage": "Foundations"
+    },
+    {
+     "tool": "python",
+     "title": "Churned users",
+     "question": "How many users churned? result: one number.",
+     "solution": "result = int(users['churned'].sum())",
+     "hint": ".sum() of a 1/0 column.",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-py-11",
+     "points": 10,
+     "tables": [
+      "users"
+     ],
+     "starter": "# Churned users\n# DataFrames ready: users, sessions, experiment\n# Put your final answer in a variable called result\nresult = users.head()",
+     "stage": "Foundations"
+    },
+    {
+     "tool": "sql",
+     "title": "Sessions per feature",
+     "question": "How many sessions used each feature? Return feature and sessions.",
+     "solution": "SELECT feature, COUNT(*) AS sessions FROM sessions GROUP BY feature",
+     "hint": "GROUP BY feature.",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-sql-12",
+     "points": 10,
+     "tables": [
+      "sessions"
+     ],
+     "starter": "-- Sessions per feature\nSELECT *\nFROM sessions\nLIMIT 10;",
+     "stage": "Foundations"
+    },
+    {
+     "tool": "python",
+     "title": "Describe minutes",
+     "question": "Return the mean, min and max of monthly_minutes (2 decimals) as a dict {\"mean\": ..., \"min\": ..., \"max\": ...}.",
+     "solution": "m = users['monthly_minutes']\nresult = {'mean': round(m.mean(), 2), 'min': m.min(), 'max': m.max()}",
+     "hint": "Series.mean/min/max.",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-py-12",
+     "points": 10,
+     "tables": [
+      "users"
+     ],
+     "starter": "# Describe minutes\n# DataFrames ready: users, sessions, experiment\n# Put your final answer in a variable called result\nresult = users.head()",
+     "stage": "Foundations"
+    },
+    {
+     "tool": "sql",
+     "title": "Churn by city tier",
+     "question": "Return city_tier, users and churn_pct (2 decimals).",
+     "solution": "SELECT city_tier, COUNT(*) AS users, ROUND(100.0 * AVG(churned), 2) AS churn_pct FROM users GROUP BY city_tier",
+     "hint": "AVG(churned).",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-sql-13",
+     "points": 10,
+     "tables": [
+      "users"
+     ],
+     "starter": "-- Churn by city tier\nSELECT *\nFROM users\nLIMIT 10;",
+     "stage": "Foundations"
+    },
+    {
+     "tool": "python",
+     "title": "Variant sizes",
+     "question": "How many users are in variant A and B? result: variant and count.",
+     "solution": "result = experiment['variant'].value_counts()",
+     "hint": "value_counts().",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-py-13",
+     "points": 10,
+     "tables": [
+      "experiment"
+     ],
+     "starter": "# Variant sizes\n# DataFrames ready: users, sessions, experiment\n# Put your final answer in a variable called result\nresult = experiment.head()",
+     "stage": "Foundations"
+    },
+    {
+     "tool": "sql",
+     "title": "Churn by channel",
+     "question": "Return acquisition_channel, users and churn_pct (2 decimals) for each channel.",
+     "solution": "SELECT acquisition_channel, COUNT(*) AS users, ROUND(100.0 * AVG(churned), 2) AS churn_pct FROM users GROUP BY 1",
+     "hint": "Same as the overall rate, grouped.",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-sql-04",
+     "points": 20,
+     "tables": [
+      "users"
+     ],
+     "starter": "-- Churn by channel\nSELECT *\nFROM users\nLIMIT 10;",
+     "stage": "Applied"
+    },
+    {
+     "tool": "python",
+     "title": "Outliers by z-score",
+     "question": "How many users have a monthly_minutes z-score above 3? Use the pandas default (sample) standard deviation. result: one number.",
+     "solution": "m = users['monthly_minutes']\nresult = ((m - m.mean()) / m.std() > 3).sum()",
+     "hint": "z = (x - mean) / std.",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-py-04",
+     "points": 20,
+     "tables": [
+      "users"
+     ],
+     "starter": "# Outliers by z-score\n# DataFrames ready: users, sessions, experiment\n# Put your final answer in a variable called result\nresult = users.head()",
+     "stage": "Applied"
+    },
+    {
+     "tool": "written",
+     "title": "Explain the churn drivers",
+     "question": "Write a short note to the product manager explaining the two strongest churn drivers you found and how confident you are in them.",
+     "guidance": "Name two drivers with numbers, and say whether they are correlation or likely cause.",
+     "rubric": "Two drivers backed by numbers; distinguishes correlation from causation; plain language.",
+     "word_limit": 150,
+     "solution": "",
+     "hint": "",
+     "id": "ds-wr-01",
+     "points": 20,
+     "tables": [],
+     "starter": "",
+     "stage": "Applied"
+    },
+    {
+     "tool": "sql",
+     "title": "Active days: churned vs retained",
+     "question": "Active days = number of distinct dates a user had a session (0 if none). Return churned (1/0) and avg_active_days (2 decimals).",
+     "solution": "SELECT u.churned, ROUND(AVG(COALESCE(a.days, 0)), 2) AS avg_active_days\nFROM users u LEFT JOIN (SELECT user_id, COUNT(DISTINCT session_date) AS days FROM sessions GROUP BY 1) a USING (user_id)\nGROUP BY u.churned",
+     "hint": "LEFT JOIN so users without sessions count as 0.",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-sql-05",
+     "points": 20,
+     "tables": [
+      "users",
+      "sessions"
+     ],
+     "starter": "-- Active days: churned vs retained\nSELECT *\nFROM users\nLIMIT 10;",
+     "stage": "Applied"
+    },
+    {
+     "tool": "python",
+     "title": "Ordinal encoding",
+     "question": "Encode plan as Free = 0, Plus = 1, Pro = 2 and return the mean encoded value per acquisition_channel (2 decimals). result: acquisition_channel and plan_code.",
+     "solution": "u = users.assign(plan_code=users['plan'].map({'Free': 0, 'Plus': 1, 'Pro': 2}))\nresult = u.groupby('acquisition_channel')['plan_code'].mean().round(2)",
+     "hint": "Series.map with a dict.",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-py-05",
+     "points": 20,
+     "tables": [
+      "users"
+     ],
+     "starter": "# Ordinal encoding\n# DataFrames ready: users, sessions, experiment\n# Put your final answer in a variable called result\nresult = users.head()",
+     "stage": "Applied"
+    },
+    {
+     "tool": "written",
+     "title": "Read the A/B test",
+     "question": "Variant B converts better. Should the team ship it? Write your recommendation with the evidence and any caveats.",
+     "guidance": "Use the lift and the z statistic, mention sample size and revenue per user, then decide.",
+     "rubric": "Decision stated; lift + significance used; revenue impact considered; caveats such as novelty or segments.",
+     "word_limit": 200,
+     "solution": "",
+     "hint": "",
+     "id": "ds-wr-02",
+     "points": 20,
+     "tables": [],
+     "starter": "",
+     "stage": "Applied"
+    },
+    {
+     "tool": "sql",
+     "title": "Feature mix",
+     "question": "What share of sessions used each feature? Return feature and share_pct (2 decimals).",
+     "solution": "SELECT feature, ROUND(100.0 * COUNT(*) / SUM(COUNT(*)) OVER (), 2) AS share_pct FROM sessions GROUP BY feature",
+     "hint": "COUNT(*) / SUM(COUNT(*)) OVER ().",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-sql-06",
+     "points": 20,
+     "tables": [
+      "sessions"
+     ],
+     "starter": "-- Feature mix\nSELECT *\nFROM sessions\nLIMIT 10;",
+     "stage": "Applied"
+    },
+    {
+     "tool": "python",
+     "title": "Correlation",
+     "question": "What is the Pearson correlation between monthly_minutes and churned? result: one number, 2 decimals.",
+     "solution": "result = round(users['monthly_minutes'].corr(users['churned']), 2)",
+     "hint": "Series.corr().",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-py-06",
+     "points": 20,
+     "tables": [
+      "users"
+     ],
+     "starter": "# Correlation\n# DataFrames ready: users, sessions, experiment\n# Put your final answer in a variable called result\nresult = users.head()",
+     "stage": "Applied"
+    },
+    {
+     "tool": "sql",
+     "title": "Average session length by plan",
+     "question": "Average session minutes per plan, 2 decimals. Return plan and avg_minutes.",
+     "solution": "SELECT u.plan, ROUND(AVG(s.minutes), 2) AS avg_minutes FROM sessions s JOIN users u USING (user_id) GROUP BY u.plan",
+     "hint": "Join users for plan.",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-sql-14",
+     "points": 20,
+     "tables": [
+      "users",
+      "sessions"
+     ],
+     "starter": "-- Average session length by plan\nSELECT *\nFROM users\nLIMIT 10;",
+     "stage": "Applied"
+    },
+    {
+     "tool": "python",
+     "title": "Missing values",
+     "question": "For each column in users, count missing values. result: column and missing.",
+     "solution": "result = users.isna().sum().rename_axis('column').rename('missing')",
+     "hint": "df.isna().sum().",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-py-14",
+     "points": 20,
+     "tables": [
+      "users"
+     ],
+     "starter": "# Missing values\n# DataFrames ready: users, sessions, experiment\n# Put your final answer in a variable called result\nresult = users.head()",
+     "stage": "Applied"
+    },
+    {
+     "tool": "sql",
+     "title": "Signups by month",
+     "question": "Users signed up per month (YYYY-MM). Return month and users.",
+     "solution": "SELECT strftime(signup_date, '%Y-%m') AS month, COUNT(*) AS users FROM users GROUP BY 1",
+     "hint": "strftime on signup_date.",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-sql-15",
+     "points": 20,
+     "tables": [
+      "users"
+     ],
+     "starter": "-- Signups by month\nSELECT *\nFROM users\nLIMIT 10;",
+     "stage": "Applied"
+    },
+    {
+     "tool": "python",
+     "title": "Binning minutes",
+     "question": "Bin monthly_minutes into Low (< 200), Mid (200 to < 500) and High (500+). Return churn rate percent per bin, 2 decimals. result: usage and churn_pct.",
+     "solution": "b = pd.cut(users['monthly_minutes'], [-1, 199.999, 499.999, 1e9], labels=['Low', 'Mid', 'High'])\nresult = (users.groupby(b.rename('usage'), observed=True)['churned'].mean() * 100).round(2).rename('churn_pct')",
+     "hint": "pd.cut with bins and labels.",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-py-15",
+     "points": 20,
+     "tables": [
+      "users"
+     ],
+     "starter": "# Binning minutes\n# DataFrames ready: users, sessions, experiment\n# Put your final answer in a variable called result\nresult = users.head()",
+     "stage": "Applied"
+    },
+    {
+     "tool": "sql",
+     "title": "Tickets and churn",
+     "question": "Churn rate by number of support tickets (0, 1, 2, 3+). Return tickets_group and churn_pct (2 decimals).",
+     "solution": "SELECT CASE WHEN support_tickets >= 3 THEN '3+' ELSE CAST(support_tickets AS VARCHAR) END AS tickets_group, ROUND(100.0 * AVG(churned), 2) AS churn_pct FROM users GROUP BY 1",
+     "hint": "CASE to bucket 3 and above.",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-sql-16",
+     "points": 20,
+     "tables": [
+      "users"
+     ],
+     "starter": "-- Tickets and churn\nSELECT *\nFROM users\nLIMIT 10;",
+     "stage": "Applied"
+    },
+    {
+     "tool": "python",
+     "title": "Sessions per user",
+     "question": "Average number of sessions per user, counting users with no sessions as 0 (2 decimals). result: one number.",
+     "solution": "n = sessions.groupby('user_id').size().reindex(users['user_id'], fill_value=0)\nresult = round(n.mean(), 2)",
+     "hint": "reindex with fill_value=0.",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-py-16",
+     "points": 20,
+     "tables": [
+      "users",
+      "sessions"
+     ],
+     "starter": "# Sessions per user\n# DataFrames ready: users, sessions, experiment\n# Put your final answer in a variable called result\nresult = users.head()",
+     "stage": "Applied"
+    },
+    {
+     "tool": "python",
+     "title": "Standardise a feature",
+     "question": "Min-max scale monthly_minutes to 0 to 1. What is the mean of the scaled column? result: one number, 2 decimals.",
+     "solution": "m = users['monthly_minutes']\nresult = round(((m - m.min()) / (m.max() - m.min())).mean(), 2)",
+     "hint": "(x - min) / (max - min).",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-py-17",
+     "points": 20,
+     "tables": [
+      "users"
+     ],
+     "starter": "# Standardise a feature\n# DataFrames ready: users, sessions, experiment\n# Put your final answer in a variable called result\nresult = users.head()",
+     "stage": "Applied"
+    },
+    {
+     "tool": "sql",
+     "title": "A/B test readout",
+     "question": "Summarise the paywall test: variant, users, conversions, conversion_pct and revenue_per_user (2 decimals).",
+     "solution": "SELECT variant, COUNT(*) AS users, SUM(converted) AS conversions, ROUND(100.0 * AVG(converted), 2) AS conversion_pct,\n       ROUND(AVG(revenue), 2) AS revenue_per_user\nFROM experiment GROUP BY variant",
+     "hint": "Everything is an aggregate of the experiment table.",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-sql-07",
+     "points": 30,
+     "tables": [
+      "users",
+      "experiment"
+     ],
+     "starter": "-- A/B test readout\nSELECT *\nFROM users\nLIMIT 10;",
+     "stage": "Business case"
+    },
+    {
+     "tool": "python",
+     "title": "Two-proportion z-test",
+     "question": "Compute the pooled two-proportion z statistic for conversion of B vs A: z = (pB - pA) / sqrt(p(1 - p)(1/nA + 1/nB)), p = pooled rate. result: z, 2 decimals.",
+     "solution": "g = experiment.groupby('variant')['converted'].agg(['sum', 'count'])\npa, pb = g.loc['A', 'sum'] / g.loc['A', 'count'], g.loc['B', 'sum'] / g.loc['B', 'count']\np = g['sum'].sum() / g['count'].sum()\nse = np.sqrt(p * (1 - p) * (1 / g.loc['A', 'count'] + 1 / g.loc['B', 'count']))\nresult = round((pb - pa) / se, 2)",
+     "hint": "Aggregate conversions and users per variant first.",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-py-07",
+     "points": 30,
+     "tables": [
+      "experiment"
+     ],
+     "starter": "# Two-proportion z-test\n# DataFrames ready: users, sessions, experiment\n# Put your final answer in a variable called result\nresult = experiment.head()",
+     "stage": "Business case"
+    },
+    {
+     "tool": "written",
+     "title": "Choose a model",
+     "question": "You need to predict churn next month. Which model would you start with and why? How would you validate it on this data?",
+     "guidance": "Start simple, justify, describe a time-based split and the metric you care about.",
+     "rubric": "Reasonable baseline model; time-based validation; metric matched to the business (recall/precision trade-off).",
+     "word_limit": 200,
+     "solution": "",
+     "hint": "",
+     "id": "ds-wr-03",
+     "points": 30,
+     "tables": [],
+     "starter": "",
+     "stage": "Business case"
+    },
+    {
+     "tool": "sql",
+     "title": "Build a feature table",
+     "question": "Build one row per user for a churn model: user_id, sessions, total_minutes, active_days and churned. Users without sessions get 0s.",
+     "solution": "SELECT u.user_id, COUNT(s.user_id) AS sessions, COALESCE(SUM(s.minutes), 0) AS total_minutes,\n       COUNT(DISTINCT s.session_date) AS active_days, u.churned\nFROM users u LEFT JOIN sessions s USING (user_id)\nGROUP BY u.user_id, u.churned",
+     "hint": "LEFT JOIN users to sessions; COUNT(s.user_id) ignores the empty side.",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-sql-08",
+     "points": 30,
+     "tables": [
+      "users",
+      "sessions"
+     ],
+     "starter": "-- Build a feature table\nSELECT *\nFROM users\nLIMIT 10;",
+     "stage": "Business case"
+    },
+    {
+     "tool": "python",
+     "title": "Time-based split",
+     "question": "Make a time-based split: users who signed up before 2024-05-01 are train, the rest test. result: split, users, churn_pct (2 decimals).",
+     "solution": "s = np.where(pd.to_datetime(users['signup_date']) < '2024-05-01', 'train', 'test')\nresult = users.groupby(s).agg(users=('user_id', 'size'), churn_pct=('churned', 'mean'))\nresult['churn_pct'] = (result['churn_pct'] * 100).round(2)\nresult.index.name = 'split'",
+     "hint": "np.where builds the split label; group by it.",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-py-08",
+     "points": 30,
+     "tables": [
+      "users"
+     ],
+     "starter": "# Time-based split\n# DataFrames ready: users, sessions, experiment\n# Put your final answer in a variable called result\nresult = users.head()",
+     "stage": "Business case"
+    },
+    {
+     "tool": "written",
+     "title": "Precision or recall?",
+     "question": "The retention team can call 200 users a month. Explain whether you would optimise precision or recall for the churn model and why.",
+     "guidance": "Tie the choice to the 200-call capacity and the cost of a missed churner.",
+     "rubric": "Links capacity to precision at top-k; considers cost of false negatives; clear conclusion.",
+     "word_limit": 150,
+     "solution": "",
+     "hint": "",
+     "id": "ds-wr-04",
+     "points": 30,
+     "tables": [],
+     "starter": "",
+     "stage": "Business case"
+    },
+    {
+     "tool": "sql",
+     "title": "Revenue by variant and plan",
+     "question": "From the experiment, revenue per user by variant and plan (2 decimals). Return variant, plan, revenue_per_user.",
+     "solution": "SELECT e.variant, u.plan, ROUND(AVG(e.revenue), 2) AS revenue_per_user FROM experiment e JOIN users u USING (user_id) GROUP BY 1, 2",
+     "hint": "Join experiment to users.",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-sql-17",
+     "points": 30,
+     "tables": [
+      "users",
+      "experiment"
+     ],
+     "starter": "-- Revenue by variant and plan\nSELECT *\nFROM users\nLIMIT 10;",
+     "stage": "Business case"
+    },
+    {
+     "tool": "python",
+     "title": "Lift of variant B",
+     "question": "Relative lift of B over A in conversion rate, in percent: (pB / pA - 1) * 100, 2 decimals. result: one number.",
+     "solution": "r = experiment.groupby('variant')['converted'].mean()\nresult = round((r['B'] / r['A'] - 1) * 100, 2)",
+     "hint": "Rates per variant first.",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-py-18",
+     "points": 30,
+     "tables": [
+      "experiment"
+     ],
+     "starter": "# Lift of variant B\n# DataFrames ready: users, sessions, experiment\n# Put your final answer in a variable called result\nresult = experiment.head()",
+     "stage": "Business case"
+    },
+    {
+     "tool": "sql",
+     "title": "Days to first session",
+     "question": "Average days from signup to first session, for users with at least one session (2 decimals). Return avg_days.",
+     "solution": "SELECT ROUND(AVG(date_diff('day', u.signup_date, f.first_s)), 2) AS avg_days FROM users u JOIN (SELECT user_id, MIN(session_date) AS first_s FROM sessions GROUP BY 1) f USING (user_id)",
+     "hint": "MIN(session_date) per user first.",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-sql-18",
+     "points": 30,
+     "tables": [
+      "users",
+      "sessions"
+     ],
+     "starter": "-- Days to first session\nSELECT *\nFROM users\nLIMIT 10;",
+     "stage": "Business case"
+    },
+    {
+     "tool": "python",
+     "title": "Confidence interval",
+     "question": "95% confidence interval for the overall churn rate using the normal approximation: p +/- 1.96 * sqrt(p(1-p)/n). result: dict {\"low\": ..., \"high\": ...} as fractions (2 decimals).",
+     "solution": "p = users['churned'].mean(); n = len(users)\nse = np.sqrt(p * (1 - p) / n)\nresult = {'low': round(p - 1.96 * se, 4), 'high': round(p + 1.96 * se, 4)}",
+     "hint": "Standard error of a proportion.",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-py-19",
+     "points": 30,
+     "tables": [
+      "users"
+     ],
+     "starter": "# Confidence interval\n# DataFrames ready: users, sessions, experiment\n# Put your final answer in a variable called result\nresult = users.head()",
+     "stage": "Business case"
+    },
+    {
+     "tool": "python",
+     "title": "Feature matrix",
+     "question": "Build a model-ready table: one row per user with user_id, monthly_minutes, support_tickets, is_pro (1/0), is_paid_social (1/0) and churned. result: that DataFrame.",
+     "solution": "result = pd.DataFrame({'user_id': users['user_id'], 'monthly_minutes': users['monthly_minutes'], 'support_tickets': users['support_tickets'],\n    'is_pro': (users['plan'] == 'Pro').astype(int), 'is_paid_social': (users['acquisition_channel'] == 'Paid Social').astype(int), 'churned': users['churned']})",
+     "hint": "Boolean columns .astype(int).",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-py-20",
+     "points": 30,
+     "tables": [
+      "users"
+     ],
+     "starter": "# Feature matrix\n# DataFrames ready: users, sessions, experiment\n# Put your final answer in a variable called result\nresult = users.head()",
+     "stage": "Business case"
+    },
+    {
+     "tool": "python",
+     "title": "Logistic-style score",
+     "question": "Score each user: score = 0.5 * support_tickets - monthly_minutes / 500. Flag the top 20% of scores (score >= the 80th percentile) as high risk. What is the churn rate percent among high-risk users (2 decimals)? result: one number.",
+     "solution": "sc = 0.5 * users['support_tickets'] - users['monthly_minutes'] / 500\nhi = sc >= sc.quantile(0.8)\nresult = round(users.loc[hi, 'churned'].mean() * 100, 2)",
+     "hint": "Series.quantile(0.8).",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-py-21",
+     "points": 30,
+     "tables": [
+      "users"
+     ],
+     "starter": "# Logistic-style score\n# DataFrames ready: users, sessions, experiment\n# Put your final answer in a variable called result\nresult = users.head()",
+     "stage": "Business case"
+    },
+    {
+     "tool": "sql",
+     "title": "Week-4 retention",
+     "question": "For users who signed up in January 2024, what percent had at least one session 21 to 27 days after signup? Return retention_pct (2 decimals).",
+     "solution": "WITH c AS (SELECT user_id, signup_date FROM users WHERE signup_date >= DATE '2024-01-01' AND signup_date < DATE '2024-02-01'),\nw AS (SELECT DISTINCT c.user_id FROM c JOIN sessions s USING (user_id)\n      WHERE date_diff('day', c.signup_date, s.session_date) BETWEEN 21 AND 27)\nSELECT ROUND(100.0 * (SELECT COUNT(*) FROM w) / COUNT(*), 2) AS retention_pct FROM c",
+     "hint": "date_diff('day', signup_date, session_date) gives days since signup.",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-sql-09",
+     "points": 40,
+     "tables": [
+      "users",
+      "sessions"
+     ],
+     "starter": "-- Week-4 retention\nSELECT *\nFROM users\nLIMIT 10;",
+     "stage": "Interview"
+    },
+    {
+     "tool": "python",
+     "title": "Evaluate a baseline",
+     "question": "A rule predicts churn = 1 when monthly_minutes < 300. Return accuracy, precision and recall as fractions (2 decimals). result: metric and value, with metric names accuracy, precision, recall.",
+     "solution": "pred = (users['monthly_minutes'] < 300).astype(int)\ny = users['churned']\ntp = ((pred == 1) & (y == 1)).sum()\nresult = pd.DataFrame({'metric': ['accuracy', 'precision', 'recall'],\n                       'value': [round((pred == y).mean(), 2), round(tp / pred.sum(), 2), round(tp / y.sum(), 2)]})",
+     "hint": "precision = TP / predicted positives, recall = TP / actual positives.",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-py-09",
+     "points": 40,
+     "tables": [
+      "users"
+     ],
+     "starter": "# Evaluate a baseline\n# DataFrames ready: users, sessions, experiment\n# Put your final answer in a variable called result\nresult = users.head()",
+     "stage": "Interview"
+    },
+    {
+     "tool": "written",
+     "title": "Leakage check",
+     "question": "List the ways data leakage could creep into a churn model built from these tables, and how you would prevent each.",
+     "guidance": "Think about features computed after the churn date, and random splits on time data.",
+     "rubric": "At least three leakage risks; concrete prevention for each; mentions time-based splits.",
+     "word_limit": 150,
+     "solution": "",
+     "hint": "",
+     "id": "ds-wr-05",
+     "points": 40,
+     "tables": [],
+     "starter": "",
+     "stage": "Interview"
+    },
+    {
+     "tool": "sql",
+     "title": "Churn by usage decile",
+     "question": "Split users into 10 equal groups by monthly_minutes (NTILE, ordered by monthly_minutes then user_id). Return decile, users, churn_pct (2 decimals).",
+     "solution": "SELECT decile, COUNT(*) AS users, ROUND(100.0 * AVG(churned), 2) AS churn_pct\nFROM (SELECT churned, NTILE(10) OVER (ORDER BY monthly_minutes, user_id) AS decile FROM users)\nGROUP BY decile",
+     "hint": "NTILE(10) OVER (ORDER BY ...) assigns deciles.",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-sql-10",
+     "points": 40,
+     "tables": [
+      "users"
+     ],
+     "starter": "-- Churn by usage decile\nSELECT *\nFROM users\nLIMIT 10;",
+     "stage": "Interview"
+    },
+    {
+     "tool": "python",
+     "title": "Which column separates churn most?",
+     "question": "For plan, acquisition_channel, age_band and city_tier, compute the spread = highest minus lowest churn rate across its categories, in percentage points. result: column and spread (2 decimals), largest first.",
+     "solution": "rows = []\nfor c in ['plan', 'acquisition_channel', 'age_band', 'city_tier']:\n    r = users.groupby(c)['churned'].mean() * 100\n    rows.append((c, round(r.max() - r.min(), 2)))\nresult = pd.DataFrame(rows, columns=['column', 'spread']).sort_values('spread', ascending=False)",
+     "hint": "Loop over the columns, group by each one.",
+     "ordered": true,
+     "explain": "",
+     "id": "ds-py-10",
+     "points": 40,
+     "tables": [
+      "users"
+     ],
+     "starter": "# Which column separates churn most?\n# DataFrames ready: users, sessions, experiment\n# Put your final answer in a variable called result\nresult = users.head()",
+     "stage": "Interview"
+    },
+    {
+     "tool": "written",
+     "title": "Explain a model to leadership",
+     "question": "Explain, in plain words for leadership, what a churn model does, how good it is, and how it will be used. No formulas.",
+     "guidance": "Purpose, quality in one sentence (e.g. out of 100 flagged, how many churn), and the action it drives.",
+     "rubric": "Jargon-free; quality explained with a concrete example; clear action and owner.",
+     "word_limit": 150,
+     "solution": "",
+     "hint": "",
+     "id": "ds-wr-06",
+     "points": 40,
+     "tables": [],
+     "starter": "",
+     "stage": "Interview"
+    },
+    {
+     "tool": "sql",
+     "title": "Conversion by channel and variant",
+     "question": "Conversion percent for each acquisition_channel and variant (2 decimals). Return acquisition_channel, variant, conversion_pct.",
+     "solution": "SELECT u.acquisition_channel, e.variant, ROUND(100.0 * AVG(e.converted), 2) AS conversion_pct FROM experiment e JOIN users u USING (user_id) GROUP BY 1, 2",
+     "hint": "Segment the test by channel.",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-sql-19",
+     "points": 40,
+     "tables": [
+      "users",
+      "experiment"
+     ],
+     "starter": "-- Conversion by channel and variant\nSELECT *\nFROM users\nLIMIT 10;",
+     "stage": "Interview"
+    },
+    {
+     "tool": "python",
+     "title": "Confusion matrix",
+     "question": "Using the rule churn = 1 if support_tickets >= 2, return the confusion matrix counts as a dict {\"tp\", \"fp\", \"fn\", \"tn\"}.",
+     "solution": "p = (users['support_tickets'] >= 2).astype(int); y = users['churned']\nresult = {'tp': int(((p == 1) & (y == 1)).sum()), 'fp': int(((p == 1) & (y == 0)).sum()), 'fn': int(((p == 0) & (y == 1)).sum()), 'tn': int(((p == 0) & (y == 0)).sum())}",
+     "hint": "Four boolean combinations.",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-py-22",
+     "points": 40,
+     "tables": [
+      "users"
+     ],
+     "starter": "# Confusion matrix\n# DataFrames ready: users, sessions, experiment\n# Put your final answer in a variable called result\nresult = users.head()",
+     "stage": "Interview"
+    },
+    {
+     "tool": "sql",
+     "title": "Percentiles of usage",
+     "question": "Return the 25th, 50th and 75th percentile of monthly_minutes (continuous). Columns p25, p50, p75.",
+     "solution": "SELECT quantile_cont(monthly_minutes, 0.25) AS p25, quantile_cont(monthly_minutes, 0.5) AS p50, quantile_cont(monthly_minutes, 0.75) AS p75 FROM users",
+     "hint": "quantile_cont(col, 0.25).",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-sql-20",
+     "points": 40,
+     "tables": [
+      "users"
+     ],
+     "starter": "-- Percentiles of usage\nSELECT *\nFROM users\nLIMIT 10;",
+     "stage": "Interview"
+    },
+    {
+     "tool": "python",
+     "title": "Best threshold",
+     "question": "For the rule churn = 1 if monthly_minutes < k, try k = 100, 150, ..., 600. Which k gives the highest accuracy? result: k (lowest k if tied).",
+     "solution": "best = None\nfor k in range(100, 601, 50):\n    acc = ((users['monthly_minutes'] < k).astype(int) == users['churned']).mean()\n    if best is None or acc > best[1]:\n        best = (k, acc)\nresult = best[0]",
+     "hint": "Loop and keep the best accuracy.",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-py-23",
+     "points": 40,
+     "tables": [
+      "users"
+     ],
+     "starter": "# Best threshold\n# DataFrames ready: users, sessions, experiment\n# Put your final answer in a variable called result\nresult = users.head()",
+     "stage": "Interview"
+    },
+    {
+     "tool": "python",
+     "title": "Retention curve",
+     "question": "For users who signed up in January 2024, percent with a session in each of the weeks 1 to 8 after signup (week = days since signup // 7, starting at week 1 for days 7 to 13). result: week and retention_pct (2 decimals).",
+     "solution": "c = users[users['signup_date'].str[:7] == '2024-01'][['user_id', 'signup_date']]\nm = sessions.merge(c, on='user_id')\nm['week'] = (pd.to_datetime(m['session_date']) - pd.to_datetime(m['signup_date'])).dt.days // 7\nw = m[(m['week'] >= 1) & (m['week'] <= 8)].groupby('week')['user_id'].nunique()\nresult = (w / len(c) * 100).round(2).rename('retention_pct')",
+     "hint": "nunique users per week divided by cohort size.",
+     "ordered": false,
+     "explain": "",
+     "id": "ds-py-24",
+     "points": 40,
+     "tables": [
+      "users",
+      "sessions"
+     ],
+     "starter": "# Retention curve\n# DataFrames ready: users, sessions, experiment\n# Put your final answer in a variable called result\nresult = users.head()",
+     "stage": "Interview"
+    }
+   ]
   },
   {
-   "tool": "sql",
-   "level": "Foundations",
-   "title": "Users per plan",
-   "question": "How many users are on each plan? Return plan and users.",
-   "solution": "SELECT plan, COUNT(*) AS users FROM users GROUP BY plan",
-   "hint": "GROUP BY plan.",
-   "ordered": false,
-   "explain": "",
-   "id": "ds-sql-02",
-   "n": 2,
-   "points": 10,
-   "tables": [
-    "users"
-   ],
-   "starter": "-- Users per plan\nSELECT *\nFROM users\nLIMIT 10;"
+   "key": "intermediate",
+   "name": "Intermediate",
+   "company": "",
+   "story": "",
+   "tables": [],
+   "tasks": []
   },
   {
-   "tool": "sql",
-   "level": "Foundations",
-   "title": "Minutes by plan",
-   "question": "What are average monthly minutes per plan? Return plan and avg_minutes (2 decimals).",
-   "solution": "SELECT plan, ROUND(AVG(monthly_minutes), 2) AS avg_minutes FROM users GROUP BY plan",
-   "hint": "AVG and ROUND.",
-   "ordered": false,
-   "explain": "",
-   "id": "ds-sql-03",
-   "n": 3,
-   "points": 10,
-   "tables": [
-    "users"
-   ],
-   "starter": "-- Minutes by plan\nSELECT *\nFROM users\nLIMIT 10;"
-  },
-  {
-   "tool": "sql",
-   "level": "Applied",
-   "title": "Churn by channel",
-   "question": "Return acquisition_channel, users and churn_pct (2 decimals) for each channel.",
-   "solution": "SELECT acquisition_channel, COUNT(*) AS users, ROUND(100.0 * AVG(churned), 2) AS churn_pct FROM users GROUP BY 1",
-   "hint": "Same as the overall rate, grouped.",
-   "ordered": false,
-   "explain": "",
-   "id": "ds-sql-04",
-   "n": 4,
-   "points": 20,
-   "tables": [
-    "users"
-   ],
-   "starter": "-- Churn by channel\nSELECT *\nFROM users\nLIMIT 10;"
-  },
-  {
-   "tool": "sql",
-   "level": "Applied",
-   "title": "Active days: churned vs retained",
-   "question": "Active days = number of distinct dates a user had a session (0 if none). Return churned (1/0) and avg_active_days (2 decimals).",
-   "solution": "SELECT u.churned, ROUND(AVG(COALESCE(a.days, 0)), 2) AS avg_active_days\nFROM users u LEFT JOIN (SELECT user_id, COUNT(DISTINCT session_date) AS days FROM sessions GROUP BY 1) a USING (user_id)\nGROUP BY u.churned",
-   "hint": "LEFT JOIN so users without sessions count as 0.",
-   "ordered": false,
-   "explain": "",
-   "id": "ds-sql-05",
-   "n": 5,
-   "points": 20,
-   "tables": [
-    "users",
-    "sessions"
-   ],
-   "starter": "-- Active days: churned vs retained\nSELECT *\nFROM users\nLIMIT 10;"
-  },
-  {
-   "tool": "sql",
-   "level": "Applied",
-   "title": "Feature mix",
-   "question": "What share of sessions used each feature? Return feature and share_pct (2 decimals).",
-   "solution": "SELECT feature, ROUND(100.0 * COUNT(*) / SUM(COUNT(*)) OVER (), 2) AS share_pct FROM sessions GROUP BY feature",
-   "hint": "COUNT(*) / SUM(COUNT(*)) OVER ().",
-   "ordered": false,
-   "explain": "",
-   "id": "ds-sql-06",
-   "n": 6,
-   "points": 20,
-   "tables": [
-    "sessions"
-   ],
-   "starter": "-- Feature mix\nSELECT *\nFROM sessions\nLIMIT 10;"
-  },
-  {
-   "tool": "sql",
-   "level": "Business case",
-   "title": "A/B test readout",
-   "question": "Summarise the paywall test: variant, users, conversions, conversion_pct and revenue_per_user (2 decimals).",
-   "solution": "SELECT variant, COUNT(*) AS users, SUM(converted) AS conversions, ROUND(100.0 * AVG(converted), 2) AS conversion_pct,\n       ROUND(AVG(revenue), 2) AS revenue_per_user\nFROM experiment GROUP BY variant",
-   "hint": "Everything is an aggregate of the experiment table.",
-   "ordered": false,
-   "explain": "",
-   "id": "ds-sql-07",
-   "n": 7,
-   "points": 30,
-   "tables": [
-    "users",
-    "experiment"
-   ],
-   "starter": "-- A/B test readout\nSELECT *\nFROM users\nLIMIT 10;"
-  },
-  {
-   "tool": "sql",
-   "level": "Business case",
-   "title": "Build a feature table",
-   "question": "Build one row per user for a churn model: user_id, sessions, total_minutes, active_days and churned. Users without sessions get 0s.",
-   "solution": "SELECT u.user_id, COUNT(s.user_id) AS sessions, COALESCE(SUM(s.minutes), 0) AS total_minutes,\n       COUNT(DISTINCT s.session_date) AS active_days, u.churned\nFROM users u LEFT JOIN sessions s USING (user_id)\nGROUP BY u.user_id, u.churned",
-   "hint": "LEFT JOIN users to sessions; COUNT(s.user_id) ignores the empty side.",
-   "ordered": false,
-   "explain": "",
-   "id": "ds-sql-08",
-   "n": 8,
-   "points": 30,
-   "tables": [
-    "users",
-    "sessions"
-   ],
-   "starter": "-- Build a feature table\nSELECT *\nFROM users\nLIMIT 10;"
-  },
-  {
-   "tool": "sql",
-   "level": "Interview",
-   "title": "Week-4 retention",
-   "question": "For users who signed up in January 2024, what percent had at least one session 21 to 27 days after signup? Return retention_pct (2 decimals).",
-   "solution": "WITH c AS (SELECT user_id, signup_date FROM users WHERE signup_date >= DATE '2024-01-01' AND signup_date < DATE '2024-02-01'),\nw AS (SELECT DISTINCT c.user_id FROM c JOIN sessions s USING (user_id)\n      WHERE date_diff('day', c.signup_date, s.session_date) BETWEEN 21 AND 27)\nSELECT ROUND(100.0 * (SELECT COUNT(*) FROM w) / COUNT(*), 2) AS retention_pct FROM c",
-   "hint": "date_diff('day', signup_date, session_date) gives days since signup.",
-   "ordered": false,
-   "explain": "",
-   "id": "ds-sql-09",
-   "n": 9,
-   "points": 40,
-   "tables": [
-    "users",
-    "sessions"
-   ],
-   "starter": "-- Week-4 retention\nSELECT *\nFROM users\nLIMIT 10;"
-  },
-  {
-   "tool": "sql",
-   "level": "Interview",
-   "title": "Churn by usage decile",
-   "question": "Split users into 10 equal groups by monthly_minutes (NTILE, ordered by monthly_minutes then user_id). Return decile, users, churn_pct (2 decimals).",
-   "solution": "SELECT decile, COUNT(*) AS users, ROUND(100.0 * AVG(churned), 2) AS churn_pct\nFROM (SELECT churned, NTILE(10) OVER (ORDER BY monthly_minutes, user_id) AS decile FROM users)\nGROUP BY decile",
-   "hint": "NTILE(10) OVER (ORDER BY ...) assigns deciles.",
-   "ordered": false,
-   "explain": "",
-   "id": "ds-sql-10",
-   "n": 10,
-   "points": 40,
-   "tables": [
-    "users"
-   ],
-   "starter": "-- Churn by usage decile\nSELECT *\nFROM users\nLIMIT 10;"
-  },
-  {
-   "tool": "python",
-   "level": "Foundations",
-   "title": "Median minutes",
-   "question": "What is the median monthly_minutes? result: one number.",
-   "solution": "result = users['monthly_minutes'].median()",
-   "hint": ".median().",
-   "ordered": false,
-   "explain": "",
-   "id": "ds-py-01",
-   "n": 1,
-   "points": 10,
-   "tables": [
-    "users"
-   ],
-   "starter": "# Median minutes\n# DataFrames ready: users, sessions, experiment\n# Put your final answer in a variable called result\nresult = users.head()"
-  },
-  {
-   "tool": "python",
-   "level": "Foundations",
-   "title": "Plan by churn crosstab",
-   "question": "Count users by plan (rows) and churned (columns 0 and 1). result: plan, 0, 1.",
-   "solution": "result = pd.crosstab(users['plan'], users['churned'])",
-   "hint": "pd.crosstab.",
-   "ordered": false,
-   "explain": "",
-   "id": "ds-py-02",
-   "n": 2,
-   "points": 10,
-   "tables": [
-    "users"
-   ],
-   "starter": "# Plan by churn crosstab\n# DataFrames ready: users, sessions, experiment\n# Put your final answer in a variable called result\nresult = users.head()"
-  },
-  {
-   "tool": "python",
-   "level": "Foundations",
-   "title": "Long sessions",
-   "question": "How many sessions lasted more than 60 minutes? result: one number.",
-   "solution": "result = (sessions['minutes'] > 60).sum()",
-   "hint": "Boolean filter then sum.",
-   "ordered": false,
-   "explain": "",
-   "id": "ds-py-03",
-   "n": 3,
-   "points": 10,
-   "tables": [
-    "sessions"
-   ],
-   "starter": "# Long sessions\n# DataFrames ready: users, sessions, experiment\n# Put your final answer in a variable called result\nresult = sessions.head()"
-  },
-  {
-   "tool": "python",
-   "level": "Applied",
-   "title": "Outliers by z-score",
-   "question": "How many users have a monthly_minutes z-score above 3? Use the pandas default (sample) standard deviation. result: one number.",
-   "solution": "m = users['monthly_minutes']\nresult = ((m - m.mean()) / m.std() > 3).sum()",
-   "hint": "z = (x - mean) / std.",
-   "ordered": false,
-   "explain": "",
-   "id": "ds-py-04",
-   "n": 4,
-   "points": 20,
-   "tables": [
-    "users"
-   ],
-   "starter": "# Outliers by z-score\n# DataFrames ready: users, sessions, experiment\n# Put your final answer in a variable called result\nresult = users.head()"
-  },
-  {
-   "tool": "python",
-   "level": "Applied",
-   "title": "Ordinal encoding",
-   "question": "Encode plan as Free = 0, Plus = 1, Pro = 2 and return the mean encoded value per acquisition_channel (2 decimals). result: acquisition_channel and plan_code.",
-   "solution": "u = users.assign(plan_code=users['plan'].map({'Free': 0, 'Plus': 1, 'Pro': 2}))\nresult = u.groupby('acquisition_channel')['plan_code'].mean().round(2)",
-   "hint": "Series.map with a dict.",
-   "ordered": false,
-   "explain": "",
-   "id": "ds-py-05",
-   "n": 5,
-   "points": 20,
-   "tables": [
-    "users"
-   ],
-   "starter": "# Ordinal encoding\n# DataFrames ready: users, sessions, experiment\n# Put your final answer in a variable called result\nresult = users.head()"
-  },
-  {
-   "tool": "python",
-   "level": "Applied",
-   "title": "Correlation",
-   "question": "What is the Pearson correlation between monthly_minutes and churned? result: one number, 2 decimals.",
-   "solution": "result = round(users['monthly_minutes'].corr(users['churned']), 2)",
-   "hint": "Series.corr().",
-   "ordered": false,
-   "explain": "",
-   "id": "ds-py-06",
-   "n": 6,
-   "points": 20,
-   "tables": [
-    "users"
-   ],
-   "starter": "# Correlation\n# DataFrames ready: users, sessions, experiment\n# Put your final answer in a variable called result\nresult = users.head()"
-  },
-  {
-   "tool": "python",
-   "level": "Business case",
-   "title": "Two-proportion z-test",
-   "question": "Compute the pooled two-proportion z statistic for conversion of B vs A: z = (pB - pA) / sqrt(p(1 - p)(1/nA + 1/nB)), p = pooled rate. result: z, 2 decimals.",
-   "solution": "g = experiment.groupby('variant')['converted'].agg(['sum', 'count'])\npa, pb = g.loc['A', 'sum'] / g.loc['A', 'count'], g.loc['B', 'sum'] / g.loc['B', 'count']\np = g['sum'].sum() / g['count'].sum()\nse = np.sqrt(p * (1 - p) * (1 / g.loc['A', 'count'] + 1 / g.loc['B', 'count']))\nresult = round((pb - pa) / se, 2)",
-   "hint": "Aggregate conversions and users per variant first.",
-   "ordered": false,
-   "explain": "",
-   "id": "ds-py-07",
-   "n": 7,
-   "points": 30,
-   "tables": [
-    "experiment"
-   ],
-   "starter": "# Two-proportion z-test\n# DataFrames ready: users, sessions, experiment\n# Put your final answer in a variable called result\nresult = experiment.head()"
-  },
-  {
-   "tool": "python",
-   "level": "Business case",
-   "title": "Time-based split",
-   "question": "Make a time-based split: users who signed up before 2024-05-01 are train, the rest test. result: split, users, churn_pct (2 decimals).",
-   "solution": "s = np.where(pd.to_datetime(users['signup_date']) < '2024-05-01', 'train', 'test')\nresult = users.groupby(s).agg(users=('user_id', 'size'), churn_pct=('churned', 'mean'))\nresult['churn_pct'] = (result['churn_pct'] * 100).round(2)\nresult.index.name = 'split'",
-   "hint": "np.where builds the split label; group by it.",
-   "ordered": false,
-   "explain": "",
-   "id": "ds-py-08",
-   "n": 8,
-   "points": 30,
-   "tables": [
-    "users"
-   ],
-   "starter": "# Time-based split\n# DataFrames ready: users, sessions, experiment\n# Put your final answer in a variable called result\nresult = users.head()"
-  },
-  {
-   "tool": "python",
-   "level": "Interview",
-   "title": "Evaluate a baseline",
-   "question": "A rule predicts churn = 1 when monthly_minutes < 300. Return accuracy, precision and recall as fractions (2 decimals). result: metric and value, with metric names accuracy, precision, recall.",
-   "solution": "pred = (users['monthly_minutes'] < 300).astype(int)\ny = users['churned']\ntp = ((pred == 1) & (y == 1)).sum()\nresult = pd.DataFrame({'metric': ['accuracy', 'precision', 'recall'],\n                       'value': [round((pred == y).mean(), 2), round(tp / pred.sum(), 2), round(tp / y.sum(), 2)]})",
-   "hint": "precision = TP / predicted positives, recall = TP / actual positives.",
-   "ordered": false,
-   "explain": "",
-   "id": "ds-py-09",
-   "n": 9,
-   "points": 40,
-   "tables": [
-    "users"
-   ],
-   "starter": "# Evaluate a baseline\n# DataFrames ready: users, sessions, experiment\n# Put your final answer in a variable called result\nresult = users.head()"
-  },
-  {
-   "tool": "python",
-   "level": "Interview",
-   "title": "Which column separates churn most?",
-   "question": "For plan, acquisition_channel, age_band and city_tier, compute the spread = highest minus lowest churn rate across its categories, in percentage points. result: column and spread (2 decimals), largest first.",
-   "solution": "rows = []\nfor c in ['plan', 'acquisition_channel', 'age_band', 'city_tier']:\n    r = users.groupby(c)['churned'].mean() * 100\n    rows.append((c, round(r.max() - r.min(), 2)))\nresult = pd.DataFrame(rows, columns=['column', 'spread']).sort_values('spread', ascending=False)",
-   "hint": "Loop over the columns, group by each one.",
-   "ordered": true,
-   "explain": "",
-   "id": "ds-py-10",
-   "n": 10,
-   "points": 40,
-   "tables": [
-    "users"
-   ],
-   "starter": "# Which column separates churn most?\n# DataFrames ready: users, sessions, experiment\n# Put your final answer in a variable called result\nresult = users.head()"
+   "key": "hard",
+   "name": "Hard",
+   "company": "",
+   "story": "",
+   "tables": [],
+   "tasks": []
   }
  ]
 }
