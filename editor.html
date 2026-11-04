@@ -221,7 +221,11 @@ KA.boot('content', function(ctx){
       +     '<p class="ka-hint">Shown blurred behind the lock, and quoted in the unlock panel.</p></div>'
       +   '<div class="ka-row">'
       +     '<div class="ka-field"><label class="ka-label">Price in rupees</label>'
-      +       '<input class="ka-input" type="number" step="1" id="bPrice" value="' + Number(ds.price || 0) + '"></div>'
+      +       '<input class="ka-input" type="number" step="1" id="bPrice" value="' + Number(ds.price || 0) + '">'
+      +       '<p class="ka-hint">First-purchase offer price. A buyer\'s first paid dataset costs this.</p></div>'
+      +     '<div class="ka-field"><label class="ka-label">MRP in rupees</label>'
+      +       '<input class="ka-input" type="number" step="1" id="bMrp" value="' + (Number((ds.meta || {}).mrp) || '') + '">'
+      +       '<p class="ka-hint">Regular price. Shown struck through for first-time buyers; repeat buyers pay this. Leave blank for no MRP.</p></div>'
       +     '<div class="ka-field"><label class="ka-label">Difficulty</label>'
       +       '<select class="ka-select" id="bDiff">'
       +         ['beginner','intermediate','hard'].map(function(d){
@@ -270,7 +274,9 @@ KA.boot('content', function(ctx){
         storage_path: document.getElementById('bPath').value.trim() || null,
         ai_prompt: document.getElementById('bPrompt').value.trim() || null,
         is_free: document.getElementById('bFree').checked,
-        locked_preview: lpNew
+        locked_preview: lpNew,
+        meta: (function(){ var m = Object.assign({}, ds.meta || {}); var v = Number(document.getElementById('bMrp').value) || 0;
+          if (v > 0) m.mrp = v; else delete m.mrp; return m; })()
       }).then(function(ok){
         if (ok) document.getElementById('kaTitle').textContent = ds.title;
       });
