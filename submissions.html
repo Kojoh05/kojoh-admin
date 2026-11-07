@@ -29,7 +29,7 @@ KA.boot('submissions', function(ctx){
   main.innerHTML =
       '<div class="ka-head"><div><h1>Challenge submissions</h1>'
     +   '<p>The GitHub repo and LinkedIn post each buyer sent in once they finished their task pack. '
-    +   'Award points once you\'ve checked the work, points then show on the public leaderboard.</p></div></div>'
+    +   'Award points once you\'ve checked the work, points then show on the public leaderboard. Awarding more than 0 points also issues the buyer a verified project certificate.</p></div></div>'
     + '<div class="ka-filters">'
     +   '<div class="ka-seg" id="kaSubFilter">'
     +     '<button data-f="pending" class="on">Pending<span class="ka-segcount" data-c="pending"></span></button>'
@@ -218,7 +218,7 @@ KA.boot('submissions', function(ctx){
           return;
         }
         s.points = pts; s.admin_notes = notes; s.status = 'reviewed';
-        KA.toast(pts + ' points saved for ' + (u ? u.username : 'this buyer') + '.');
+        KA.toast(pts + ' points saved for ' + (u ? u.username : 'this buyer') + (pts > 0 ? '. Certificate issued.' : '.'));
         if (KA.refreshShellBadges) KA.refreshShellBadges();
         renderTable();
         document.removeEventListener('keydown', onKey);
