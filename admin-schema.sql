@@ -334,7 +334,7 @@ grant execute on function public.admin_dashboard(int) to authenticated;
 -- Change the email below if you signed up to KOJOH with a different one,
 -- then check that it returned 1 row.
 -- ============================================================
-update public.profiles set is_admin = true where email = 'yashc@inalsa.co.in';
+update public.profiles set is_admin = true where email = 'YOUR_ADMIN_EMAIL';
 
 -- Confirm it worked:
 --   select username, email, is_admin from public.profiles where is_admin;
