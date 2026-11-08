@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+if (/^\/admin(\/|$)/.test(location.pathname)) document.write('<base href="/admin/">');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>KOJOH Admin | Gift a project</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+<style>
+.gf-users{border:1px solid var(--line); border-radius:var(--radius-sm); margin-top:0.35rem; overflow:hidden;}
+.gf-users button{display:block; width:100%; text-align:left; font:inherit; font-size:0.85rem; padding:0.5rem 0.75rem; background:var(--card); color:var(--text); border:0; border-bottom:1px solid var(--line); cursor:pointer;}
+.gf-users button:last-child{border-bottom:0;}
+.gf-users button:hover{background:var(--bg);}
+.gf-msg{white-space:pre-wrap; font-size:0.85rem; line-height:1.6; background:var(--bg); border:1px dashed var(--line); border-radius:var(--radius-sm); padding:0.8rem 0.9rem; margin-top:0.75rem;}
+.gf-table{width:100%; border-collapse:collapse; font-size:0.85rem;}
+.gf-table th, .gf-table td{text-align:left; padding:0.55rem 0.5rem; border-bottom:1px solid var(--line);}
+.gf-table th{font-size:0.72rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted);}
+</style>
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="supabase-config.js"></script>
+<script src="admin-core.js"></script>
+<script>
+KA.boot('gift', function (ctx) {
+  var main = ctx.main, supa = KA.supa, esc = KA.esc, picked = null;
+  main.innerHTML = '<div class="ka-head"><div><h1>Gift a project</h1><p>Unlock a project for a registered user at no charge: founding reviewers, contest winners, or fixing a support problem. '
+    + 'They get their own licence pack, exactly like a buyer. If they review it, the review shows "Got free access".</p></div></div>'
+    + '<div class="ka-card" style="margin-bottom:1rem"><div class="ka-grid2">'
+    + '<div><label class="ka-label">Project</label><select class="ka-select" id="gfDs"></select></div>'
+    + '<div><label class="ka-label">User (name, username or email)</label><input class="ka-input" id="gfQ" placeholder="Type at least 2 letters" autocomplete="off"><div id="gfList"></div><div class="ka-hint" id="gfPicked">They need a KOJOH account first.</div></div></div>'
+    + '<div class="ka-btnrow" style="margin-top:0.9rem"><button class="ka-btn ka-btn-primary" type="button" id="gfGo">Gift project</button></div>'
+    + '<div id="gfDone"></div></div>'
+    + '<div class="ka-card"><h2>Recent gifts</h2><div id="gfRecent"><div class="ka-empty">Loading</div></div></div>';
+
+  var DS = {};
+  supa.from('datasets').select('id, title, slug, price, is_free').eq('is_published', true).order('price', { ascending: false }).then(function (r) {
+    (r.data || []).forEach(function (d) { DS[d.id] = d; });
+    document.getElementById('gfDs').innerHTML = (r.data || []).map(function (d) {
+      return '<option value="' + d.id + '">' + esc(d.title) + (d.is_free ? ' (free)' : ' (₹' + d.price + ')') + '</option>';
+    }).join('');
+  });
+
+  async function recent() {
+    var r = await supa.rpc('admin_recent_gifts', { p_limit: 50 });
+    var host = document.getElementById('gfRecent');
+    if (r.error) { host.innerHTML = '<div class="ka-empty">Gifting is not switched on yet. Run <code>supabase/schema-gift.sql</code> in the Supabase SQL editor.</div>'; return; }
+    var rows = r.data || [];
+    if (!rows.length) { host.innerHTML = '<div class="ka-empty">No gifts yet.</div>'; return; }
+    host.innerHTML = '<table class="gf-table"><thead><tr><th>When</th><th>User</th><th>Project</th><th>Reviewed</th></tr></thead><tbody>'
+      + rows.map(function (g) {
+        return '<tr><td>' + KA.date(g.purchased_at) + '</td><td>' + esc(g.user_name || '') + '<br><span class="ka-hint">' + esc(g.user_email || '') + '</span></td><td>' + esc(g.dataset_title) + '</td><td>' + (g.reviewed ? 'Yes' : 'Not yet') + '</td></tr>';
+      }).join('') + '</tbody></table>';
+  }
+  recent();
+
+  var q = document.getElementById('gfQ'), list = document.getElementById('gfList'), pk = document.getElementById('gfPicked'), t = null;
+  q.oninput = function () {
+    clearTimeout(t); var v = q.value.trim().replace(/[%,()]/g, '');
+    if (v.length < 2) { list.innerHTML = ''; return; }
+    t = setTimeout(async function () {
+      var r = await supa.from('profiles').select('id, username, email, first_name, last_name')
+        .or('username.ilike.%' + v + '%,email.ilike.%' + v + '%,first_name.ilike.%' + v + '%,last_name.ilike.%' + v + '%').limit(8);
+      var rows = r.data || [];
+      list.innerHTML = rows.length ? '<div class="gf-users">' + rows.map(function (u) {
+        var n = [u.first_name, u.last_name].filter(Boolean).join(' ') || u.username;
+        return '<button type="button" data-u="' + u.id + '" data-n="' + esc(n) + '" data-f="' + esc(u.first_name || n) + '">' + esc(n) + ' &middot; ' + esc(u.email || u.username) + '</button>';
+      }).join('') + '</div>' : '<div class="ka-hint">No registered user matches. Ask them to sign up first.</div>';
+    }, 250);
+  };
+  list.onclick = function (e) {
+    var b = e.target.closest('[data-u]'); if (!b) return;
+    picked = { id: b.getAttribute('data-u'), name: b.getAttribute('data-n'), first: b.getAttribute('data-f') };
+    pk.textContent = 'Selected: ' + b.textContent; list.innerHTML = ''; q.value = '';
+  };
+
+  document.getElementById('gfGo').onclick = async function () {
+    var ds = DS[document.getElementById('gfDs').value];
+    if (!picked) { KA.toast('Pick the user first', true); return; }
+    if (!ds) { KA.toast('Pick a project', true); return; }
+    if (!KA.confirm('Gift "' + ds.title + '" to ' + picked.name + '?')) return;
+    this.disabled = true;
+    var r = await supa.rpc('admin_gift_project', { p_user: picked.id, p_dataset: ds.id });
+    this.disabled = false;
+    if (r.error) { KA.toast(/admin_gift_project|schema cache/i.test(r.error.message) ? 'Run supabase/schema-gift.sql first' : r.error.message, true); return; }
+    KA.toast('Gifted. Licence ' + (r.data && r.data.license_code || ''));
+    var link = 'https://www.kojohhi.com/dataset?slug=' + ds.slug;
+    var msg = 'Hi ' + picked.first + ', I\'ve unlocked "' + ds.title.replace(/\s*\(Free\)\s*$/, '') + '" for you on KOJOH, free. It\'s in your library: ' + link
+      + '\n\nIf you work through it, I\'d really value an honest review on the project page, good or bad. It helps other students decide, and it will show that you got free access.';
+    document.getElementById('gfDone').innerHTML = '<div class="gf-msg" id="gfMsg">' + esc(msg) + '</div><div class="ka-btnrow" style="margin-top:0.5rem"><button class="ka-btn" type="button" id="gfCopy">Copy message</button></div>';
+    document.getElementById('gfCopy').onclick = function () { try { navigator.clipboard.writeText(msg); KA.toast('Copied'); } catch (e) {} };
+    picked = null; pk.textContent = 'They need a KOJOH account first.';
+    recent();
+  };
+});
+</script>
+</body>
+</html>
