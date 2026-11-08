@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+if (/^\/admin(\/|$)/.test(location.pathname)) document.write('<base href="/admin/">');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>KOJOH Admin | Project reviews</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+<style>
+.rvw{border:1px solid var(--line); border-radius:var(--radius-sm); padding:1rem; background:var(--bg); margin-bottom:0.75rem;}
+.rvw.hidden{opacity:0.6;}
+.rvw-meta{display:flex; flex-wrap:wrap; gap:0.4rem 0.7rem; align-items:center; font-size:0.8rem; color:var(--muted);}
+.rvw-meta b{color:var(--text);}
+.rvw-stars{color:#E0A526; letter-spacing:0.06em;}
+.rvw-body{white-space:pre-wrap; font-size:0.875rem; line-height:1.6; margin:0.5rem 0 0.7rem;}
+.rvw-reply{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:0.5rem; align-items:end;}
+.rvw-tag{font-size:0.7rem; font-weight:600; padding:0.1rem 0.5rem; border-radius:999px; border:1px solid var(--line);}
+.rvw-tag.on{background:var(--ink); color:var(--bg); border-color:var(--ink);}
+.rvw-pick{display:flex; gap:0.15rem;}
+.rvw-pick button{font:inherit; font-size:1.5rem; line-height:1; background:none; border:0; cursor:pointer; color:var(--line); padding:0 0.1rem;}
+.rvw-pick button.on{color:#E0A526;}
+.rvw-users{border:1px solid var(--line); border-radius:var(--radius-sm); margin-top:0.35rem; overflow:hidden;}
+.rvw-users button{display:block; width:100%; text-align:left; font:inherit; font-size:0.85rem; padding:0.5rem 0.75rem; background:var(--card); color:var(--text); border:0; border-bottom:1px solid var(--line); cursor:pointer;}
+.rvw-users button:last-child{border-bottom:0;}
+.rvw-users button:hover{background:var(--bg);}
+.rvw-filters{display:grid; grid-template-columns:minmax(0,2fr) minmax(0,1fr) minmax(0,2fr); gap:0.6rem; margin-bottom:1rem;}
+@media (max-width:40rem){ .rvw-filters{grid-template-columns:1fr;} .rvw-reply{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="supabase-config.js"></script>
+<script src="admin-core.js"></script>
+<script>
+KA.boot('projreviews', function (ctx) {
+  var main = ctx.main, supa = KA.supa, esc = KA.esc;
+  var DS = [], dsTitle = {}, rows = [], pickedUser = null, newRating = 0;
+  function stars(n) { var s = ''; for (var i = 1; i <= 5; i++) s += i <= n ? '&#9733;' : '&#9734;'; return '<span class="rvw-stars">' + s + '</span>'; }
+
+  main.innerHTML = '<div class="ka-head"><div><h1>Project reviews</h1><p>Reviews buyers leave on dataset pages. Each account can review a project once, and only if it owns that project. '
+    + 'Hide anything abusive, feature the most helpful, and reply publicly. The name shown always comes from the reviewer\'s profile.</p></div></div>'
+    + '<div class="ka-kpis" id="rvKpis"></div>'
+    + '<div class="ka-card" style="margin-bottom:1rem"><h2 class="ka-card-title">Add a review for a registered user</h2>'
+    + '<p class="ka-card-sub">For feedback a real user sent you another way (WhatsApp, email, a call). Pick their account; the review shows their profile name and an "Added by the KOJOH team" note. '
+    + 'One review per user per project.</p>'
+    + '<div class="ka-grid2"><div><label class="ka-label">Project</label><select class="ka-select" id="rvAddDs"></select></div>'
+    + '<div><label class="ka-label">User (search by name, username or email)</label><input class="ka-input" id="rvUserQ" placeholder="Type at least 2 letters" autocomplete="off"><div id="rvUserList"></div><div class="ka-hint" id="rvUserPicked"></div></div></div>'
+    + '<div style="margin-top:0.75rem"><label class="ka-label">Rating</label><div class="rvw-pick" id="rvPick"></div></div>'
+    + '<div style="margin-top:0.75rem"><label class="ka-label">Their review, in their words</label><textarea class="ka-textarea" id="rvAddBody" maxlength="1200" placeholder="At least 20 characters"></textarea></div>'
+    + '<div class="ka-btnrow" style="margin-top:0.75rem"><button class="ka-btn ka-btn-primary" type="button" id="rvAddGo">Add review</button></div></div>'
+    + '<div class="ka-card"><div class="rvw-filters"><select class="ka-select" id="rvFDs"><option value="">All projects</option></select>'
+    + '<select class="ka-select" id="rvFSt"><option value="">Visible and hidden</option><option value="visible">Visible</option><option value="hidden">Hidden</option></select>'
+    + '<input class="ka-input" id="rvFQ" placeholder="Search text or name"></div><div id="rvList"><div class="ka-empty">Loading</div></div></div>';
+
+  var pick = document.getElementById('rvPick');
+  function paintPick() { var h = ''; for (var i = 1; i <= 5; i++) h += '<button type="button" data-s="' + i + '" class="' + (i <= newRating ? 'on' : '') + '">&#9733;</button>'; pick.innerHTML = h; }
+  paintPick();
+  pick.onclick = function (e) { var b = e.target.closest('[data-s]'); if (!b) return; newRating = +b.getAttribute('data-s'); paintPick(); };
+
+  async function boot() {
+    var d = await supa.from('datasets').select('id, title').order('title');
+    DS = d.data || []; DS.forEach(function (x) { dsTitle[x.id] = x.title; });
+    var opts = DS.map(function (x) { return '<option value="' + x.id + '">' + esc(x.title) + '</option>'; }).join('');
+    document.getElementById('rvAddDs').innerHTML = opts;
+    document.getElementById('rvFDs').innerHTML = '<option value="">All projects</option>' + opts;
+    load();
+  }
+
+  async function load() {
+    var list = document.getElementById('rvList');
+    var r = await supa.from('reviews').select('*').order('created_at', { ascending: false }).limit(500);
+    if (r.error) {
+      list.innerHTML = '<div class="ka-empty">Reviews are not switched on yet. Run <code>supabase/schema-reviews.sql</code> in the Supabase SQL editor.</div>';
+      document.getElementById('rvKpis').innerHTML = ''; return;
+    }
+    rows = r.data || [];
+    var vis = rows.filter(function (x) { return x.status === 'visible'; });
+    var avg = vis.length ? (vis.reduce(function (a, x) { return a + x.rating; }, 0) / vis.length).toFixed(1) : '–';
+    document.getElementById('rvKpis').innerHTML = [
+      ['Reviews', KA.nf(rows.length)], ['Average rating', avg], ['Hidden', KA.nf(rows.length - vis.length)],
+      ['Projects reviewed', KA.nf(Object.keys(rows.reduce(function (a, x) { a[x.dataset_id] = 1; return a; }, {})).length)]
+    ].map(function (k) { return '<div class="ka-kpi"><div class="ka-kpi-label">' + k[0] + '</div><div class="ka-kpi-value">' + k[1] + '</div></div>'; }).join('');
+    paint();
+  }
+
+  function paint() {
+    var fd = document.getElementById('rvFDs').value, fs = document.getElementById('rvFSt').value, fq = document.getElementById('rvFQ').value.trim().toLowerCase();
+    var list = rows.filter(function (x) {
+      return (!fd || x.dataset_id === fd) && (!fs || x.status === fs) && (!fq || (x.body + ' ' + x.reviewer_name).toLowerCase().indexOf(fq) > -1);
+    });
+    var host = document.getElementById('rvList');
+    if (!list.length) { host.innerHTML = '<div class="ka-empty">' + (rows.length ? 'No reviews match.' : 'No reviews yet. They appear here as soon as buyers post them.') + '</div>'; return; }
+    host.innerHTML = list.map(function (x) {
+      return '<div class="rvw' + (x.status === 'hidden' ? ' hidden' : '') + '" data-id="' + x.id + '"><div class="rvw-meta">' + stars(x.rating) + '<b>' + esc(x.reviewer_name) + '</b>'
+        + '<span>' + esc(dsTitle[x.dataset_id] || 'Project') + '</span><span>' + KA.date(x.created_at) + '</span>'
+        + (x.verified_owner ? '<span class="rvw-tag">Verified owner</span>' : '') + (x.added_by_admin ? '<span class="rvw-tag">Added by team</span>' : '')
+        + (x.featured ? '<span class="rvw-tag on">Featured</span>' : '') + (x.status === 'hidden' ? '<span class="rvw-tag">Hidden</span>' : '') + '</div>'
+        + '<p class="rvw-body">' + esc(x.body) + '</p>'
+        + '<div class="rvw-reply"><div><label class="ka-label">Public reply from KOJOH</label><textarea class="ka-textarea" style="min-height:3.5rem" data-reply>' + esc(x.admin_reply || '') + '</textarea></div>'
+        + '<div class="ka-btnrow"><button class="ka-btn" type="button" data-a="reply">Save reply</button>'
+        + '<button class="ka-btn" type="button" data-a="feature">' + (x.featured ? 'Unfeature' : 'Feature') + '</button>'
+        + '<button class="ka-btn" type="button" data-a="hide">' + (x.status === 'hidden' ? 'Show' : 'Hide') + '</button>'
+        + '<button class="ka-btn ka-btn-danger" type="button" data-a="delete">Delete</button></div></div></div>';
+    }).join('');
+  }
+
+  document.getElementById('rvFDs').onchange = paint;
+  document.getElementById('rvFSt').onchange = paint;
+  document.getElementById('rvFQ').oninput = paint;
+
+  document.getElementById('rvList').addEventListener('click', async function (e) {
+    var b = e.target.closest('[data-a]'); if (!b) return;
+    var card = b.closest('.rvw'), id = card.getAttribute('data-id'), x = rows.filter(function (r) { return r.id === id; })[0], act = b.getAttribute('data-a'), res;
+    if (act === 'delete') { if (!KA.confirm('Delete this review for good?')) return; res = await supa.from('reviews').delete().eq('id', id); }
+    else if (act === 'hide') res = await supa.from('reviews').update({ status: x.status === 'hidden' ? 'visible' : 'hidden' }).eq('id', id);
+    else if (act === 'feature') res = await supa.from('reviews').update({ featured: !x.featured }).eq('id', id);
+    else if (act === 'reply') res = await supa.from('reviews').update({ admin_reply: card.querySelector('[data-reply]').value.trim() || null }).eq('id', id);
+    if (res && res.error) { KA.toast(res.error.message, true); return; }
+    KA.toast({ delete: 'Review deleted', hide: 'Saved', feature: 'Saved', reply: 'Reply saved' }[act]);
+    load();
+  });
+
+  // user search for "add a review"
+  var q = document.getElementById('rvUserQ'), ul = document.getElementById('rvUserList'), picked = document.getElementById('rvUserPicked'), t = null;
+  q.oninput = function () {
+    clearTimeout(t); var v = q.value.trim().replace(/[%,()]/g, '');
+    if (v.length < 2) { ul.innerHTML = ''; return; }
+    t = setTimeout(async function () {
+      var r = await supa.from('profiles').select('id, username, email, first_name, last_name')
+        .or('username.ilike.%' + v + '%,email.ilike.%' + v + '%,first_name.ilike.%' + v + '%,last_name.ilike.%' + v + '%').limit(8);
+      var list = r.data || [];
+      ul.innerHTML = list.length ? '<div class="rvw-users">' + list.map(function (u) {
+        return '<button type="button" data-u="' + u.id + '" data-n="' + esc([u.first_name, u.last_name].filter(Boolean).join(' ') || u.username) + '">' + esc([u.first_name, u.last_name].filter(Boolean).join(' ') || u.username) + ' &middot; ' + esc(u.email || u.username) + '</button>';
+      }).join('') + '</div>' : '<div class="ka-hint">No registered user matches.</div>';
+    }, 250);
+  };
+  ul.onclick = function (e) {
+    var b = e.target.closest('[data-u]'); if (!b) return;
+    pickedUser = b.getAttribute('data-u'); picked.textContent = 'Selected: ' + b.textContent; ul.innerHTML = ''; q.value = '';
+  };
+  document.getElementById('rvAddGo').onclick = async function () {
+    var ds = document.getElementById('rvAddDs').value, body = document.getElementById('rvAddBody').value.trim();
+    if (!pickedUser) { KA.toast('Pick the user first', true); return; }
+    if (!newRating) { KA.toast('Pick a rating', true); return; }
+    if (body.length < 20) { KA.toast('The review needs at least 20 characters', true); return; }
+    var r = await supa.from('reviews').insert({ dataset_id: ds, user_id: pickedUser, rating: newRating, body: body });
+    if (r.error) { KA.toast(/duplicate|unique/i.test(r.error.message) ? 'This user already has a review on this project' : r.error.message, true); return; }
+    KA.toast('Review added'); pickedUser = null; newRating = 0; paintPick(); picked.textContent = ''; document.getElementById('rvAddBody').value = '';
+    load();
+  };
+  boot();
+});
+</script>
+</body>
+</html>

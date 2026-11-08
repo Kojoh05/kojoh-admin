@@ -83,6 +83,8 @@
       icon:'<polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>' },
     { key:'reviews', href:'practice-review.html', label:'Practice reviews',
       icon:'<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>' },
+    { key:'projreviews', href:'project-reviews.html', label:'Project reviews',
+      icon:'<polygon points="12 2 15 8.5 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 9 8.5 12 2"/>' },
     { key:'submissions', href:'submissions.html', label:'Challenge submissions',
       icon:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6l6 6v10a2 2 0 0 1-2 2h-1M9 15l2 2 4-4"/>' }
   ];
