@@ -226,10 +226,10 @@ KA.boot('content', function(ctx){
       +   '<div class="ka-row">'
       +     '<div class="ka-field"><label class="ka-label">Price in rupees</label>'
       +       '<input class="ka-input" type="number" step="1" id="bPrice" value="' + Number(ds.price || 0) + '">'
-      +       '<p class="ka-hint">First-purchase offer price. A buyer\'s first paid dataset costs this.</p></div>'
+      +       '<p class="ka-hint">What every buyer pays. Members and reward codes take a % off this.</p></div>'
       +     '<div class="ka-field"><label class="ka-label">MRP in rupees</label>'
       +       '<input class="ka-input" type="number" step="1" id="bMrp" value="' + (Number((ds.meta || {}).mrp) || '') + '">'
-      +       '<p class="ka-hint">Regular price. Shown struck through for first-time buyers; repeat buyers pay this. Leave blank for no MRP.</p></div>'
+      +       '<p class="ka-hint">Shown struck through next to the price, with the % off. Leave blank for no MRP.</p></div>'
       +     '<div class="ka-field"><label class="ka-label">Difficulty</label>'
       +       '<select class="ka-select" id="bDiff">'
       +         ['beginner','intermediate','hard'].map(function(d){
