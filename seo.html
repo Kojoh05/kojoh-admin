@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+if (/^\/admin(\/|$)/.test(location.pathname)) document.write('<base href="/admin/">');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>KOJOH Admin | SEO keywords</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+<style>
+.kw-list{display:flex; flex-direction:column; gap:0.4rem; margin-top:0.75rem;}
+.kw-row{display:flex; align-items:center; gap:0.6rem; padding:0.5rem 0.75rem; border:1px solid var(--line); border-radius:var(--radius-sm); background:var(--card);}
+.kw-row span{flex:1; font-size:0.9rem;}
+.kw-row button{font:inherit; font-size:0.8rem; background:none; border:1px solid var(--line); border-radius:999px; padding:0.2rem 0.6rem; cursor:pointer; color:var(--text);}
+.kw-row button:hover{border-color:var(--text);}
+.kw-row .kw-star.on{background:var(--text); color:var(--bg); border-color:var(--text);}
+.kw-serp{border:1px solid var(--line); border-radius:var(--radius-sm); padding:0.8rem 1rem; margin-top:0.75rem; background:var(--card);}
+.kw-serp small{display:block; color:var(--muted); font-size:0.78rem;}
+.kw-serp b{display:block; color:#1a0dab; font-size:1.05rem; font-weight:500; margin:0.15rem 0;}
+@media (prefers-color-scheme: dark){ .kw-serp b{color:#8ab4f8;} }
+.kw-count{font-size:0.8rem; color:var(--muted);}
+</style>
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="supabase-config.js"></script>
+<script src="admin-core.js"></script>
+<script>
+KA.boot('seo', function (ctx) {
+  var main = ctx.main, supa = KA.supa, esc = KA.esc;
+  var SITE = 'https://www.kojohhi.com';
+  main.innerHTML = '<div class="ka-head"><div><h1>SEO keywords</h1><p>The searches you want KOJOH to show up for. Add them for the whole website or for one project. '
+    + 'They go into the page title, a visible "People also search for" line, the Google data on the page, and llms.txt for AI assistants. Press Publish when you are done.</p></div></div>'
+    + '<div class="ka-card" style="margin-bottom:1rem"><div class="ka-grid2">'
+    + '<div><label class="ka-label">Keywords for</label><select class="ka-select" id="kwFor"></select><div class="ka-hint" id="kwLink"></div></div>'
+    + '<div><label class="ka-label">Add keywords (separate with commas)</label><input class="ka-input" id="kwNew" placeholder="kirana store dataset, grocery sales data india" autocomplete="off">'
+    + '<div class="ka-btnrow" style="margin-top:0.5rem"><button class="ka-btn ka-btn-primary" type="button" id="kwAdd">Add</button></div></div></div>'
+    + '<div id="kwSerp"></div><div class="kw-count" id="kwCount" style="margin-top:0.9rem"></div><div class="kw-list" id="kwList"></div></div>'
+    + '<div class="ka-card" style="margin-bottom:1rem"><h2>Publish</h2><p class="ka-hint">Rebuilds the website with your keywords. Live in about a minute. '
+    + 'Then open Search Console, inspect the page and press Request indexing, so Google reads the new title sooner.</p>'
+    + '<div class="ka-btnrow" style="margin-top:0.6rem"><button class="ka-btn ka-btn-primary" type="button" id="kwPub">Publish to the website</button>'
+    + '<a class="ka-btn" id="kwGsc" target="_blank" rel="noopener" href="https://search.google.com/search-console?resource_id=sc-domain%3Akojohhi.com">Open Search Console</a></div>'
+    + '<details style="margin-top:0.9rem"><summary class="ka-hint" style="cursor:pointer">Deploy hook (one-time setup)</summary>'
+    + '<p class="ka-hint">In Vercel: project dataset-marketplace &rarr; Settings &rarr; Git &rarr; Deploy Hooks. Name it "keywords", branch main, Create, then paste the URL here. Only admins can read it.</p>'
+    + '<input class="ka-input" id="kwHook" placeholder="https://api.vercel.com/v1/integrations/deploy/..." autocomplete="off">'
+    + '<div class="ka-btnrow" style="margin-top:0.5rem"><button class="ka-btn" type="button" id="kwHookSave">Save hook</button></div></details></div>'
+    + '<div class="ka-card"><h2>Tips</h2><ul class="ka-hint" style="line-height:1.8;margin:0;padding-left:1.1rem">'
+    + '<li>Write what a student would type into Google: "kirana store dataset", not "retail analytics solution".</li>'
+    + '<li>5 to 10 per project is plenty. Star the one you care about most: it goes at the start of the Google title.</li>'
+    + '<li>Mix one broad search ("sales dataset India") with specific ones ("kirana store sales data for Power BI").</li>'
+    + '<li>Do not repeat the same word in many forms. Google treats that as spam.</li>'
+    + '<li>Google takes days to weeks to move. Check Search Console &rarr; Performance to see which searches already bring people.</li></ul></div>';
+
+  var DS = {}, cur = '', rows = [], TITLES = {};
+  var sel = document.getElementById('kwFor');
+
+  supa.from('datasets').select('id, title, slug, is_free, price').eq('is_published', true).order('title').then(function (r) {
+    (r.data || []).forEach(function (d) { DS[d.id] = d; });
+    sel.innerHTML = '<option value="">Whole website</option>' + (r.data || []).map(function (d) {
+      return '<option value="' + d.id + '">' + esc(d.title) + '</option>';
+    }).join('');
+    load();
+  });
+  sel.onchange = load;
+
+  function clean(t) { return String(t || '').replace(/\s*\(Free\)\s*$/, ''); }
+
+  function serp() {
+    var host = document.getElementById('kwSerp'), link = document.getElementById('kwLink');
+    if (!cur) { host.innerHTML = ''; link.innerHTML = 'Shown on the home page, the projects page and llms.txt.'; return; }
+    var d = DS[cur]; var url = SITE + '/projects/' + d.slug;
+    link.innerHTML = '<a href="' + url + '" target="_blank" rel="noopener">' + esc(url.replace('https://', '')) + '</a>';
+    var p = rows.filter(function (k) { return k.is_primary; })[0];
+    var live = TITLES[d.slug] || (clean(d.title).split(':')[0] + ': Data Project | KOJOH');
+    var i = live.indexOf(': '), rest = i > 0 ? live.slice(i + 2) : 'Data Project | KOJOH';
+    var t = p ? p.keyword.charAt(0).toUpperCase() + p.keyword.slice(1) + ': ' + rest : live;
+    if (t.length > 65 && p) t = p.keyword.charAt(0).toUpperCase() + p.keyword.slice(1) + ' | KOJOH';
+    if (!TITLES[d.slug]) fetch('/projects/' + d.slug).then(function (x) { return x.ok ? x.text() : ''; }).then(function (h) {
+      var m = /<title>([^<]*)<\/title>/.exec(h || '');
+      if (m) { var el = document.createElement('textarea'); el.innerHTML = m[1]; TITLES[d.slug] = el.value; if (cur === d.id) serp(); }
+    }).catch(function () {});
+    host.innerHTML = '<div class="kw-serp"><small>Roughly how Google shows it' + (p ? '' : ' (star a keyword to put it first)') + '</small><small>kojohhi.com &rsaquo; projects &rsaquo; ' + esc(d.slug) + '</small><b>' + esc(t) + '</b></div>';
+  }
+
+  async function load() {
+    cur = sel.value;
+    var q = supa.from('seo_keywords').select('id, keyword, is_primary').order('is_primary', { ascending: false }).order('created_at');
+    q = cur ? q.eq('dataset_id', cur) : q.is('dataset_id', null);
+    var r = await q;
+    var list = document.getElementById('kwList');
+    if (r.error) { list.innerHTML = '<div class="ka-empty">Keywords are not switched on yet. Run <code>supabase/schema-seo-keywords.sql</code> in the Supabase SQL editor.</div>'; return; }
+    rows = r.data || [];
+    document.getElementById('kwCount').textContent = rows.length + (rows.length === 1 ? ' keyword' : ' keywords') + (rows.length > 12 ? ' (the first 12 are shown on the page)' : '');
+    list.innerHTML = rows.length ? rows.map(function (k) {
+      return '<div class="kw-row"><span>' + esc(k.keyword) + '</span>'
+        + (cur ? '<button type="button" class="kw-star' + (k.is_primary ? ' on' : '') + '" data-star="' + k.id + '">' + (k.is_primary ? '&#9733; In title' : '&#9734; Put in title') + '</button>' : '')
+        + '<button type="button" data-del="' + k.id + '">Remove</button></div>';
+    }).join('') : '<div class="ka-empty">No keywords yet.</div>';
+    serp();
+  }
+
+  document.getElementById('kwAdd').onclick = async function () {
+    var inp = document.getElementById('kwNew');
+    var have = rows.map(function (k) { return k.keyword.toLowerCase(); });
+    var items = inp.value.split(/[,\n]/).map(function (s) { return s.trim().replace(/\s+/g, ' '); })
+      .filter(function (s, i, a) { return s.length >= 2 && s.length <= 80 && have.indexOf(s.toLowerCase()) < 0 && a.map(function (x) { return x.toLowerCase(); }).indexOf(s.toLowerCase()) === i; });
+    if (!items.length) { KA.toast('Nothing new to add', true); return; }
+    this.disabled = true;
+    var r = await supa.from('seo_keywords').insert(items.map(function (k) { return { dataset_id: cur || null, keyword: k }; }));
+    this.disabled = false;
+    if (r.error) { KA.toast(r.error.message, true); return; }
+    inp.value = ''; KA.toast('Added ' + items.length); load();
+  };
+  document.getElementById('kwNew').onkeydown = function (e) { if (e.key === 'Enter') document.getElementById('kwAdd').click(); };
+
+  document.getElementById('kwList').onclick = async function (e) {
+    var del = e.target.closest('[data-del]'), star = e.target.closest('[data-star]'), r;
+    if (del) {
+      r = await supa.from('seo_keywords').delete().eq('id', del.getAttribute('data-del'));
+    } else if (star) {
+      var id = star.getAttribute('data-star'), on = star.classList.contains('on');
+      r = await supa.from('seo_keywords').update({ is_primary: false }).eq('dataset_id', cur).eq('is_primary', true);
+      if (!r.error && !on) r = await supa.from('seo_keywords').update({ is_primary: true }).eq('id', id);
+    } else return;
+    if (r.error) { KA.toast(r.error.message, true); return; }
+    load();
+  };
+
+  supa.from('admin_settings').select('value').eq('key', 'deploy_hook').maybeSingle().then(function (r) {
+    if (r.data && r.data.value) document.getElementById('kwHook').value = r.data.value;
+  });
+  document.getElementById('kwHookSave').onclick = async function () {
+    var v = document.getElementById('kwHook').value.trim();
+    if (!/^https:\/\/api\.vercel\.com\//.test(v)) { KA.toast('That does not look like a Vercel deploy hook', true); return; }
+    var r = await supa.from('admin_settings').upsert({ key: 'deploy_hook', value: v, updated_at: new Date().toISOString() });
+    if (r.error) { KA.toast(r.error.message, true); return; }
+    KA.toast('Hook saved');
+  };
+
+  document.getElementById('kwPub').onclick = async function () {
+    var v = document.getElementById('kwHook').value.trim();
+    if (!v) { KA.toast('Add the deploy hook first (one-time setup below)', true); document.querySelector('details').open = true; return; }
+    this.disabled = true;
+    try { await fetch(v, { method: 'POST', mode: 'no-cors' }); KA.toast('Publishing. Live in about a minute.'); }
+    catch (e) { KA.toast('Could not reach Vercel. Try again.', true); }
+    var b = this; setTimeout(function () { b.disabled = false; }, 30000);
+  };
+});
+</script>
+</body>
+</html>
