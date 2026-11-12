@@ -87,6 +87,8 @@
       icon:'<polygon points="12 2 15 8.5 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 9 8.5 12 2"/>' },
     { key:'gift', href:'gift.html', label:'Gift a project',
       icon:'<rect x="3" y="8" width="18" height="13" rx="2"/><path d="M12 8v13M3 12h18M12 8c-2-4-6-4-6-1.5S9 8 12 8zM12 8c2-4 6-4 6-1.5S15 8 12 8z"/>' },
+    { key:'blog', href:'blog.html', label:'Blog',
+      icon:'<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>' },
     { key:'seo', href:'seo.html', label:'SEO keywords',
       icon:'<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M8 11h6M11 8v6"/>' },
     { key:'submissions', href:'submissions.html', label:'Challenge submissions',

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+if (/^\/admin(\/|$)/.test(location.pathname)) document.write('<base href="/admin/">');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>KOJOH Admin | Blog</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+<link rel="stylesheet" href="https://www.kojohhi.com/blog.css">
+<style>
+.bg-wrap{display:grid; grid-template-columns:17rem minmax(0,1fr); gap:1rem; align-items:start;}
+.bg-list{display:flex; flex-direction:column; gap:0.4rem;}
+.bg-item{display:block; text-align:left; font:inherit; width:100%; border:1px solid var(--line); border-radius:var(--radius-sm); background:var(--card); padding:0.55rem 0.7rem; cursor:pointer; color:var(--text);}
+.bg-item:hover, .bg-item.on{border-color:var(--text);}
+.bg-item b{display:block; font-size:0.88rem; line-height:1.3;}
+.bg-item small{color:var(--muted); font-size:0.75rem;}
+.bg-pill{display:inline-block; font-size:0.68rem; border-radius:999px; padding:0.05rem 0.45rem; border:1px solid var(--line); margin-right:0.3rem;}
+.bg-pill.pub{background:var(--text); color:var(--bg); border-color:var(--text);}
+.bg-split{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:1rem;}
+.bg-body{min-height:32rem; font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-size:0.85rem;}
+.bg-prev{border:1px solid var(--line); border-radius:var(--radius-sm); padding:1rem 1.2rem; max-height:44rem; overflow:auto; background:var(--bg);}
+.bg-prev h1{font-family:'Space Grotesk', sans-serif; font-size:1.6rem; margin:0 0 0.4rem;}
+.bg-checks{list-style:none; padding:0; margin:0.4rem 0 0; font-size:0.85rem; line-height:1.9;}
+.bg-checks li::before{content:'\2713  '; font-weight:700;}
+.bg-checks li.bad{color:#b3261e;} .bg-checks li.bad::before{content:'!  ';}
+.bg-serp{border:1px solid var(--line); border-radius:var(--radius-sm); padding:0.8rem 1rem; background:var(--card);}
+.bg-serp small{display:block; color:var(--muted); font-size:0.78rem;}
+.bg-serp b{display:block; color:#1a0dab; font-size:1.05rem; font-weight:500; margin:0.15rem 0;}
+.bg-serp span{font-size:0.85rem; color:var(--muted);}
+@media (prefers-color-scheme: dark){ .bg-serp b{color:#8ab4f8;} }
+.bg-cover{max-width:100%; border-radius:10px; border:1px solid var(--line); margin-top:0.5rem; display:block;}
+.bg-tools{display:flex; gap:0.4rem; flex-wrap:wrap; margin:0 0 0.4rem;}
+.bg-tools button{font:inherit; font-size:0.78rem; border:1px solid var(--line); background:var(--card); border-radius:999px; padding:0.2rem 0.65rem; cursor:pointer; color:var(--text);}
+@media (max-width:1100px){ .bg-wrap, .bg-split{grid-template-columns:minmax(0,1fr);} }
+</style>
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="supabase-config.js"></script>
+<script src="admin-core.js"></script>
+<script src="https://www.kojohhi.com/blog-md.js"></script>
+<script>
+KA.boot('blog', function (ctx) {
+  var main = ctx.main, supa = KA.supa, esc = KA.esc, MD = window.KojohMD;
+  var SITE = 'https://www.kojohhi.com';
+  main.innerHTML = '<div class="ka-head"><div><h1>Blog</h1><p>Guides that bring people from Google to KOJOH. Drafts are private. Publish puts the post live at kojohhi.com/blog, open to everyone with no login, '
+    + 'adds it to the sitemap and tells Bing. Live in about a minute.</p></div><div class="ka-btnrow"><button class="ka-btn ka-btn-primary" type="button" id="bgNew">New post</button></div></div>'
+    + '<div class="bg-wrap"><div><div class="ka-hint" style="margin-bottom:0.4rem" id="bgCount"></div><div class="bg-list" id="bgList"></div></div>'
+    + '<div id="bgEdit"><div class="ka-card"><p class="ka-hint">Pick a post on the left or press New post.</p></div></div></div>';
+
+  var POSTS = [], DS = [], cur = null, slugTouched = false;
+
+  function fmt(d) { return d ? new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : ''; }
+  function slugify(s) { return MD.slugify(s).slice(0, 80); }
+
+  async function load(selectSlug) {
+    var r = await supa.from('blog_posts').select('*').order('created_at', { ascending: false });
+    if (r.error) { document.getElementById('bgList').innerHTML = '<p class="ka-hint">' + esc(/relation|does not exist/i.test(r.error.message) ? 'Run supabase/schema-blog.sql in the Supabase SQL editor first.' : r.error.message) + '</p>'; return; }
+    POSTS = r.data || [];
+    var pub = POSTS.filter(function (p) { return p.status === 'published'; }).length;
+    document.getElementById('bgCount').textContent = POSTS.length + ' posts, ' + pub + ' live, ' + (POSTS.length - pub) + ' drafts';
+    document.getElementById('bgList').innerHTML = POSTS.map(function (p) {
+      return '<button class="bg-item' + (cur && cur.id === p.id ? ' on' : '') + '" data-id="' + p.id + '"><span class="bg-pill' + (p.status === 'published' ? ' pub' : '') + '">' + (p.status === 'published' ? 'Live' : 'Draft') + '</span>'
+        + '<small>' + fmt(p.published_at || p.created_at) + '</small><b>' + esc(p.title) + '</b></button>';
+    }).join('') || '<p class="ka-hint">No posts yet.</p>';
+    Array.prototype.forEach.call(document.querySelectorAll('.bg-item'), function (b) {
+      b.onclick = function () { edit(POSTS.find(function (p) { return p.id === b.getAttribute('data-id'); })); };
+    });
+    if (selectSlug) { var s = POSTS.find(function (p) { return p.slug === selectSlug; }); if (s) edit(s); }
+  }
+
+  function edit(p) {
+    cur = p || { id: null, slug: '', title: '', description: '', body_md: '', cover_url: '', cover_alt: '', project_slug: '', tags: [], author: 'KOJOH team', status: 'draft' };
+    slugTouched = !!cur.slug;
+    Array.prototype.forEach.call(document.querySelectorAll('.bg-item'), function (b) { b.classList.toggle('on', cur.id && b.getAttribute('data-id') === cur.id); });
+    var live = cur.status === 'published';
+    document.getElementById('bgEdit').innerHTML =
+      '<div class="ka-card" style="margin-bottom:1rem"><div class="ka-grid2">'
+      + '<div><label class="ka-label">Title (what people search for, about 60 characters)</label><input class="ka-input" id="fTitle" value="' + esc(cur.title) + '"></div>'
+      + '<div><label class="ka-label">Address</label><input class="ka-input" id="fSlug" value="' + esc(cur.slug) + '"><div class="ka-hint" id="fUrl"></div></div>'
+      + '<div style="grid-column:1/-1"><label class="ka-label">Description (the grey line on Google, 120 to 160 characters) <span class="ka-hint" id="fDescN"></span></label><input class="ka-input" id="fDesc" value="' + esc(cur.description) + '"></div>'
+      + '<div><label class="ka-label">Project this post sends readers to</label><select class="ka-select" id="fProj"><option value="">None</option>'
+      + DS.map(function (d) { return '<option value="' + esc(d.slug) + '"' + (d.slug === cur.project_slug ? ' selected' : '') + '>' + esc(d.title) + '</option>'; }).join('') + '</select></div>'
+      + '<div><label class="ka-label">Tags (comma separated)</label><input class="ka-input" id="fTags" value="' + esc((cur.tags || []).join(', ')) + '" placeholder="grocery store dataset, SQL, Power BI"></div>'
+      + '<div><label class="ka-label">Author</label><input class="ka-input" id="fAuthor" value="' + esc(cur.author || 'KOJOH team') + '"></div>'
+      + '<div><label class="ka-label">Cover image (1200 x 630 works best)</label><input type="file" accept="image/*" id="fCoverFile" class="ka-input"><input class="ka-input" id="fCover" style="margin-top:0.4rem" placeholder="or paste an image address" value="' + esc(cur.cover_url || '') + '">'
+      + '<input class="ka-input" id="fCoverAlt" style="margin-top:0.4rem" placeholder="Describe the image in a few words (helps Google Images)" value="' + esc(cur.cover_alt || '') + '"><div id="fCoverPrev"></div></div>'
+      + '</div></div>'
+      + '<div class="ka-card" style="margin-bottom:1rem"><div class="bg-split"><div><label class="ka-label">Post (markdown)</label>'
+      + '<div class="bg-tools"><button type="button" data-ins="## Heading\n\n">Heading</button><button type="button" data-ins="**bold**">Bold</button><button type="button" data-ins="- point one\n- point two\n">List</button>'
+      + '<button type="button" data-ins="| Column | Meaning |\n|---|---|\n| A | B |\n">Table</button><button type="button" data-ins="```sql\nSELECT 1;\n```\n">Code</button><button type="button" data-ins="[link text](/projects/)">Link</button>'
+      + '<button type="button" id="fImgBtn">Image</button><input type="file" accept="image/*" id="fImgFile" hidden></div>'
+      + '<textarea class="ka-textarea bg-body" id="fBody" spellcheck="true">' + esc(cur.body_md || '') + '</textarea></div>'
+      + '<div><label class="ka-label">Preview</label><div class="bg-prev bl"><h1 id="pTitle"></h1><div class="bl-body" id="pBody"></div></div></div></div></div>'
+      + '<div class="ka-card"><div class="ka-grid2"><div><h2>On Google</h2><div class="bg-serp" id="fSerp"></div><h2 style="margin-top:1rem">Before you publish</h2><ul class="bg-checks" id="fChecks"></ul></div>'
+      + '<div><h2>' + (live ? 'Live since ' + fmt(cur.published_at) : 'Draft') + '</h2><div class="ka-btnrow" style="margin-top:0.6rem">'
+      + '<button class="ka-btn" type="button" id="bSave">Save draft</button>'
+      + '<button class="ka-btn ka-btn-primary" type="button" id="bPub">' + (live ? 'Save and update live' : 'Publish') + '</button>'
+      + (live ? '<button class="ka-btn" type="button" id="bUnpub">Unpublish</button><a class="ka-btn" target="_blank" rel="noopener" href="' + SITE + '/blog/' + esc(cur.slug) + '">View live</a>' : '')
+      + (cur.id ? '<button class="ka-btn" type="button" id="bDel">Delete</button>' : '') + '</div>'
+      + '<p class="ka-hint" style="margin-top:0.8rem">After it goes live, open Search Console, inspect the new address and press Request indexing, so Google reads it the same day.</p></div></div></div>';
+
+    var $ = function (id) { return document.getElementById(id); };
+    function refresh() {
+      if (!slugTouched) $('fSlug').value = slugify($('fTitle').value);
+      var slug = $('fSlug').value, t = $('fTitle').value.trim(), d = $('fDesc').value.trim(), r = MD.render($('fBody').value), cv = $('fCover').value.trim();
+      $('fUrl').textContent = SITE + '/blog/' + slug;
+      $('fDescN').textContent = d.length + ' / 160';
+      $('pTitle').textContent = t;
+      $('pBody').innerHTML = (cv ? '<figure class="bl-cover"><img src="' + esc(cv) + '" alt=""></figure>' : '') + r.html;
+      $('fCoverPrev').innerHTML = cv ? '<img class="bg-cover" src="' + esc(cv) + '" alt="">' : '';
+      $('fSerp').innerHTML = '<small>kojohhi.com &rsaquo; blog &rsaquo; ' + esc(slug) + '</small><b>' + esc((t + ' | KOJOH Blog').slice(0, 62)) + '</b><span>' + esc(d.slice(0, 160)) + '</span>';
+      var checks = [
+        [t.length >= 20 && t.length <= 65, 'Title is ' + t.length + ' characters (aim for 40 to 65)'],
+        [d.length >= 110 && d.length <= 165, 'Description is ' + d.length + ' characters (aim for 120 to 160)'],
+        [r.words >= 700, r.words + ' words (aim for 700 or more, so it can rank)'],
+        [r.toc.length >= 3, r.toc.length + ' section headings (aim for 3 or more)'],
+        [!!cv, cv ? 'Cover image added' : 'Add a cover image'],
+        [!cv || $('fCoverAlt').value.trim().length > 5, 'Cover image has a description'],
+        [!!$('fProj').value, $('fProj').value ? 'Links to a project' : 'Pick the project this post sends readers to'],
+        [/\]\(\/projects\//.test($('fBody').value), 'Links to a project inside the text'],
+        [/^[a-z0-9]+(-[a-z0-9]+)*$/.test(slug) && slug.length >= 3, 'Address is valid']
+      ];
+      $('fChecks').innerHTML = checks.map(function (c) { return '<li class="' + (c[0] ? '' : 'bad') + '">' + esc(c[1]) + '</li>'; }).join('');
+    }
+    ['fTitle', 'fDesc', 'fBody', 'fCover', 'fCoverAlt', 'fProj'].forEach(function (id) { $(id).addEventListener('input', refresh); });
+    $('fSlug').addEventListener('input', function () { slugTouched = true; this.value = this.value.toLowerCase().replace(/[^a-z0-9-]/g, '-'); refresh(); });
+    refresh();
+
+    function insert(text) {
+      var ta = $('fBody'), a = ta.selectionStart, b = ta.selectionEnd;
+      ta.value = ta.value.slice(0, a) + text + ta.value.slice(b); ta.focus(); ta.selectionStart = ta.selectionEnd = a + text.length; refresh();
+    }
+    Array.prototype.forEach.call(document.querySelectorAll('[data-ins]'), function (b) { b.onclick = function () { insert(b.getAttribute('data-ins').replace(/\\n/g, '\n')); }; });
+
+    async function upload(file, kind) {
+      var slug = $('fSlug').value || 'post', ext = (file.name.split('.').pop() || 'png').toLowerCase().replace(/[^a-z0-9]/g, '');
+      var p = slug + '/' + kind + '-' + Date.now() + '.' + ext;
+      var r = await supa.storage.from('blog').upload(p, file, { upsert: true, contentType: file.type, cacheControl: '31536000' });
+      if (r.error) { KA.toast(r.error.message, true); return null; }
+      return supa.storage.from('blog').getPublicUrl(p).data.publicUrl;
+    }
+    $('fCoverFile').onchange = async function () { if (!this.files[0]) return; var u = await upload(this.files[0], 'cover'); if (u) { $('fCover').value = u; refresh(); KA.toast('Cover uploaded'); } };
+    $('fImgBtn').onclick = function () { $('fImgFile').click(); };
+    $('fImgFile').onchange = async function () {
+      var f = this.files[0]; if (!f) return; var u = await upload(f, 'img'); this.value = '';
+      if (u) insert('\n![' + (window.prompt('Describe the image in a few words', '') || '') + '](' + u + ' "' + (window.prompt('Caption under the image (optional)', '') || '') + '")\n');
+    };
+
+    function row(status) {
+      var tags = $('fTags').value.split(',').map(function (s) { return s.trim(); }).filter(Boolean);
+      return { slug: $('fSlug').value.trim(), title: $('fTitle').value.trim(), description: $('fDesc').value.trim(), body_md: $('fBody').value, cover_url: $('fCover').value.trim() || null,
+        cover_alt: $('fCoverAlt').value.trim() || null, project_slug: $('fProj').value || null, tags: tags, author: $('fAuthor').value.trim() || 'KOJOH team', status: status };
+    }
+    async function save(status) {
+      var v = row(status);
+      if (!v.title || !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(v.slug)) { KA.toast('Add a title and a valid address first', true); return false; }
+      var r = cur.id ? await supa.from('blog_posts').update(v).eq('id', cur.id).select().single() : await supa.from('blog_posts').insert(v).select().single();
+      if (r.error) { KA.toast(/duplicate|unique/i.test(r.error.message) ? 'Another post already uses that address' : r.error.message, true); return false; }
+      cur = r.data; return true;
+    }
+    async function deploy() {
+      var h = await supa.from('admin_settings').select('value').eq('key', 'deploy_hook').maybeSingle();
+      var hook = h.data && h.data.value;
+      if (!hook) { KA.toast('Saved. Add the deploy hook in SEO keywords once, so Publish can rebuild the website.', true); return; }
+      try { await fetch(hook, { method: 'POST', mode: 'no-cors' }); KA.toast('Publishing. Live in about a minute.'); } catch (e) { KA.toast('Saved, but could not reach Vercel. Press Publish again.', true); }
+    }
+    $('bSave').onclick = async function () { if (await save(cur.status === 'published' ? 'published' : 'draft')) { KA.toast('Saved'); if (cur.status === 'published') deploy(); load(cur.slug); } };
+    $('bPub').onclick = async function () {
+      var bad = document.querySelectorAll('#fChecks li.bad').length;
+      if (bad && !KA.confirm(bad + ' check(s) are not met yet. Publish anyway?')) return;
+      if (await save('published')) { await deploy(); load(cur.slug); }
+    };
+    if ($('bUnpub')) $('bUnpub').onclick = async function () { if (!KA.confirm('Take this post off the website?')) return; if (await save('draft')) { await deploy(); load(cur.slug); } };
+    if ($('bDel')) $('bDel').onclick = async function () {
+      if (!KA.confirm('Delete this post for good? This cannot be undone.')) return;
+      var r = await supa.from('blog_posts').delete().eq('id', cur.id);
+      if (r.error) { KA.toast(r.error.message, true); return; }
+      var wasLive = cur.status === 'published'; cur = null; KA.toast('Deleted'); if (wasLive) deploy(); load();
+      document.getElementById('bgEdit').innerHTML = '<div class="ka-card"><p class="ka-hint">Deleted.</p></div>';
+    };
+  }
+
+  document.getElementById('bgNew').onclick = function () { edit(null); };
+  supa.from('datasets').select('slug,title').eq('is_published', true).order('title').then(function (r) { DS = r.data || []; load(); });
+});
+</script>
+</body>
+</html>
