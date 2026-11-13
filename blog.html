@@ -82,12 +82,17 @@ KA.boot('blog', function (ctx) {
   async function showImports() {
     var box = document.getElementById('bgImport'), list = [];
     try { var r = await fetch('drafts/index.json?x=' + Date.now(), { cache: 'no-store' }); if (r.ok) list = await r.json(); } catch (e) {}
-    var have = {}; POSTS.forEach(function (p) { have[p.slug] = 1; });
-    list = (list || []).filter(function (d) { return d && d.slug && !have[d.slug]; });
+    var have = {}; POSTS.forEach(function (p) { have[p.slug] = p; });
+    list = (list || []).filter(function (d) {
+      if (!d || !d.slug) return false;
+      var p = have[d.slug]; if (!p) return true;
+      d.update = true; d.live = p.status === 'published';
+      return d.rev && new Date(d.rev) > new Date(p.updated_at);
+    });
     if (!list.length) { box.innerHTML = ''; return; }
-    box.innerHTML = '<div class="ka-card" style="margin-bottom:1rem"><h2>New drafts from Claude (' + list.length + ')</h2><p class="ka-hint">Import adds the post here as a draft. Nothing goes live until you press Publish.</p><div class="bg-list" style="margin-top:0.6rem">'
+    box.innerHTML = '<div class="ka-card" style="margin-bottom:1rem"><h2>From Claude (' + list.length + ')</h2><p class="ka-hint">New drafts and updates to posts. Nothing goes live until you press Publish.</p><div class="bg-list" style="margin-top:0.6rem">'
       + list.map(function (d) { return '<div class="bg-item" style="display:flex;align-items:center;gap:0.8rem;cursor:default"><span style="flex:1"><b>' + esc(d.title) + '</b><small>' + esc(d.description || '') + '</small></span>'
-        + '<button class="ka-btn ka-btn-primary" type="button" data-imp="' + esc(d.slug) + '">Import</button></div>'; }).join('') + '</div></div>';
+        + '<button class="ka-btn ka-btn-primary" type="button" data-imp="' + esc(d.slug) + '" data-upd="' + (d.update ? 1 : 0) + '">' + (d.update ? 'Load update' : 'Import') + '</button></div>'; }).join('') + '</div></div>';
     Array.prototype.forEach.call(box.querySelectorAll('[data-imp]'), function (b) {
       b.onclick = async function () {
         b.disabled = true; b.textContent = 'Importing';
@@ -95,9 +100,13 @@ KA.boot('blog', function (ctx) {
           var d = await (await fetch('drafts/' + b.getAttribute('data-imp') + '.json?x=' + Date.now(), { cache: 'no-store' })).json();
           var row = { slug: d.slug, title: d.title, description: d.description || '', body_md: d.body_md || '', cover_url: d.cover_url || null, cover_alt: d.cover_alt || null,
             project_slug: d.project_slug || null, tags: d.tags || [], author: d.author || 'KOJOH team', status: 'draft' };
-          var ins = await supa.from('blog_posts').insert(row);
+          var ins;
+          if (b.getAttribute('data-upd') === '1') {
+            delete row.status; delete row.slug;
+            ins = await supa.from('blog_posts').update(row).eq('slug', d.slug);
+          } else ins = await supa.from('blog_posts').insert(row);
           if (ins.error) throw ins.error;
-          KA.toast('Draft imported. Review it, then Publish.'); load(d.slug);
+          KA.toast(b.getAttribute('data-upd') === '1' ? 'Update loaded. Review it, then press Publish or Save and update live.' : 'Draft imported. Review it, then Publish.'); load(d.slug);
         } catch (e) { KA.toast((e && e.message) || 'Could not import', true); b.disabled = false; b.textContent = 'Import'; }
       };
     });
