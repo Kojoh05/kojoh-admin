@@ -51,7 +51,7 @@ KA.boot('blog', function (ctx) {
   var SITE = 'https://www.kojohhi.com';
   main.innerHTML = '<div class="ka-head"><div><h1>Blog</h1><p>Guides that bring people from Google to KOJOH. Drafts are private. Publish puts the post live at kojohhi.com/blog, open to everyone with no login, '
     + 'adds it to the sitemap and tells Bing. Live in about a minute.</p></div><div class="ka-btnrow"><button class="ka-btn ka-btn-primary" type="button" id="bgNew">New post</button></div></div>'
-    + '<div class="bg-wrap"><div><div class="ka-hint" style="margin-bottom:0.4rem" id="bgCount"></div><div class="bg-list" id="bgList"></div></div>'
+    + '<div id="bgImport"></div><div class="bg-wrap"><div><div class="ka-hint" style="margin-bottom:0.4rem" id="bgCount"></div><div class="bg-list" id="bgList"></div></div>'
     + '<div id="bgEdit"><div class="ka-card"><p class="ka-hint">Pick a post on the left or press New post.</p></div></div></div>';
 
   var POSTS = [], DS = [], cur = null, slugTouched = false;
@@ -61,8 +61,9 @@ KA.boot('blog', function (ctx) {
 
   async function load(selectSlug) {
     var r = await supa.from('blog_posts').select('*').order('created_at', { ascending: false });
-    if (r.error) { document.getElementById('bgList').innerHTML = '<p class="ka-hint">' + esc(/relation|does not exist/i.test(r.error.message) ? 'Run supabase/schema-blog.sql in the Supabase SQL editor first.' : r.error.message) + '</p>'; return; }
+    if (r.error) { document.getElementById('bgList').innerHTML = '<p class="ka-hint">' + esc(/relation|does not exist/i.test(r.error.message) ? 'The blog table is not set up yet.' : r.error.message) + '</p>'; return; }
     POSTS = r.data || [];
+    showImports();
     var pub = POSTS.filter(function (p) { return p.status === 'published'; }).length;
     document.getElementById('bgCount').textContent = POSTS.length + ' posts, ' + pub + ' live, ' + (POSTS.length - pub) + ' drafts';
     document.getElementById('bgList').innerHTML = POSTS.map(function (p) {
@@ -73,6 +74,33 @@ KA.boot('blog', function (ctx) {
       b.onclick = function () { edit(POSTS.find(function (p) { return p.id === b.getAttribute('data-id'); })); };
     });
     if (selectSlug) { var s = POSTS.find(function (p) { return p.slug === selectSlug; }); if (s) edit(s); }
+  }
+
+
+  // Drafts written by Claude live in this admin site (drafts/index.json + drafts/<slug>.json).
+  // Any draft not yet in the database shows here with an Import button, so no SQL is ever needed.
+  async function showImports() {
+    var box = document.getElementById('bgImport'), list = [];
+    try { var r = await fetch('drafts/index.json?x=' + Date.now(), { cache: 'no-store' }); if (r.ok) list = await r.json(); } catch (e) {}
+    var have = {}; POSTS.forEach(function (p) { have[p.slug] = 1; });
+    list = (list || []).filter(function (d) { return d && d.slug && !have[d.slug]; });
+    if (!list.length) { box.innerHTML = ''; return; }
+    box.innerHTML = '<div class="ka-card" style="margin-bottom:1rem"><h2>New drafts from Claude (' + list.length + ')</h2><p class="ka-hint">Import adds the post here as a draft. Nothing goes live until you press Publish.</p><div class="bg-list" style="margin-top:0.6rem">'
+      + list.map(function (d) { return '<div class="bg-item" style="display:flex;align-items:center;gap:0.8rem;cursor:default"><span style="flex:1"><b>' + esc(d.title) + '</b><small>' + esc(d.description || '') + '</small></span>'
+        + '<button class="ka-btn ka-btn-primary" type="button" data-imp="' + esc(d.slug) + '">Import</button></div>'; }).join('') + '</div></div>';
+    Array.prototype.forEach.call(box.querySelectorAll('[data-imp]'), function (b) {
+      b.onclick = async function () {
+        b.disabled = true; b.textContent = 'Importing';
+        try {
+          var d = await (await fetch('drafts/' + b.getAttribute('data-imp') + '.json?x=' + Date.now(), { cache: 'no-store' })).json();
+          var row = { slug: d.slug, title: d.title, description: d.description || '', body_md: d.body_md || '', cover_url: d.cover_url || null, cover_alt: d.cover_alt || null,
+            project_slug: d.project_slug || null, tags: d.tags || [], author: d.author || 'KOJOH team', status: 'draft' };
+          var ins = await supa.from('blog_posts').insert(row);
+          if (ins.error) throw ins.error;
+          KA.toast('Draft imported. Review it, then Publish.'); load(d.slug);
+        } catch (e) { KA.toast((e && e.message) || 'Could not import', true); b.disabled = false; b.textContent = 'Import'; }
+      };
+    });
   }
 
   function edit(p) {
